@@ -1,103 +1,25 @@
-<ion-menu side="start" content-id="main-content" class="menu">
-  <ion-header>
-    <ion-toolbar>
-      <ion-img src="assets/Fotos/santurtzi.png" class="logo"></ion-img>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <ion-list>
-      <ion-item
-        *ngFor="let item of menuItems"
-        [class.selected]="currentItem === item"
-        (click)="selectMenuItem(item)"
-      >
-        <div class="indicator" *ngIf="currentItem === item"></div>
-        {{ item }}
-      </ion-item>
-    </ion-list>
-  </ion-content>
-</ion-menu>
+<app-menu> </app-menu>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Hitzorduak</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-<ion-content id="main-content" class="main-content">
-  <div class="content-container">
-    <div class="left-section">
-      <div class="team-selection">
-        <h2>Hautatu taldea</h2>
-        <ion-select [(ngModel)]="selectedTeam" placeholder="Aukeratu taldea">
-          <ion-select-option *ngFor="let team of teams" [value]="team">
-            {{ team }}
-          </ion-select-option>
-        </ion-select>
-      </div>
-
-      <div class="calendar-section">
-        <div class="calendar-header">
-          <ion-button fill="clear" (click)="prevMonth()">
-            <ion-icon name="chevron-back-outline"></ion-icon>
-          </ion-button>
-          <h2>{{ months[currentMonthIndex] }} {{ currentYear }}</h2>
-          <ion-button fill="clear" (click)="nextMonth()">
-            <ion-icon name="chevron-forward-outline"></ion-icon>
-          </ion-button>
-        </div>
-        <ion-grid>
-          <ion-row>
-            <ion-col
-              size="4"
-              *ngFor="let day of availableDays"
-              (click)="selectDay(day)"
-              [class.selected]="selectedDay === day"
-            >
-              {{ day }}
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-        <div class="hours">
-          <ion-grid>
-            <ion-row>
-              <ion-col size="4" *ngFor="let hour of availableHours">
-                <ion-button
-                  expand="block"
-                  (click)="selectHour(hour)"
-                  [color]="selectedHour === hour ? 'danger' : 'medium'"
-                >
-                  {{ hour }}
-                </ion-button>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </div>
-      </div>
-    </div>
-
-    <div class="services-section">
-      <h3>Zerbitzuak</h3>
-      <ion-list>
-        <ion-item class="service-item" *ngFor="let service of services">
-          <span class="service-name">{{ service.name }}</span>
-          <ion-button
-            class="service-button"
-            [color]="service.selected ? 'success' : 'danger'"
-            (click)="toggleService(service)"
-            size="small"
-            fill="outline"
-            expand="block"
-          >
-            {{ service.selected ? 'Hautatua' : 'Aukeratu' }}
-          </ion-button>
-        </ion-item>
-      </ion-list>
-    </div>
-  </div>
-
-  <div class="footer">
-    <ion-button
-      expand="block"
-      [disabled]="!isFormComplete()"
-      [color]="isFormComplete() ? 'danger' : 'medium'"
-      (click)="confirmAppointment()"
-    >
-      Baieztatu
-    </ion-button>
+<ion-content id="main-content">
+  <div class="info-container">
+    <div class="taldea"></div>
+    <ion-item>
+      <ion-datetime
+        display-format="DD/MM/YYYY"
+        month-values="1,2,3,4,5,9,10,11,12"
+        hour-values="10,11,12,13,14"
+        minute-values="0,30"
+        [min]="minDate"
+      ></ion-datetime>
+    </ion-item>
+    <div class="zerbitzua"></div>
   </div>
 </ion-content>

@@ -1,0 +1,39 @@
+<ion-menu content-id="main-content" side="start">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Menua</ion-title>
+      <div class="logo">
+        <img src="assets/Fotos/santurtzi.png" alt="Santurtzi Logo" />
+      </div>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    
+    <div class="menu-items">
+      <ion-item button [routerLink]="['/citas']" routerLinkActive="active" class="menu-item">
+        <img src="assets/Fotos/citas.png" alt="Hitzorduak" />
+        <span>Hitzorduak</span>
+      </ion-item>
+      <ion-item button [routerLink]="['/inbentario']" routerLinkActive="active" class="menu-item">
+        <img src="assets/Fotos/inbentario.png" alt="Inbentario" />
+        <span>Inbentario</span>
+      </ion-item>
+      <ion-item button [routerLink]="['/taldeak']" routerLinkActive="active" class="menu-item">
+        <img src="assets/Fotos/equipo.png" alt="Taldeak" />
+        <span>Taldeak</span>
+      </ion-item>
+      <ion-item button [routerLink]="['/asistentzia']" routerLinkActive="active" class="menu-item">
+        <img src="assets/Fotos/asist.png" alt="Asistentzia" />
+        <span>Asistentzia</span>
+      </ion-item>
+      <ion-item button [routerLink]="['/ticket']" routerLinkActive="active" class="menu-item">
+        <img src="assets/Fotos/recibo.png" alt="Ticket" />
+        <span>Ticket</span>
+      </ion-item>
+      <ion-item button [routerLink]="['/garbiketa']" routerLinkActive="active" class="menu-item">
+        <img src="assets/Fotos/garbi.png" alt="Garbiketa" />
+        <span>Garbiketa</span>
+      </ion-item>
+    </div>
+  </ion-content>
+</ion-menu>

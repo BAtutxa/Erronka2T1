@@ -1,135 +1,28 @@
-/* Menú lateral siempre visible */
-.menu {
-    --background: #f9f9f9;
-    width: 250px;
+
+.info-container {
+    display: flex;
     height: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    display: block; /* Asegurarse de que el menú esté visible */
-}
-
-/* Logo */
-.logo {
-    width: 100px;
-    margin: 10px auto;
-}
-
-/* Estilo del menú */
-ion-item {
-    position: relative;
-    height: 50px;
-}
-
-.selected {
-    background-color: #ffffff;
-}
-
-.indicator {
-    position: absolute;
-    left: 0;
-    height: 100%;
-    width: 5px;
-    background-color: #e74c3c;
-    margin-left: 10px; /* Separación entre la barra roja y el texto */
-}
-
-/* Contenido principal */
-.main-content {
-    margin-left: 250px; /* Deja espacio para el menú */
-    padding: 20px;
-}
-
-.content-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
-.left-section {
-    flex-basis: 45%;
-    padding-right: 20px;
-}
-
-.services-section {
-    flex-basis: 45%;
-}
-
-.team-selection,
-.calendar-section {
-    margin-bottom: 20px;
-}
-
-.calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.calendar-header h2 {
-    font-size: 18px;
-}
-
-ion-col {
-    text-align: center;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-ion-col.selected {
-    background-color: #e74c3c;
-    color: white;
-}
-
-/* Servicios */
-.services-section {
-    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-left: 20px;
     flex-direction: column;
-}
-
-.service-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.service-name {
-    flex-grow: 1;
-    text-align: left; /* Alinear texto a la izquierda */
-}
-
-/* Botón 'Aukeratu' más pequeño y alineado a la derecha */
-ion-button.service-button {
-    font-size: 12px; /* Tamaño de fuente más pequeño */
-    padding: 5px 10px; /* Reducción de padding */
-    text-align: left; /* Alinear texto a la izquierda */
-    margin-left: auto; /* Empuja el botón a la derecha */
-    margin-right: 0;
-}
-
-/* Botón "Baieztatu" */
-.footer ion-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 150px;
-    font-size: 18px;
-    --border-radius: 10px;
-    --height: auto;
-}
-
-/* Estilo para las horas debajo de los días */
-.hours ion-row {
+  }
+  
+  ion-datetime {
+    --background: #f4f4f4;
+    --color: #2c39eb;
+    --placeholder-color: #9b9b9b;
     margin-top: 20px;
-}
-
-.hours ion-col {
-    text-align: center;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-}
+    width: 100%;
+  }
+  
+  .zerbitzua {
+    margin-top: 20px;
+    color: #2c39eb;
+    font-size: 16px;
+  }
+  
+  .taldea {
+    margin-top: 20px;
+  }
+  
