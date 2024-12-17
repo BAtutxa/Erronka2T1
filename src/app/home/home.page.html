@@ -1,0 +1,28 @@
+<ion-content [fullscreen]="true" class="no-scroll">
+  <ion-grid class="full-height">
+    <ion-row class="full-height">
+      <!-- Columna de la imagen -->
+      <ion-col size="12" size-md="6" class="image-column full-height">
+        <div class="image-container">
+          <img src="assets/Fotos/tijera.png" alt="Scissors" />
+        </div>
+      </ion-col>
+
+      <!-- Columna del formulario -->
+      <ion-col size="12" size-md="6" class="full-height">
+        <div class="login-container">
+          <h2>Saioa hasi</h2>
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" [(ngModel)]="email"></ion-input> <!-- Binding de ngModel para el email -->
+          </ion-item>
+          <ion-item>
+            <ion-label position="floating">Pasahitza</ion-label>
+            <ion-input type="password" [(ngModel)]="password"></ion-input> <!-- Binding de ngModel para la contraseña -->
+          </ion-item>
+          <ion-button expand="block" color="danger" (click)="login()">Saioa ireki</ion-button> <!-- Llamar a login() -->
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

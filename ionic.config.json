@@ -1,0 +1,7 @@
+{
+  "name": "IleapaindegiaErronka",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
