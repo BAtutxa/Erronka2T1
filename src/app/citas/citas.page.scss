@@ -1,28 +1,46 @@
-
+/* General styles for the layout */
 .info-container {
-    display: flex;
-    height: 100%;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding-left: 20px;
-    flex-direction: column;
-  }
-  
-  ion-datetime {
-    --background: #f4f4f4;
-    --color: #2c39eb;
-    --placeholder-color: #9b9b9b;
-    margin-top: 20px;
-    width: 100%;
-  }
-  
-  .zerbitzua {
-    margin-top: 20px;
-    color: #2c39eb;
-    font-size: 16px;
-  }
-  
-  .taldea {
-    margin-top: 20px;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 20px;
+}
+
+/* Calendar container */
+.calendar-container {
+  flex: 1 1 300px;
+  margin-right: 20px;
+  align-self: flex-start;
+}
+
+ion-datetime {
+  --background: #ffffff;
+  --color: #2c39eb;
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Services container */
+.services-container {
+  flex: 1 1 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Botón por defecto */
+ion-button {
+  margin-left: auto;
+  --border-color: red;
+  --color: red;
+  transition: all 0.3s ease;
+}
+
+/* Botón seleccionado */
+ion-button.selected {
+  --border-color: green;
+  --background: green;
+  --color: white;
+}
+

@@ -1,25 +1,43 @@
-<app-menu> </app-menu>
+<app-menu></app-menu>
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Hitzorduak</ion-title>
+    <ion-title>Gestión de Citas</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content id="main-content">
   <div class="info-container">
-    <div class="taldea"></div>
-    <ion-item>
-      <ion-datetime
-        display-format="DD/MM/YYYY"
-        month-values="1,2,3,4,5,9,10,11,12"
-        hour-values="10,11,12,13,14"
-        minute-values="0,30"
-        [min]="minDate"
-      ></ion-datetime>
-    </ion-item>
-    <div class="zerbitzua"></div>
+    <!-- Calendario -->
+    <div class="calendar-container">
+      <ion-item>
+        <ion-label position="stacked">Selecciona la fecha y hora</ion-label>
+        <ion-datetime
+          min="{{ today }}"
+          display-format="DD MMM YYYY HH:mm"
+          month-values="1,2,3,4,5,9,10,11,12"
+          hour-values="10,11,12,13,14"
+          minute-values="0,30"
+        ></ion-datetime>
+      </ion-item>
+    </div>
+
+    <!-- Servicios -->
+    <div class="services-container">
+      <ion-label position="stacked">Zerbitzua hautatu</ion-label>
+      <ion-item *ngFor="let service of services">
+        <ion-label>{{ service.name }}</ion-label>
+        <ion-button
+          color="danger"
+          fill="outline"
+          [class.selected]="service.selected"
+          (click)="toggleService(service)"
+        >
+          {{ service.selected ? 'Hautatuta' : 'Hautatu' }}
+        </ion-button>
+      </ion-item>
+    </div>
   </div>
 </ion-content>
