@@ -14,7 +14,11 @@ const routes: Routes = [
   {
     path: 'citas',
     loadChildren: () => import('./citas/citas.module').then(m => m.CitasPageModule)
+  },  {
+    path: 'inbentario',
+    loadChildren: () => import('./inbentario/inbentario.module').then( m => m.InbentarioPageModule)
   }
+
 ];
 
 @NgModule({
