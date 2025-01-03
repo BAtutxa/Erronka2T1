@@ -1,17 +1,39 @@
-/* General styles for the layout */
 .info-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: flex-start;
+  gap: 20px;
   margin: 20px;
 }
 
-/* Calendar container */
+.left-section {
+  flex: 1 1 60%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.grupo-container {
+  flex: 1 1 auto;
+}
+
+.grupo-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.grupo-chip {
+  --background: #2c39eb;
+  --color: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
 .calendar-container {
-  flex: 1 1 300px;
-  margin-right: 20px;
-  align-self: flex-start;
+  flex: 1 1 auto;
 }
 
 ion-datetime {
@@ -21,15 +43,13 @@ ion-datetime {
   width: 100%;
 }
 
-/* Services container */
-.services-container {
-  flex: 1 1 300px;
+.right-section {
+  flex: 1 1 35%; 
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-/* Botón por defecto */
 ion-button {
   margin-left: auto;
   --border-color: red;
@@ -37,10 +57,20 @@ ion-button {
   transition: all 0.3s ease;
 }
 
-/* Botón seleccionado */
 ion-button.selected {
   --border-color: green;
   --background: green;
   --color: white;
 }
 
+/* Responsividad */
+@media (max-width: 768px) {
+  .info-container {
+    flex-direction: column;
+  }
+
+  .left-section,
+  .right-section {
+    flex: 1 1 100%; 
+  }
+}

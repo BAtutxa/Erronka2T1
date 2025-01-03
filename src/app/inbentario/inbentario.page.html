@@ -8,10 +8,33 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">inbentario</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <div class="search-container">
+    <ion-searchbar placeholder="Buscar productos"></ion-searchbar>
+  </div>
+  <div class="product-grid">
+    <!-- Ejemplo de productos -->
+    <div class="product-card">
+      <img src="assets/producto1.jpg" alt="Producto 1">
+      <h3>Producto 1</h3>
+    </div>
+    <div class="product-card">
+      <img src="assets/producto2.jpg" alt="Producto 2">
+      <h3>Producto 2</h3>
+    </div>
+    <div class="product-card">
+      <img src="assets/producto3.jpg" alt="Producto 3">
+      <h3>Producto 3</h3>
+    </div>
+    <div class="product-card">
+      <img src="assets/producto4.jpg" alt="Producto 4">
+      <h3>Producto 4</h3>
+    </div>
+    <!-- Ejemplo de un solo producto -->
+    <div class="product-card">
+      <img src="assets/producto5.jpg" alt="Producto 5">
+      <h3>Producto 5</h3>
+    </div>
+    
+  </div>
 </ion-content>

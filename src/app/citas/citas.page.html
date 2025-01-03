@@ -10,22 +10,35 @@
 
 <ion-content id="main-content">
   <div class="info-container">
-    <!-- Calendario -->
-    <div class="calendar-container">
-      <ion-item>
-        <ion-label position="stacked">Selecciona la fecha y hora</ion-label>
-        <ion-datetime
-          min="{{ today }}"
-          display-format="DD MMM YYYY HH:mm"
-          month-values="1,2,3,4,5,9,10,11,12"
-          hour-values="10,11,12,13,14"
-          minute-values="0,30"
-        ></ion-datetime>
-      </ion-item>
+    <div class="left-section">
+      <div class="grupo-container">
+        <ion-item>
+          <ion-label position="stacked">Grupo Asignado</ion-label>
+          <div class="grupo-info">
+            <ion-chip color="secondary" class="grupo-chip">
+              <ion-label>Grupo A</ion-label>
+            </ion-chip>
+          </div>
+        </ion-item>
+      </div>
+
+      <!-- Calendario -->
+      <div class="calendar-container">
+        <ion-item>
+          <ion-label position="stacked">Selecciona la fecha y hora</ion-label>
+          <ion-datetime
+            min="{{ today }}"
+            display-format="DD MMM YYYY HH:mm"
+            month-values="1,2,3,4,5,9,10,11,12"
+            hour-values="10,11,12,13,14"
+            minute-values="0,30"
+          ></ion-datetime>
+        </ion-item>
+      </div>
     </div>
 
     <!-- Servicios -->
-    <div class="services-container">
+    <div class="right-section services-container">
       <ion-label position="stacked">Zerbitzua hautatu</ion-label>
       <ion-item *ngFor="let service of services">
         <ion-label>{{ service.name }}</ion-label>

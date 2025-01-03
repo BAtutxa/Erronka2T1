@@ -1,0 +1,52 @@
+.search-container {
+    padding: 10px;
+    background-color: #f4f4f4;
+  }
+  
+  ion-searchbar {
+    --background: #ffffff;
+    --border-radius: 8px;
+    --placeholder-color: #888888;
+    --color: #333333;
+  }
+  
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Siempre muestra 4 columnas */
+    gap: 15px;
+    padding: 15px;
+    background-color: #f8f8f8;
+  
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr); /* Cambia a 2 columnas en pantallas pequeñas */
+    }
+  
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr; /* Cambia a 1 columna en pantallas muy pequeñas */
+    }
+  }
+  
+  .product-card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    padding: 10px;
+    width: 100%; /* Ajusta al tamaño de la columna */
+  }
+  
+  .product-card img {
+    max-width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+  }
+  
+  .product-card h3 {
+    font-size: 16px;
+    color: #333;
+    margin: 10px 0 0;
+  }
+  
