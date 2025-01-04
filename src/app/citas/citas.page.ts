@@ -26,4 +26,6 @@ export class CitasPage {
   toggleService(service: any): void {
     service.selected = !service.selected;
   }
+
+  
 }
