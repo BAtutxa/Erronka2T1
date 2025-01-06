@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
+import { Component} from '@angular/core';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -8,8 +6,7 @@ import { MenuController } from '@ionic/angular';
 })
 export class MenuComponent  {
 
-  constructor(private menuCtrl: MenuController) {
-    // Asegúrate de habilitar el menú
-    this.menuCtrl.enable(true);
+  constructor() {
+
   }
 }

@@ -14,13 +14,22 @@
           <h2>Saioa hasi</h2>
           <ion-item>
             <ion-label position="floating">Email</ion-label>
-            <ion-input type="email" [(ngModel)]="email"></ion-input> <!-- Binding de ngModel para el email -->
+            <ion-input type="email" [(ngModel)]="email"></ion-input>
           </ion-item>
+          <!-- Mensaje de error debajo del campo email -->
+          <div *ngIf="emailError" class="error-message">{{ emailError }}</div>
+
           <ion-item>
             <ion-label position="floating">Pasahitza</ion-label>
-            <ion-input type="password" [(ngModel)]="password"></ion-input> <!-- Binding de ngModel para la contraseña -->
+            <ion-input type="password" [(ngModel)]="password"></ion-input>
           </ion-item>
-          <ion-button expand="block" color="danger" (click)="login()">Saioa ireki</ion-button> <!-- Llamar a login() -->
+          <!-- Mensaje de error debajo del campo password -->
+          <div *ngIf="passwordError" class="error-message">{{ passwordError }}</div>
+
+          <ion-button expand="block" color="danger" (click)="login()">Saioa ireki</ion-button>
+
+          <!-- Mensaje de error debajo del botón si las credenciales son incorrectas -->
+          <div *ngIf="passError" class="error-message">{{ passError }}</div>
         </div>
       </ion-col>
     </ion-row>
