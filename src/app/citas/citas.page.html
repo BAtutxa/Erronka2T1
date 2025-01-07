@@ -38,6 +38,7 @@
               month-values="1,2,3,4,5,9,10,11,12"
               hour-values="10,11,12,13,14"
               minute-values="0,30"
+              (ionChange)="onDateChange($event)"
             ></ion-datetime>
           </ion-card-content>
         </ion-card>
@@ -56,13 +57,19 @@
                 <ion-checkbox
                   slot="end"
                   [(ngModel)]="service.selected"
+                  (ionChange)="toggleService(service)"
                 ></ion-checkbox>
               </ion-item>
             </ion-list>
+            <div *ngIf="showErrorMessage" class="error-message">
+              <p>Por favor, selecciona al menos un servicio y una fecha y hora.</p>
+            </div>
           </ion-card-content>
         </ion-card>
+        <ion-button [disabled]="isButtonDisabled()" (click)="onSubmit()">
+          <span> Baieztatu </span>
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
-  
 </ion-content>
