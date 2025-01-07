@@ -8,30 +8,52 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [fullscreen]="true">
   <div class="search-container">
-    <ion-searchbar placeholder="Buscar productos"></ion-searchbar>
-    <ion-button class="add-product-btn" shape="round">+</ion-button>
-  </div>
-  <div class="product-grid">
-    <!-- Lista de productos -->
-    <div
-      class="product-card"
-      *ngFor="let product of products"
-      (click)="showProductDetails(product)"
-    >
-      <img [src]="product.image" [alt]="product.name" />
-      <h3>{{ product.name }}</h3>
-    </div>
+    <ion-searchbar
+      placeholder="Buscar productos"
+      (ionInput)="filterProducts($event)"
+    ></ion-searchbar>
+    <ion-button class="add-product-btn" shape="round" (click)="addProduct()">
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-button>
   </div>
 
-  <!-- Detalles del producto -->
-  <div
-    class="product-details"
-    *ngIf="selectedProduct"
-  >
-    <h2>{{ selectedProduct.name }}</h2>
-    <p>{{ selectedProduct.description }}</p>
-    <ion-button (click)="closeProductDetails()">Itxi</ion-button>
+  <div class="product-grid">
+    <ng-container *ngIf="filteredProducts.length; else noProducts">
+      <ion-card
+        class="product-card"
+        *ngFor="let product of filteredProducts"
+        (click)="showProductDetails(product)"
+      >
+        <img [src]="product.image" [alt]="product.name" />
+        <ion-card-header>
+          <ion-card-title>{{ product.name }}</ion-card-title>
+        </ion-card-header>
+      </ion-card>
+    </ng-container>
+    <ng-template #noProducts>
+      <p class="no-products">No hay productos disponibles.</p>
+    </ng-template>
   </div>
+
+  <ion-modal isOpen="{{ !!selectedProduct }}">
+    <ng-container *ngIf="selectedProduct">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ selectedProduct.name }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeProductDetails()">
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="product-details">
+          <p>{{ selectedProduct.description }}</p>
+        </div>
+      </ion-content>
+    </ng-container>
+  </ion-modal>
 </ion-content>

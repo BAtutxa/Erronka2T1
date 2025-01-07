@@ -12,16 +12,17 @@
       <ion-col size="12" size-md="6" class="full-height">
         <div class="login-container">
           <h2>Saioa hasi</h2>
+          
           <ion-item>
             <ion-label position="floating">Email</ion-label>
-            <ion-input type="email" [(ngModel)]="email"></ion-input>
+            <ion-input type="email" [(ngModel)]="email" required></ion-input>
           </ion-item>
           <!-- Mensaje de error debajo del campo email -->
           <div *ngIf="emailError" class="error-message">{{ emailError }}</div>
 
           <ion-item>
             <ion-label position="floating">Pasahitza</ion-label>
-            <ion-input type="password" [(ngModel)]="password"></ion-input>
+            <ion-input type="password" [(ngModel)]="password" required></ion-input>
           </ion-item>
           <!-- Mensaje de error debajo del campo password -->
           <div *ngIf="passwordError" class="error-message">{{ passwordError }}</div>
