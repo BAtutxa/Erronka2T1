@@ -4,14 +4,14 @@ ion-grid {
 }
 
 /* Sección izquierda */
-.left-section {
+ion-col.left-section {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
 /* Sección derecha */
-.right-section {
+ion-col.right-section {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -32,11 +32,21 @@ ion-datetime {
   width: 100%;
 }
 
+/* Mensaje de error */
 .error-message {
   color: red;
   font-size: 14px;
   margin-top: 10px;
 }
 
+/* Botón de confirmación */
+ion-button[disabled] {
+  opacity: 0.6;
+}
 
-
+/* Ajuste de imagen de cerrar sesión */
+.menu-items ion-item img {
+  width: 24px;
+  height: auto;
+  margin-right: 15px;
+}

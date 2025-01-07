@@ -1,18 +1,25 @@
 <app-menu></app-menu>
+
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Gestión de Citas</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <img src="assets/Fotos/garbi.png" alt="Cerrar Sesion" />
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content id="main-content">
   <ion-grid>
     <ion-row>
       <!-- Sección izquierda: Grupo y Calendario -->
-      <ion-col size="12" size-md="8" class="left-section">
+      <ion-col size="12" size-md="8">
         <!-- Información del grupo -->
         <ion-card>
           <ion-card-header>
@@ -24,7 +31,7 @@
             </ion-chip>
           </ion-card-content>
         </ion-card>
-  
+
         <!-- Calendario -->
         <ion-card>
           <ion-card-header>
@@ -43,9 +50,9 @@
           </ion-card-content>
         </ion-card>
       </ion-col>
-  
+
       <!-- Sección derecha: Servicios -->
-      <ion-col size="12" size-md="4" class="right-section">
+      <ion-col size="12" size-md="4">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Zerbitzua hautatu</ion-card-title>
@@ -67,7 +74,7 @@
           </ion-card-content>
         </ion-card>
         <ion-button [disabled]="isButtonDisabled()" (click)="onSubmit()">
-          <span> Baieztatu </span>
+          <span>Baieztatu</span>
         </ion-button>
       </ion-col>
     </ion-row>

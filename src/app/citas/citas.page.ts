@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-citas',
   templateUrl: './citas.page.html',
@@ -16,18 +16,24 @@ export class CitasPage {
   ];
   showErrorMessage = false; // Controla la visibilidad del mensaje de error
 
-  constructor() {
+  constructor(private router: Router) {
     // Configuración de la fecha mínima
     this.today = new Date().toISOString();
   }
+  
 
+  // Método para cerrar sesión
+  logout(): void {
+    // Aquí debes añadir tu lógica de cierre de sesión, por ejemplo, eliminar datos de sesión o JWT
+    // Después de eso, redirigir al usuario a la página de login
+    this.router.navigate(['/home']);
+  }
   /**
    * Verifica si el botón "Baieztatu" debe estar habilitado.
    * El botón se habilita si al menos un servicio está seleccionado y la fecha y hora están definidas.
    */
   isButtonDisabled(): boolean {
-    const isServiceSelected = this.services.some(service => service.selected);
-    return !isServiceSelected || !this.selectedDate; // El botón estará deshabilitado si no hay servicio seleccionado o no hay fecha/hora
+    return !(this.services.some(service => service.selected) && this.selectedDate);
   }
 
   /**
@@ -35,12 +41,12 @@ export class CitasPage {
    * Muestra el mensaje de error si los campos no están correctamente llenados.
    */
   onSubmit(): void {
-    const isServiceSelected = this.services.some(service => service.selected);
-    if (!isServiceSelected || !this.selectedDate) {
+    if (!this.selectedDate || !this.services.some(service => service.selected)) {
       this.showErrorMessage = true; // Muestra el mensaje de error si falta completar algo
     } else {
       // Aquí puedes proceder con la lógica para confirmar la cita
       console.log('Cita confirmada');
+      this.showErrorMessage = false;
     }
   }
 
