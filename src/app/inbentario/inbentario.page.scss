@@ -63,3 +63,8 @@ ion-searchbar {
   font-size: 16px;
   padding: 20px;
 }
+ion-button img {
+  width: 30px; /* Reducido el ancho */
+  height: auto; /* Mantener proporción */
+  margin-right: 15px; /* Opcional: ajustar el margen */
+}

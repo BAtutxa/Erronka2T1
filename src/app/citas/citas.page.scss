@@ -45,8 +45,8 @@ ion-button[disabled] {
 }
 
 /* Ajuste de imagen de cerrar sesión */
-.menu-items ion-item img {
-  width: 24px;
-  height: auto;
-  margin-right: 15px;
+ion-button img {
+  width: 30px; /* Reducido el ancho */
+  height: auto; /* Mantener proporción */
+  margin-right: 15px; /* Opcional: ajustar el margen */
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { MenuController } from '@ionic/angular';
-
+import { MenuController,AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-inbentario',
   templateUrl: './inbentario.page.html',
@@ -18,7 +18,7 @@ export class InbentarioPage {
   filteredProducts = [...this.products];
   selectedProduct: any = null;
 
-  constructor(private menuCtrl: MenuController) {}
+  constructor(private menuCtrl: MenuController, private router: Router, private alertController: AlertController) {}
 
   ionViewWillEnter() {
     this.menuCtrl.enable(true);
@@ -47,4 +47,35 @@ export class InbentarioPage {
     console.log('Agregar producto: función no implementada');
     // Aquí puedes implementar la lógica para agregar un nuevo producto
   }
+
+  async presentLogoutAlert(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Confirmación',
+      message: '¿Estás seguro de que quieres cerrar sesión?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Cerrar sesión',
+          handler: () => {
+            this.logout();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  /**
+   * Lógica de cierre de sesión.
+   */
+  logout(): void {
+    // Añade aquí la lógica de cierre de sesión, como borrar datos de sesión
+    this.router.navigate(['/home']);
+  }
+
 }

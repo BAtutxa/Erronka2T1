@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
+
 @Component({
   selector: 'app-citas',
   templateUrl: './citas.page.html',
@@ -16,35 +18,58 @@ export class CitasPage {
   ];
   showErrorMessage = false; // Controla la visibilidad del mensaje de error
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private alertController: AlertController) {
     // Configuración de la fecha mínima
     this.today = new Date().toISOString();
   }
-  
 
-  // Método para cerrar sesión
+  /**
+   * Muestra un cuadro de diálogo para confirmar el cierre de sesión.
+   */
+  async presentLogoutAlert(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Confirmación',
+      message: '¿Estás seguro de que quieres cerrar sesión?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+        },
+        {
+          text: 'Cerrar sesión',
+          handler: () => {
+            this.logout();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  /**
+   * Lógica de cierre de sesión.
+   */
   logout(): void {
-    // Aquí debes añadir tu lógica de cierre de sesión, por ejemplo, eliminar datos de sesión o JWT
-    // Después de eso, redirigir al usuario a la página de login
+    // Añade aquí la lógica de cierre de sesión, como borrar datos de sesión
     this.router.navigate(['/home']);
   }
+
   /**
    * Verifica si el botón "Baieztatu" debe estar habilitado.
-   * El botón se habilita si al menos un servicio está seleccionado y la fecha y hora están definidas.
    */
   isButtonDisabled(): boolean {
-    return !(this.services.some(service => service.selected) && this.selectedDate);
+    return !(this.services.some((service) => service.selected) && this.selectedDate);
   }
 
   /**
    * Maneja el evento de clic en el botón "Baieztatu".
-   * Muestra el mensaje de error si los campos no están correctamente llenados.
    */
   onSubmit(): void {
-    if (!this.selectedDate || !this.services.some(service => service.selected)) {
-      this.showErrorMessage = true; // Muestra el mensaje de error si falta completar algo
+    if (!this.selectedDate || !this.services.some((service) => service.selected)) {
+      this.showErrorMessage = true;
     } else {
-      // Aquí puedes proceder con la lógica para confirmar la cita
       console.log('Cita confirmada');
       this.showErrorMessage = false;
     }
@@ -52,7 +77,6 @@ export class CitasPage {
 
   /**
    * Alterna el estado seleccionado de un servicio.
-   * @param service El servicio a modificar.
    */
   toggleService(service: { name: string; selected: boolean }): void {
     service.selected = !service.selected;
@@ -60,10 +84,9 @@ export class CitasPage {
 
   /**
    * Maneja cambios en la fecha seleccionada.
-   * @param event El evento que contiene la nueva fecha seleccionada.
    */
   onDateChange(event: any): void {
-    this.selectedDate = event.detail.value; // Asignamos el valor de la fecha seleccionada
+    this.selectedDate = event.detail.value;
     console.log('Fecha seleccionada:', this.selectedDate);
   }
 }
