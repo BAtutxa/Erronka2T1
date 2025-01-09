@@ -1,0 +1,63 @@
+<app-menu></app-menu>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Gestión de Grupos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentLogoutAlert()">
+        <img src="assets/Fotos/garbi.png" alt="Cerrar Sesión" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="group-grid">
+    <ng-container *ngIf="groups.length; else noGroupsTemplate">
+      <ion-card
+        class="group-card"
+        *ngFor="let group of groups"
+        (click)="showGroupDetails(group)"
+      >
+        <ion-card-header>
+          <ion-card-title>{{ group.name }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>{{ group.description }}</ion-card-content>
+      </ion-card>
+    </ng-container>
+    <ion-button
+      class="add-group-btn"
+      shape="round"
+      (click)="addGroup()"
+    >
+    <ion-icon name="add-circle-outline"></ion-icon>
+    <span> + </span>
+    </ion-button>
+  </div>
+
+  <ng-template #noGroupsTemplate>
+    <div class="no-groups">No hay grupos disponibles.</div>
+  </ng-template>
+
+  <ion-modal isOpen="{{ !!selectedGroup }}">
+    <ng-container *ngIf="selectedGroup">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ selectedGroup.name }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="closeGroupDetails()">
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <div class="group-details">
+          <p>{{ selectedGroup.description }}</p>
+        </div>
+      </ion-content>
+    </ng-container>
+  </ion-modal>
+</ion-content>

@@ -1,0 +1,58 @@
+.group-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    padding: 15px;
+    background-color: var(--ion-color-light);
+  }
+  
+  .group-card {
+    background-color: var(--ion-color-light);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .group-card:hover {
+    transform: scale(1.05);
+  }
+  
+  .no-groups {
+    text-align: center;
+    color: var(--ion-color-medium);
+    font-size: 16px;
+    padding: 20px;
+  }
+  
+  .group-details {
+    padding: 15px;
+    font-size: 16px;
+    color: var(--ion-color-dark);
+  }
+  
+  .add-group-btn {
+    margin: 20px auto;
+    width: 48px;
+    height: 48px;
+    --border-radius: 50%;
+    --background: var(--ion-color-success);
+    --color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-group-btn:hover {
+    --background: var(--ion-color-success-shade);
+  }
+  
+  ion-button img {
+    width: 30px;
+    height: auto;
+    margin-right: 15px;
+  }
+  

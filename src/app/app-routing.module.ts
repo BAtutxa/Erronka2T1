@@ -17,6 +17,10 @@ const routes: Routes = [
   },  {
     path: 'inbentario',
     loadChildren: () => import('./inbentario/inbentario.module').then( m => m.InbentarioPageModule)
+  },
+  {
+    path: 'grupos',
+    loadChildren: () => import('./grupos/grupos.module').then( m => m.GruposPageModule)
   }
 
 ];
