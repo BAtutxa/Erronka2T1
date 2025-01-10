@@ -7,31 +7,19 @@
       </div>
     </ion-toolbar>
   </ion-header>
+
   <ion-content>
     <div class="menu-items">
-      <ion-item button [routerLink]="['/citas']" routerLinkActive="active" class="menu-item">
-        <img src="assets/Fotos/citas.png" alt="Hitzorduak" />
-        <span>Hitzorduak</span>
-      </ion-item>
-      <ion-item button [routerLink]="['/inbentario']" routerLinkActive="active" class="menu-item">
-        <img src="assets/Fotos/inbentario.png" alt="Inbentario" />
-        <span>Inbentario</span>
-      </ion-item>
-      <ion-item button [routerLink]="['/grupos']" routerLinkActive="active" class="menu-item">
-        <img src="assets/Fotos/equipo.png" alt="Taldeak" />
-        <span>Taldeak</span>
-      </ion-item>
-      <ion-item button [routerLink]="['/asistentzia']" routerLinkActive="active" class="menu-item">
-        <img src="assets/Fotos/asist.png" alt="Asistentzia" />
-        <span>Asistentzia</span>
-      </ion-item>
-      <ion-item button [routerLink]="['/ticket']" routerLinkActive="active" class="menu-item">
-        <img src="assets/Fotos/recibo.png" alt="Ticket" />
-        <span>Ticket</span>
-      </ion-item>
-      <ion-item button [routerLink]="['/garbiketa']" routerLinkActive="active" class="menu-item">
-        <img src="assets/Fotos/garbi.png" alt="Garbiketa" />
-        <span>Garbiketa</span>
+      <ion-item
+        *ngFor="let item of menuItems"
+        button
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="menu-item"
+        role="menuitem"
+      >
+        <img [src]="item.icon" alt="{{ item.label }}" />
+        <span>{{ item.label }}</span>
       </ion-item>
     </div>
   </ion-content>
