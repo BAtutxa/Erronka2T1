@@ -1,0 +1,61 @@
+/* General Reset y Optimización */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Estilo del Título */
+.title {
+  font-size: 30px;
+  font-weight: bold;
+  padding-left: 20px;
+  margin-top: 20px;
+}
+
+/* Contenedor del formulario */
+.form-container {
+  display: flex; /* Organiza las columnas horizontalmente */
+  justify-content: space-between; 
+  padding: 20px;
+}
+
+/* Estilo para las columnas */
+.column {
+  width: 48%; /* Ocupa casi la mitad del espacio disponible */
+}
+
+/* Fila del formulario */
+.form-row {
+  margin-bottom: 25px; /* Aumentado el espacio entre filas */
+}
+
+/* Estilo de los labels */
+label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 10px; /* Más espacio debajo del label */
+  color: #333;
+}
+
+/* Estilo del ion-input */
+ion-input {
+  width: 100%; /* Ocupa el 100% del ancho disponible */
+  padding: 14px; /* Aumentado el padding dentro del input */
+  border: 2px solid #ccc; /* Borde gris alrededor del input */
+  border-radius: 8px; /* Esquinas redondeadas */
+  background-color: #f9f9f9; /* Fondo ligeramente gris */
+}
+
+/* Estilo cuando el input está enfocado */
+ion-input:focus {
+  border-color: #3b97e3; /* Borde azul cuando el input está en foco */
+  background-color: #fff; /* Fondo blanco cuando el input está enfocado */
+}
+
+/* Estilo de la imagen en el botón */
+ion-button img {
+  width: 30px;
+  height: auto;
+  margin-right: 15px;
+}

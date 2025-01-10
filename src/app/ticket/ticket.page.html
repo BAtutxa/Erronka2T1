@@ -1,0 +1,69 @@
+<app-menu></app-menu>
+
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Ticket</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentLogoutAlert()">
+        <img src="assets/Fotos/garbi.png" alt="Cerrar Sesión" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <!-- Título -->
+  <h1 class="title">Sortu Ticket bat:</h1>
+
+  <!-- Formulario con columnas -->
+  <div class="form-container">
+    <div class="column">
+      <div class="form-row">
+        <label for="input1">Label 1</label>
+        <ion-input id="input1" placeholder="Escribe algo"></ion-input>
+      </div>
+      <div class="form-row">
+        <label for="input2">Label 2</label>
+        <ion-input id="input2" placeholder="Escribe algo"></ion-input>
+      </div>
+      <div class="form-row">
+        <label for="input3">Label 3</label>
+        <ion-input id="input3" placeholder="Escribe algo"></ion-input>
+      </div>
+      <div class="form-row">
+        <label for="input4">Label 4</label>
+        <ion-input id="input4" placeholder="Escribe algo"></ion-input>
+      </div>
+      <div class="form-row">
+        <label for="input5">Label 5</label>
+        <ion-input id="input5" placeholder="Escribe algo"></ion-input>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="form-row">
+        <label for="input6">Label 6</label>
+        <ion-input id="input6" placeholder="Escribe algo"></ion-input>
+      </div>
+      <div class="form-row">
+        <label for="input7">Label 7</label>
+        <ion-input id="input7" placeholder="Escribe algo"></ion-input>
+      </div>
+      <div class="form-row">
+        <label for="input8">Label 8</label>
+        <ion-input id="input8" placeholder="Escribe algo"></ion-input>
+      </div>
+      <div class="form-row">
+        <label for="input9">Label 9</label>
+        <ion-input id="input9" placeholder="Escribe algo"></ion-input>
+      </div>
+      <div class="form-row">
+        <label for="input10">Label 10</label>
+        <ion-input id="input10" placeholder="Escribe algo"></ion-input>
+      </div>
+    </div>
+  </div>
+</ion-content>
