@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { jsPDF } from 'jspdf';
+
 
 @Component({
   selector: 'app-ticket',
@@ -35,5 +37,11 @@ export class TicketPage {
 
   logout(): void {
     this.router.navigate(['/home']); // Navegar a la página de inicio (puedes cambiar la ruta según tu aplicación)
+  }
+
+ sortuPDF(){
+  const pdf = new jsPDF();
+
+  
   }
 }

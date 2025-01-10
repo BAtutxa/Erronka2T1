@@ -7,7 +7,7 @@
     </ion-buttons>
     <ion-title>Ticket</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="presentLogoutAlert()">
+      <ion-button>
         <img src="assets/Fotos/garbi.png" alt="Cerrar Sesión" />
       </ion-button>
     </ion-buttons>
@@ -22,48 +22,53 @@
   <div class="form-container">
     <div class="column">
       <div class="form-row">
-        <label for="input1">Label 1</label>
-        <ion-input id="input1" placeholder="Escribe algo"></ion-input>
+        <label for="input1">Bezero mota:</label>
+        <ion-input id="input1" type="text" placeholder="Idatzi zerbait"></ion-input>
       </div>
       <div class="form-row">
-        <label for="input2">Label 2</label>
-        <ion-input id="input2" placeholder="Escribe algo"></ion-input>
+        <label for="input2">Bezeroa: </label>
+        <ion-input id="input2" type="text" placeholder="Idatzi zerbait"></ion-input>
       </div>
       <div class="form-row">
-        <label for="input3">Label 3</label>
-        <ion-input id="input3" placeholder="Escribe algo"></ion-input>
+        <label for="input3">Ticket data:</label>
+        <ion-input id="input3" type="date" ></ion-input>
       </div>
       <div class="form-row">
-        <label for="input4">Label 4</label>
-        <ion-input id="input4" placeholder="Escribe algo"></ion-input>
+        <label for="input4">Zenbatekoa:</label>
+        <ion-input id="input4" type="number" placeholder="Idatzi zerbait"></ion-input>
       </div>
       <div class="form-row">
-        <label for="input5">Label 5</label>
-        <ion-input id="input5" placeholder="Escribe algo"></ion-input>
+        <label for="input5">Ordaindu duena:</label>
+        <ion-input id="input5" type="number" placeholder="Idatzi zerbait"></ion-input>
       </div>
     </div>
 
     <div class="column">
       <div class="form-row">
-        <label for="input6">Label 6</label>
-        <ion-input id="input6" placeholder="Escribe algo"></ion-input>
+        <label for="input6">Nork moztu dio:</label>
+        <ion-input id="input6" type="text" placeholder="Idatzi zerbait"></ion-input>
       </div>
       <div class="form-row">
-        <label for="input7">Label 7</label>
-        <ion-input id="input7" placeholder="Escribe algo"></ion-input>
+        <label for="input7">Ile mozketa:</label>
+        <ion-input id="input7" type="text" placeholder="Idatzi zerbait"></ion-input>
       </div>
       <div class="form-row">
-        <label for="input8">Label 8</label>
-        <ion-input id="input8" placeholder="Escribe algo"></ion-input>
+        <label for="input8">Ticket zenbakia:</label>
+        <ion-input id="input8" type="number" placeholder="Idatzi zerbait"></ion-input>
       </div>
       <div class="form-row">
-        <label for="input9">Label 9</label>
-        <ion-input id="input9" placeholder="Escribe algo"></ion-input>
+        <label for="input9">Nola ordaindu du:</label>
+        <ion-input id="input9" type="number" placeholder="Idatzi zerbait"></ion-input>
       </div>
       <div class="form-row">
-        <label for="input10">Label 10</label>
-        <ion-input id="input10" placeholder="Escribe algo"></ion-input>
+        <label for="input10">Bueltak:</label>
+        <ion-input id="input10" type="number" placeholder="Idatzi zerbait"></ion-input>
       </div>
     </div>
+  </div>
+
+  <!-- Botón "Sortu" al final, dentro del flujo normal -->
+  <div class="button-container">
+    <ion-button expand="full" (click)="sortuPDF() ">Sortu</ion-button>
   </div>
 </ion-content>

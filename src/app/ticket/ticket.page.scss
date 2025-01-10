@@ -40,6 +40,7 @@ label {
 
 /* Estilo del ion-input */
 ion-input {
+    
   width: 100%; /* Ocupa el 100% del ancho disponible */
   padding: 14px; /* Aumentado el padding dentro del input */
   border: 2px solid #ccc; /* Borde gris alrededor del input */
@@ -59,3 +60,12 @@ ion-button img {
   height: auto;
   margin-right: 15px;
 }
+
+ion-button {
+    width: 100%; /* El botón ocupará todo el ancho disponible */
+    max-width: 300px; /* Limitar el tamaño máximo del botón */
+    margin: 0 auto; /* Centrar el botón */
+    border-radius: 50px; /* Bordes redondeados */
+    background-color: #3b97e3; /* Color de fondo */
+  }
+  
