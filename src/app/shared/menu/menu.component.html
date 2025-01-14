@@ -1,3 +1,16 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{titulo}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentLogoutAlert()">
+        <img src="assets/Fotos/SaioaItxi.png" alt="Cerrar Sesión" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 <ion-menu content-id="main-content" side="start">
   <ion-header>
     <ion-toolbar color="primary">
@@ -17,6 +30,7 @@
         routerLinkActive="active"
         class="menu-item"
         role="menuitem"
+        
       >
         <img [src]="item.icon" alt="{{ item.label }}" />
         <span>{{ item.label }}</span>

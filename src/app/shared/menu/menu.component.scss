@@ -1,3 +1,8 @@
+ion-button img {
+  width: 30px; /* Reducido el ancho */
+  height: auto; /* Mantener proporción */
+  margin-right: 15px; /* Opcional: ajustar el margen */
+}
 :host {
   --primary-color: #2c39eb;
   --hover-color: #3b4a92;

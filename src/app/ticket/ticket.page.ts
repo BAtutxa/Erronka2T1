@@ -23,31 +23,7 @@ export class TicketPage {
 
   constructor(private router: Router, private alertController: AlertController) { }
 
-  async presentLogoutAlert(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'Confirmación',
-      message: '¿Estás seguro de que quieres cerrar sesión?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
-        {
-          text: 'Cerrar sesión',
-          handler: () => {
-            this.logout(); // Llamada al método logout cuando el usuario confirma
-          },
-        },
-      ],
-    });
-
-    await alert.present();
-  }
-
-  logout(): void {
-    this.router.navigate(['/home']);
-  }
+  
 
   calcularVuelta(): void {
     if (this.ticket.pagado && this.ticket.precio) {

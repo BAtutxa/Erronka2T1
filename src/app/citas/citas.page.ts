@@ -23,38 +23,7 @@ export class CitasPage {
     this.today = new Date().toISOString();
   }
 
-  /**
-   * Muestra un cuadro de diálogo para confirmar el cierre de sesión.
-   */
-  async presentLogoutAlert(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'Confirmación',
-      message: '¿Estás seguro de que quieres cerrar sesión?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
-        {
-          text: 'Cerrar sesión',
-          handler: () => {
-            this.logout();
-          },
-        },
-      ],
-    });
-
-    await alert.present();
-  }
-
-  /**
-   * Lógica de cierre de sesión.
-   */
-  logout(): void {
-    // Añade aquí la lógica de cierre de sesión, como borrar datos de sesión
-    this.router.navigate(['/home']);
-  }
+  
 
   /**
    * Verifica si el botón "Baieztatu" debe estar habilitado.

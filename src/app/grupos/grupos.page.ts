@@ -45,29 +45,4 @@ export class GruposPage {
     // Implementar lógica para agregar grupos en el futuro
   }
 
-  async presentLogoutAlert(): Promise<void> {
-    const alert = await this.alertController.create({
-      header: 'Confirmación',
-      message: '¿Estás seguro de que quieres cerrar sesión?',
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-        },
-        {
-          text: 'Cerrar sesión',
-          handler: () => {
-            this.logout();
-          },
-        },
-      ],
-    });
-
-    await alert.present();
-  }
-
-  logout(): void {
-    this.router.navigate(['/home']);
-  }
 }
