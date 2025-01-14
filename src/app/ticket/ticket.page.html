@@ -1,13 +1,11 @@
-<app-menu></app-menu>
-
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Ticket</ion-title>
+    <ion-title>Ticket de Peluquería</ion-title>
     <ion-buttons slot="end">
-      <ion-button>
+      <ion-button (click)="presentLogoutAlert()">
         <img src="assets/Fotos/garbi.png" alt="Cerrar Sesión" />
       </ion-button>
     </ion-buttons>
@@ -15,60 +13,62 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Título -->
-  <h1 class="title">Sortu Ticket bat:</h1>
+  <h1 class="title">Crear Ticket de Cita</h1>
 
-  <!-- Formulario con columnas -->
-  <div class="form-container">
-    <div class="column">
-      <div class="form-row">
-        <label for="input1">Bezero mota:</label>
-        <ion-input id="input1" type="text" placeholder="Idatzi zerbait"></ion-input>
+  <!-- Formulario de la cita -->
+  <form #ticketForm="ngForm" (ngSubmit)="sortuPDF(ticketForm)">
+    <div class="form-container">
+      <div class="column">
+        <div class="form-row">
+          <label for="cliente">Cliente:</label>
+          <ion-input id="cliente" type="text" placeholder="Nombre del cliente" [(ngModel)]="ticket.cliente" name="cliente" required></ion-input>
+        </div>
+        <div class="form-row">
+          <label for="fecha">Fecha de la cita:</label>
+          <ion-input id="fecha" type="date" [(ngModel)]="ticket.fecha" name="fecha" required></ion-input>
+        </div>
+        <div class="form-row">
+          <label for="hora">Hora de la cita:</label>
+          <ion-input id="hora" type="time" [(ngModel)]="ticket.hora" name="hora" required></ion-input>
+        </div>
+        <div class="form-row">
+          <label for="servicio">Servicio:</label>
+          <ion-select id="servicio" [(ngModel)]="ticket.servicio" name="servicio" placeholder="Selecciona un servicio" required>
+            <ion-select-option value="corte">Corte de pelo</ion-select-option>
+            <ion-select-option value="color">Coloración</ion-select-option>
+            <ion-select-option value="peinado">Peinado</ion-select-option>
+            <ion-select-option value="otros">Otros</ion-select-option>
+          </ion-select>
+        </div>
       </div>
-      <div class="form-row">
-        <label for="input2">Bezeroa: </label>
-        <ion-input id="input2" type="text" placeholder="Idatzi zerbait"></ion-input>
-      </div>
-      <div class="form-row">
-        <label for="input3">Ticket data:</label>
-        <ion-input id="input3" type="date" ></ion-input>
-      </div>
-      <div class="form-row">
-        <label for="input4">Zenbatekoa:</label>
-        <ion-input id="input4" type="number" placeholder="Idatzi zerbait"></ion-input>
-      </div>
-      <div class="form-row">
-        <label for="input5">Ordaindu duena:</label>
-        <ion-input id="input5" type="number" placeholder="Idatzi zerbait"></ion-input>
+  
+      <div class="column">
+        <div class="form-row">
+          <label for="precio">Precio:</label>
+          <ion-input id="precio" type="number" placeholder="Precio del servicio" [(ngModel)]="ticket.precio" name="precio" required></ion-input>
+        </div>
+        <div class="form-row">
+          <label for="pagado">Monto Pagado:</label>
+          <ion-input id="pagado" type="number" placeholder="Monto pagado" [(ngModel)]="ticket.pagado" name="pagado" (ionBlur)="calcularVuelta()" required></ion-input>
+        </div>
+        <div class="form-row">
+          <label for="vueltas">Vueltas:</label>
+          <ion-input id="vueltas" type="number" [value]="ticket.vueltas" readonly></ion-input>
+        </div>
+        <div class="form-row">
+          <label for="metodoPago">Método de Pago:</label>
+          <ion-select id="metodoPago" [(ngModel)]="ticket.metodoPago" name="metodoPago" placeholder="Selecciona un método" required>
+            <ion-select-option value="efectivo">Efectivo</ion-select-option>
+            <ion-select-option value="tarjeta">Tarjeta</ion-select-option>
+            <ion-select-option value="transferencia">Transferencia</ion-select-option>
+          </ion-select>
+        </div>
       </div>
     </div>
-
-    <div class="column">
-      <div class="form-row">
-        <label for="input6">Nork moztu dio:</label>
-        <ion-input id="input6" type="text" placeholder="Idatzi zerbait"></ion-input>
-      </div>
-      <div class="form-row">
-        <label for="input7">Ile mozketa:</label>
-        <ion-input id="input7" type="text" placeholder="Idatzi zerbait"></ion-input>
-      </div>
-      <div class="form-row">
-        <label for="input8">Ticket zenbakia:</label>
-        <ion-input id="input8" type="number" placeholder="Idatzi zerbait"></ion-input>
-      </div>
-      <div class="form-row">
-        <label for="input9">Nola ordaindu du:</label>
-        <ion-input id="input9" type="number" placeholder="Idatzi zerbait"></ion-input>
-      </div>
-      <div class="form-row">
-        <label for="input10">Bueltak:</label>
-        <ion-input id="input10" type="number" placeholder="Idatzi zerbait"></ion-input>
-      </div>
+  
+    <div class="button-container">
+      <ion-button expand="full" type="submit" [disabled]="ticketForm.invalid">Crear Ticket</ion-button>
     </div>
-  </div>
-
-  <!-- Botón "Sortu" al final, dentro del flujo normal -->
-  <div class="button-container">
-    <ion-button expand="full" (click)="sortuPDF() ">Sortu</ion-button>
-  </div>
+  </form>
+  
 </ion-content>

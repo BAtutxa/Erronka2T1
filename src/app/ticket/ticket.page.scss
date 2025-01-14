@@ -5,67 +5,76 @@
   box-sizing: border-box;
 }
 
-/* Estilo del Título */
+/* Título */
 .title {
   font-size: 30px;
   font-weight: bold;
   padding-left: 20px;
   margin-top: 20px;
+  color: #333;
 }
 
 /* Contenedor del formulario */
 .form-container {
-  display: flex; /* Organiza las columnas horizontalmente */
-  justify-content: space-between; 
+  display: flex;
+  justify-content: space-between;
   padding: 20px;
 }
 
 /* Estilo para las columnas */
 .column {
-  width: 48%; /* Ocupa casi la mitad del espacio disponible */
+  width: 48%;
 }
 
 /* Fila del formulario */
 .form-row {
-  margin-bottom: 25px; /* Aumentado el espacio entre filas */
+  margin-bottom: 25px;
 }
 
 /* Estilo de los labels */
 label {
   display: block;
   font-size: 16px;
-  margin-bottom: 10px; /* Más espacio debajo del label */
+  margin-bottom: 10px;
   color: #333;
 }
 
-/* Estilo del ion-input */
-ion-input {
-    
-  width: 100%; /* Ocupa el 100% del ancho disponible */
-  padding: 14px; /* Aumentado el padding dentro del input */
-  border: 2px solid #ccc; /* Borde gris alrededor del input */
-  border-radius: 8px; /* Esquinas redondeadas */
-  background-color: #f9f9f9; /* Fondo ligeramente gris */
+/* Estilo de los ion-input y ion-select */
+ion-input,
+ion-select {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
 }
 
 /* Estilo cuando el input está enfocado */
-ion-input:focus {
-  border-color: #3b97e3; /* Borde azul cuando el input está en foco */
-  background-color: #fff; /* Fondo blanco cuando el input está enfocado */
+ion-input:focus,
+ion-select:focus {
+  border-color: #3b97e3;
+  background-color: #fff;
 }
 
-/* Estilo de la imagen en el botón */
-ion-button img {
-  width: 30px;
-  height: auto;
-  margin-right: 15px;
+/* Estilo del ion-textarea */
+ion-textarea {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
 }
 
+/* Botón */
 ion-button {
-    width: 100%; /* El botón ocupará todo el ancho disponible */
-    max-width: 300px; /* Limitar el tamaño máximo del botón */
-    margin: 0 auto; /* Centrar el botón */
-    border-radius: 50px; /* Bordes redondeados */
-    background-color: #3b97e3; /* Color de fondo */
-  }
-  
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  border-radius: 50px;
+  background-color: #3b97e3;
+}
+ion-button img {
+  width: 30px; /* Reducido el ancho */
+  height: auto; /* Mantener proporción */
+  margin-right: 15px; /* Opcional: ajustar el margen */
+}
