@@ -1,12 +1,11 @@
 <app-menu></app-menu>
 
 
-<ion-content id="main-content">
+<ion-content>
   <ion-grid>
     <ion-row>
-      <!-- Sección izquierda: Grupo y Calendario -->
-      <ion-col size="12" size-md="8">
-        <!-- Información del grupo -->
+      <!-- Sección de grupo y calendario -->
+      <ion-col size="12" size-md="6">
         <ion-card>
           <ion-card-header>
             <ion-card-title>Grupo Asignado</ion-card-title>
@@ -18,30 +17,29 @@
           </ion-card-content>
         </ion-card>
 
-        <!-- Calendario -->
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Selecciona la fecha y hora</ion-card-title>
+            <ion-card-title>Selecciona Fecha y Hora</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-datetime
               [(ngModel)]="selectedDate"
-              min="{{ today }}"
+              [min]="today"
               display-format="DD MMM YYYY HH:mm"
               month-values="1,2,3,4,5,9,10,11,12"
-              hour-values="10,11,12,13,14"
-              minute-values="0,30"
+              hour-values="9,10,11,12,13,14,15,16"
+              minute-values="0,15,30,45"
               (ionChange)="onDateChange($event)"
             ></ion-datetime>
           </ion-card-content>
         </ion-card>
       </ion-col>
 
-      <!-- Sección derecha: Servicios -->
-      <ion-col size="12" size-md="4">
+      <!-- Sección de servicios -->
+      <ion-col size="12" size-md="6">
         <ion-card>
           <ion-card-header>
-            <ion-card-title>Zerbitzua hautatu</ion-card-title>
+            <ion-card-title>Servicios Disponibles</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <ion-list>
@@ -50,17 +48,17 @@
                 <ion-checkbox
                   slot="end"
                   [(ngModel)]="service.selected"
-                  (ionChange)="toggleService(service)"
                 ></ion-checkbox>
               </ion-item>
             </ion-list>
             <div *ngIf="showErrorMessage" class="error-message">
-              <p>Por favor, selecciona al menos un servicio y una fecha y hora.</p>
+              Por favor, selecciona al menos un servicio y una fecha.
             </div>
           </ion-card-content>
         </ion-card>
-        <ion-button [disabled]="isButtonDisabled()" (click)="onSubmit()">
-          <span>Baieztatu</span>
+
+        <ion-button expand="full" [disabled]="isButtonDisabled()" (click)="onSubmit()">
+          Confirmar Cita
         </ion-button>
       </ion-col>
     </ion-row>

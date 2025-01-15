@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MenuController,AlertController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-inbentario',
@@ -18,15 +18,7 @@ export class InbentarioPage {
   filteredProducts = [...this.products];
   selectedProduct: any = null;
 
-  constructor(private menuCtrl: MenuController, private router: Router, private alertController: AlertController) {}
-
-  ionViewWillEnter() {
-    this.menuCtrl.enable(true);
-  }
-
-  ionViewWillLeave() {
-    this.menuCtrl.enable(false);
-  }
+  constructor(private router: Router, private alertController: AlertController) {}
 
   filterProducts(event: any) {
     const query = event.target.value.toLowerCase();

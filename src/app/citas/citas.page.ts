@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 
 @Component({
@@ -9,53 +8,57 @@ import { AlertController } from '@ionic/angular';
 })
 export class CitasPage {
   today: string; // Fecha mínima para el calendario
-  selectedDate: string | null = null; // Fecha seleccionada vinculada a [(ngModel)]
+  selectedDate: string | null = null; // Fecha seleccionada
   services = [
     { name: 'Corte de cabello largo', selected: false },
     { name: 'Tinte completo', selected: false },
     { name: 'Peinado especial', selected: false },
     { name: 'Lavado y secado', selected: false },
   ];
-  showErrorMessage = false; // Controla la visibilidad del mensaje de error
+  showErrorMessage = false; // Mostrar mensaje de error
 
-  constructor(private router: Router, private alertController: AlertController) {
+  constructor(private alertController: AlertController) {
     // Configuración de la fecha mínima
     this.today = new Date().toISOString();
   }
 
-  
-
   /**
-   * Verifica si el botón "Baieztatu" debe estar habilitado.
+   * Verifica si el botón "Confirmar" debe estar habilitado.
    */
   isButtonDisabled(): boolean {
-    return !(this.services.some((service) => service.selected) && this.selectedDate);
+    return !this.selectedDate || !this.services.some((s) => s.selected);
   }
 
   /**
-   * Maneja el evento de clic en el botón "Baieztatu".
+   * Maneja el envío de la cita.
    */
-  onSubmit(): void {
-    if (!this.selectedDate || !this.services.some((service) => service.selected)) {
+  async onSubmit(): Promise<void> {
+    if (this.isButtonDisabled()) {
       this.showErrorMessage = true;
     } else {
-      console.log('Cita confirmada');
       this.showErrorMessage = false;
+
+      const selectedServices = this.services
+        .filter((service) => service.selected)
+        .map((service) => service.name);
+
+      const alert = await this.alertController.create({
+        header: 'Cita Confirmada',
+        message: `
+          Fecha: ${this.selectedDate}<br>
+          Servicios: ${selectedServices.join(', ')}
+        `,
+        buttons: ['OK'],
+      });
+
+      await alert.present();
     }
   }
 
   /**
-   * Alterna el estado seleccionado de un servicio.
-   */
-  toggleService(service: { name: string; selected: boolean }): void {
-    service.selected = !service.selected;
-  }
-
-  /**
-   * Maneja cambios en la fecha seleccionada.
+   * Maneja el cambio en la fecha seleccionada.
    */
   onDateChange(event: any): void {
     this.selectedDate = event.detail.value;
-    console.log('Fecha seleccionada:', this.selectedDate);
   }
 }

@@ -1,35 +1,18 @@
-/* Diseño general */
+/* Ajuste general */
 ion-grid {
-  margin: 20px;
+  padding: 20px;
 }
 
-/* Sección izquierda */
-ion-col.left-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Sección derecha */
-ion-col.right-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-/* Personalización del chip */
+/* Chip personalizado */
 .grupo-chip {
-  --background: #2c39eb;
-  --color: #ffffff;
-  padding: 10px;
-  border-radius: 5px;
+  --background: #3880ff;
+  --color: #fff;
   font-weight: bold;
 }
 
-/* Datetime personalizado */
+/* Datetime */
 ion-datetime {
-  margin-top: 20px;
-  width: 100%;
+  margin-top: 10px;
 }
 
 /* Mensaje de error */
@@ -39,14 +22,7 @@ ion-datetime {
   margin-top: 10px;
 }
 
-/* Botón de confirmación */
+/* Botón deshabilitado */
 ion-button[disabled] {
-  opacity: 0.6;
-}
-
-/* Ajuste de imagen de cerrar sesión */
-ion-button img {
-  width: 30px; /* Reducido el ancho */
-  height: auto; /* Mantener proporción */
-  margin-right: 15px; /* Opcional: ajustar el margen */
+  opacity: 0.5;
 }

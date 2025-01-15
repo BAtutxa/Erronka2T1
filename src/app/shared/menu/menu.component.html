@@ -22,7 +22,7 @@
   </ion-header>
 
   <ion-content>
-    <div class="menu-items">
+    <ion-list class="menu-items">
       <ion-item
         *ngFor="let item of menuItems"
         button
@@ -35,7 +35,7 @@
         <img [src]="item.icon" alt="{{ item.label }}" />
         <span>{{ item.label }}</span>
       </ion-item>
-    </div>
+    </ion-list>
   </ion-content>
 </ion-menu>
 
