@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-inbentario',
   templateUrl: './inbentario.page.html',
@@ -15,28 +15,38 @@ export class InbentarioPage {
     { name: 'Producto 5', description: 'Descripción del Producto 5.', image: 'assets/producto5.jpg' },
   ];
 
-  filteredProducts = [...this.products];
-  selectedProduct: any = null;
+  materials = [
+    { name: 'Material 1', description: 'Descripción del Material 1.', image: 'assets/material1.jpg' },
+    { name: 'Material 2', description: 'Descripción del Material 2.', image: 'assets/material2.jpg' },
+    { name: 'Material 3', description: 'Descripción del Material 3.', image: 'assets/material3.jpg' },
+    // Más materiales...
+  ];
 
-  constructor(private router: Router, private alertController: AlertController) {}
+  filteredItems = [...this.products];  // Inicialmente muestra los productos
+  currentSection = 'productos';  // 'productos' o 'materiales'
+  selectedItem: any = null;
 
-  filterProducts(event: any) {
-    const query = event.target.value.toLowerCase();
-    this.filteredProducts = this.products.filter(product =>
-      product.name.toLowerCase().includes(query)
+  constructor(private alertController: AlertController) {}
+
+  // Este método se llama cuando se cambia el valor en el ion-segment
+  segmentChanged() {
+    this.filterItems(); // Aplicamos el filtro con el valor actual
+  }
+
+  filterItems(event?: any) {
+    const query = event ? event.target.value.toLowerCase() : ''; // Si no se pasa evento, se toma el filtro vacío
+    const items = this.currentSection === 'productos' ? this.products : this.materials;
+
+    this.filteredItems = items.filter(item =>
+      item.name.toLowerCase().includes(query)
     );
   }
 
-  showProductDetails(product: any) {
-    this.selectedProduct = product;
+  showItemDetails(item: any) {
+    this.selectedItem = item;
   }
 
-  closeProductDetails() {
-    this.selectedProduct = null;
-  }
-
-  addProduct() {
-    console.log('Agregar producto: función no implementada');
-    // Aquí puedes implementar la lógica para agregar un nuevo producto
+  closeItemDetails() {
+    this.selectedItem = null;
   }
 }
