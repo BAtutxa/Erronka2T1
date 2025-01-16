@@ -29,6 +29,10 @@ const routes: Routes = [
   {
     path: 'bezero',
     loadChildren: () => import('./bezero/bezero.module').then( m => m.BezeroPageModule)
+  },
+  {
+    path: 'limpieza',
+    loadChildren: () => import('./limpieza/limpieza.module').then( m => m.LimpiezaPageModule)
   }
 
 ];

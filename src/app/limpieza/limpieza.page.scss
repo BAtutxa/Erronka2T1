@@ -1,0 +1,59 @@
+.container {
+  padding: 16px;
+}
+
+.selection-group {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #007bff; /* Azul para los títulos */
+  margin-bottom: 16px;
+}
+
+ion-button {
+  --border-radius: 8px; /* Bordes redondeados para los botones */
+  --box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  --background: #007bff; /* Color de fondo para los botones */
+  --color: #fff; /* Color blanco para el texto */
+}
+
+ion-button.primary {
+  --background: #007bff; /* Azul oscuro */
+}
+
+ion-button.secondary {
+  --background: #6c757d; /* Azul más claro */
+}
+
+ion-button:hover {
+  --background: #0056b3; /* Azul más oscuro en hover */
+}
+
+/* global.scss */
+.custom-modal {
+  --width: 100% !important; /* Ajusta el tamaño del modal */
+  --height: 100% !important;
+  --border-radius: 15px !important;
+  --background: #fff !important;
+  padding: 20px !important;
+}
+
+ion-card {
+  height: 100%;
+  overflow: auto !important; /* Permitir desplazamiento */
+}
+
+ion-card-header {
+  background-color: #f1f1f1 !important;
+  padding: 15px !important;
+}
+
+ion-card-title {
+  font-size: 1.5em !important;
+  font-weight: bold !important;
+  color: #333 !important;
+}

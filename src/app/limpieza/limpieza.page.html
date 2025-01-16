@@ -1,0 +1,102 @@
+<app-menu></app-menu>
+
+<ion-content>
+  <div class="container">
+    <!-- Sección de Grado Medio -->
+    <div class="selection-group">
+      <h2 class="section-title">Grado Medio</h2>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-button 
+              expand="full" 
+              size="large" 
+              color="primary" 
+              (click)="selectGroup('Grado Medio', '2PCC1')">
+              2PCC1
+            </ion-button>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button 
+              expand="full" 
+              size="large" 
+              color="primary" 
+              (click)="selectGroup('Grado Medio', '2PCC2')">
+              2PCC2
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <!-- Sección de Grado Superior -->
+    <div class="selection-group">
+      <h2 class="section-title">Grado Superior</h2>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-button 
+              expand="full" 
+              size="large" 
+              color="secondary" 
+              (click)="selectGroup('Grado Superior', '3EDP1')">
+              3EDP1
+            </ion-button>
+          </ion-col>
+          <ion-col size="6">
+            <ion-button 
+              expand="full" 
+              size="large" 
+              color="secondary" 
+              (click)="selectGroup('Grado Superior', '3EDP2')">
+              3EDP2
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <ion-modal [isOpen]="selectedGroup != null" cssClass="custom-modal">
+      <div *ngIf="selectedGroup">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>{{ selectedGroup.name }} - Grupo Detalles</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <!-- Información Principal del Grupo -->
+            <ion-item>
+              <ion-label>
+                <strong>Profesor Responsable:</strong>
+                <p>{{ selectedGroup.professor }}</p>
+              </ion-label>
+            </ion-item>
+            <ion-item>
+              <ion-label>
+                <strong>Responsable de la Limpieza:</strong>
+                <p>{{ selectedGroup.cleaner }}</p>
+              </ion-label>
+            </ion-item>
+    
+            <!-- Listado de Tareas -->
+            <ion-list>
+              <ion-item-divider>
+                <ion-label color="primary">Tareas Asignadas</ion-label>
+              </ion-item-divider>
+              <div *ngFor="let task of selectedGroup.tasks">
+                <ion-item>
+                  <ion-label>
+                    <strong>{{ task.taskName }}</strong>
+                    <ul>
+                      <li *ngFor="let person of task.assignees">{{ person }}</li>
+                    </ul>
+                  </ion-label>
+                </ion-item>
+              </div>
+            </ion-list>
+          </ion-card-content>
+          <ion-button expand="full" (click)="selectedGroup = null">Cerrar</ion-button>
+        </ion-card>
+      </div>
+    </ion-modal>
+  </div>
+</ion-content>

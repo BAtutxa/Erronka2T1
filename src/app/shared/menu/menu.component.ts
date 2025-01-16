@@ -17,7 +17,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     { label: 'Taldeak', route: '/grupos', icon: 'assets/Fotos/equipo.png', titulo: 'Taldeak' },
     { label: 'Asistentzia', route: '/asistentzia', icon: 'assets/Fotos/asist.png', titulo: 'Asistentzia' },
     { label: 'Ticket', route: '/ticket', icon: 'assets/Fotos/recibo.png', titulo: 'Ticket' },
-    { label: 'Garbiketa', route: '/garbiketa', icon: 'assets/Fotos/garbi.png', titulo: 'Garbiketa' },
+    { label: 'Garbiketa', route: '/limpieza', icon: 'assets/Fotos/garbi.png', titulo: 'Garbiketa' },
     { label: 'Fitxategi bezeroak', route: '/bezero', icon: 'assets/Fotos/BezeroFitxa.png', titulo: 'Fitxategi bezeroak' },
   ];
   
