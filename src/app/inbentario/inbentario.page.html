@@ -6,6 +6,12 @@
       placeholder="Buscar en {{ currentSection === 'productos' ? 'productos' : 'materiales' }}"
       (ionInput)="filterItems($event)"
     ></ion-searchbar>
+    <ion-button
+      class="add-group-btn"
+      shape="round"
+    >
+    <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-button>
   </div>
 
   <div class="toggle-container">
