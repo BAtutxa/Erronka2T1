@@ -45,7 +45,7 @@ export class CitasPage {
       const alert = await this.alertController.create({
         header: 'Cita Confirmada',
         message: `
-          Fecha: ${this.selectedDate}<br>
+          Fecha: ${this.selectedDate}
           Servicios: ${selectedServices.join(', ')}
         `,
         buttons: ['OK'],

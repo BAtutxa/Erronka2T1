@@ -14,11 +14,11 @@ export class MenuComponent implements OnInit, OnDestroy {
   menuItems = [
     { label: 'Hitzorduak', route: '/citas', icon: 'assets/Fotos/citas.png', titulo: 'Hitzorduak' },
     { label: 'Inbentario', route: '/inbentario', icon: 'assets/Fotos/inbentario.png', titulo: 'Inbentario' },
+    { label: 'Fitxategi bezeroak', route: '/bezero', icon: 'assets/Fotos/BezeroFitxa.png', titulo: 'Fitxategi bezeroak' },
     { label: 'Taldeak', route: '/grupos', icon: 'assets/Fotos/equipo.png', titulo: 'Taldeak' },
     { label: 'Asistentzia', route: '/asistentzia', icon: 'assets/Fotos/asist.png', titulo: 'Asistentzia' },
-    { label: 'Ticket', route: '/ticket', icon: 'assets/Fotos/recibo.png', titulo: 'Ticket' },
     { label: 'Garbiketa', route: '/limpieza', icon: 'assets/Fotos/garbi.png', titulo: 'Garbiketa' },
-    { label: 'Fitxategi bezeroak', route: '/bezero', icon: 'assets/Fotos/BezeroFitxa.png', titulo: 'Fitxategi bezeroak' },
+    { label: 'Ticket', route: '/ticket', icon: 'assets/Fotos/recibo.png', titulo: 'Ticket' },
   ];
   
   private routerSubscription!: Subscription;
