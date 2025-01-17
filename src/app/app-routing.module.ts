@@ -33,6 +33,10 @@ const routes: Routes = [
   {
     path: 'limpieza',
     loadChildren: () => import('./limpieza/limpieza.module').then( m => m.LimpiezaPageModule)
+  },
+  {
+    path: 'zerbitzua',
+    loadChildren: () => import('./zerbitzua/zerbitzua.module').then( m => m.ZerbitzuaPageModule)
   }
 
 ];
