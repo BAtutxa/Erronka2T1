@@ -1,37 +1,49 @@
-import { Component } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { HitzorduakService } from '../services/hitzorduak.service';
 
 @Component({
   selector: 'app-citas',
   templateUrl: './citas.page.html',
   styleUrls: ['./citas.page.scss'],
 })
-export class CitasPage {
+export class CitasPage implements OnInit {
   today: string; // Fecha mínima para el calendario
   selectedDate: string | null = null; // Fecha seleccionada
-  services = [
-    { name: 'Corte de cabello largo', selected: false },
-    { name: 'Tinte completo', selected: false },
-    { name: 'Peinado especial', selected: false },
-    { name: 'Lavado y secado', selected: false },
-  ];
+  services: any[] = []; // Servicios disponibles
   showErrorMessage = false; // Mostrar mensaje de error
 
-  constructor(private alertController: AlertController) {
-    // Configuración de la fecha mínima
+  constructor(
+    private alertController: AlertController,
+    @Inject(HitzorduakService)
+    private hs: HitzorduakService
+  ) {
     this.today = new Date().toISOString();
   }
 
-  /**
-   * Verifica si el botón "Confirmar" debe estar habilitado.
-   */
+  ngOnInit() {
+    this.loadServices();
+  }
+
+  // Cargar servicios desde la API
+  loadServices(): void {
+    this.hs.getZerbitzuak().subscribe(
+      (data) => {
+        this.services = data.map((service) => ({
+          name: service.izena,
+          selected: false,
+        }));
+      },
+      (error) => {
+        console.error('Error al cargar servicios:', error);
+      }
+    );
+  }
+
   isButtonDisabled(): boolean {
     return !this.selectedDate || !this.services.some((s) => s.selected);
   }
 
-  /**
-   * Maneja el envío de la cita.
-   */
   async onSubmit(): Promise<void> {
     if (this.isButtonDisabled()) {
       this.showErrorMessage = true;
@@ -55,9 +67,6 @@ export class CitasPage {
     }
   }
 
-  /**
-   * Maneja el cambio en la fecha seleccionada.
-   */
   onDateChange(event: any): void {
     this.selectedDate = event.detail.value;
   }

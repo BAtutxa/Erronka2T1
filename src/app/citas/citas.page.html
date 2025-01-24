@@ -60,6 +60,11 @@
         <ion-button expand="full" [disabled]="isButtonDisabled()" (click)="onSubmit()">
           Confirmar Cita
         </ion-button>
+
+        <ion-button expand="full"  (click)="loadServices()">
+          getServices
+        </ion-button>
+        <label>{{services}}</label>
       </ion-col>
     </ion-row>
   </ion-grid>
