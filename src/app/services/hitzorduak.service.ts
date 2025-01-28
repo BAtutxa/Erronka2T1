@@ -19,4 +19,13 @@ export class HitzorduakService {
   getHitzorduak(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/hitzorduak`);
   }
+
+  getMaterialak(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/materialak`);
+  }
+
+  getProduktuak(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/produktuak`);
+  }
+
 }
