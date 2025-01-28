@@ -36,8 +36,9 @@ export class InbentarioPage implements OnInit {
     this.hitzorduakService.getMaterialak().subscribe(
       (data) => {
         this.materiala = data.map((materiala) => ({
+          id: materiala.id,
           name: materiala.izena,
-          description: materiala.description || 'Sin descripción',
+          description: materiala.etiketa || 'No hay descripción',
           image: materiala.image || 'assets/default-image.png',
         }));
         if (this.currentSection === 'materiales') this.filterItems();
@@ -52,8 +53,11 @@ export class InbentarioPage implements OnInit {
     this.hitzorduakService.getProduktuak().subscribe(
       (data) => {
         this.produktuak = data.map((produktu) => ({
+          id: produktu.id,
           name: produktu.izena,
-          description: produktu.description || 'Sin descripción',
+          description: produktu.deskribapena || 'Sin descripción',
+          marka: produktu.marka || 'La marca no está añadida',
+          stock: produktu.stock || 'No hay stock añadido',
           image: produktu.image || 'assets/default-image.png',
         }));
         if (this.currentSection === 'productos') this.filterItems();
@@ -92,5 +96,45 @@ export class InbentarioPage implements OnInit {
    */
   closeItemDetails(): void {
     this.selectedItem = null;
+  }
+
+  /**
+   * Elimina un ítem (producto/material)
+   */
+  deleteItem(itemId: number, event: Event): void {
+    event.stopPropagation();
+    const confirm = this.alertController.create({
+      header: 'Confirmar',
+      message: '¿Seguro que quieres eliminar este ítem?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            if (this.currentSection === 'productos') {
+              this.hitzorduakService.deleteProduktuak(itemId).subscribe(() => {
+                this.loadProduktuak(); // Recargar productos
+              });
+            } else {
+              this.hitzorduakService.deleteMaterialak(itemId).subscribe(() => {
+                this.loadMateriala(); // Recargar materiales
+              });
+            }
+          },
+        },
+      ],
+    });
+    confirm.then((alert) => alert.present());
+  }
+
+  /**
+   * Método para abrir el modal para agregar nuevos productos/materiales
+   */
+  openAddItemModal(): void {
+    // Aquí puedes crear y abrir el modal para agregar un nuevo ítem
+    // Puedes incluir un formulario para agregar los datos
   }
 }

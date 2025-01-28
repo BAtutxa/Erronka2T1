@@ -9,8 +9,9 @@
     <ion-button
       class="add-group-btn"
       shape="round"
+      (click)="openAddItemModal()"
     >
-    <ion-icon name="add-circle-outline"></ion-icon>
+      <ion-icon name="add-circle-outline"></ion-icon>
     </ion-button>
   </div>
 
@@ -36,6 +37,12 @@
         <ion-card-header>
           <ion-card-title>{{ item.name }}</ion-card-title>
         </ion-card-header>
+        <ion-button
+          fill="clear"
+          (click)="deleteItem(item.id, $event)"
+        >
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
       </ion-card>
     </ng-container>
     <ng-template #noItems>
@@ -57,7 +64,10 @@
       </ion-header>
       <ion-content>
         <div class="item-details">
+          <p>{{ selectedItem.izena }}</p>
           <p>{{ selectedItem.description }}</p>
+          <p>{{ selectedItem.marka }}</p>
+          <p>{{ selectedItem.stock }}</p>
         </div>
       </ion-content>
     </ng-container>
