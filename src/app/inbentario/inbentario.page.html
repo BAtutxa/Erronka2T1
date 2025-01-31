@@ -54,7 +54,7 @@
     <ng-container *ngIf="selectedItem">
       <ion-header>
         <ion-toolbar>
-          <ion-title>{{ selectedItem.name }}</ion-title>
+          <ion-title>Editar {{ selectedItem.name }}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="closeItemDetails()">
               <ion-icon name="close"></ion-icon>
@@ -64,10 +64,23 @@
       </ion-header>
       <ion-content>
         <div class="item-details">
-          <p>{{ selectedItem.izena }}</p>
-          <p>{{ selectedItem.description }}</p>
-          <p>{{ selectedItem.marka }}</p>
-          <p>{{ selectedItem.stock }}</p>
+          <ion-item>
+            <ion-label position="stacked">Nombre</ion-label>
+            <ion-input [(ngModel)]="selectedItem.name"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Descripción</ion-label>
+            <ion-textarea [(ngModel)]="selectedItem.description"></ion-textarea>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Marca</ion-label>
+            <ion-input [(ngModel)]="selectedItem.marka"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Stock</ion-label>
+            <ion-input type="number" [(ngModel)]="selectedItem.stock"></ion-input>
+          </ion-item>
+          <ion-button expand="full" (click)="saveChanges()">Guardar Cambios</ion-button>
         </div>
       </ion-content>
     </ng-container>

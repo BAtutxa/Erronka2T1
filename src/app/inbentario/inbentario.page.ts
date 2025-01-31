@@ -130,6 +130,26 @@ export class InbentarioPage implements OnInit {
     confirm.then((alert) => alert.present());
   }
 
+  saveChanges(): void {
+    if (this.currentSection === 'productos') {
+      this.hitzorduakService.updateProduktuak(this.selectedItem.id, this.selectedItem).subscribe(
+        () => {
+          this.loadProduktuak();
+          this.closeItemDetails();
+        },
+        (error) => console.error('Error al actualizar el producto:', error)
+      );
+    } else {
+      this.hitzorduakService.updateMaterialak(this.selectedItem.id, this.selectedItem).subscribe(
+        () => {
+          this.loadMateriala();
+          this.closeItemDetails();
+        },
+        (error) => console.error('Error al actualizar el material:', error)
+      );
+    }
+  }
+
   /**
    * Método para abrir el modal para agregar nuevos productos/materiales
    */
@@ -138,3 +158,5 @@ export class InbentarioPage implements OnInit {
     // Puedes incluir un formulario para agregar los datos
   }
 }
+
+
