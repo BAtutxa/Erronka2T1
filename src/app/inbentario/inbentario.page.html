@@ -54,7 +54,7 @@
     <ng-container *ngIf="selectedItem">
       <ion-header>
         <ion-toolbar>
-          <ion-title>Editar {{ selectedItem.name }}</ion-title>
+          <ion-title>{{ selectedItem.name }}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="closeItemDetails()">
               <ion-icon name="close"></ion-icon>
@@ -62,24 +62,40 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
+  
       <ion-content>
         <div class="item-details">
+          <!-- Común para ambos -->
           <ion-item>
             <ion-label position="stacked">Nombre</ion-label>
             <ion-input [(ngModel)]="selectedItem.name"></ion-input>
           </ion-item>
+  
           <ion-item>
             <ion-label position="stacked">Descripción</ion-label>
             <ion-textarea [(ngModel)]="selectedItem.description"></ion-textarea>
           </ion-item>
-          <ion-item>
-            <ion-label position="stacked">Marca</ion-label>
-            <ion-input [(ngModel)]="selectedItem.marka"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label position="stacked">Stock</ion-label>
-            <ion-input type="number" [(ngModel)]="selectedItem.stock"></ion-input>
-          </ion-item>
+  
+          <!-- Solo para productos -->
+          <ng-container *ngIf="selectedItem.type === 'producto'">
+            <ion-item>
+              <ion-label position="stacked">Marca</ion-label>
+              <ion-input [(ngModel)]="selectedItem.marka"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Stock</ion-label>
+              <ion-input type="number" [(ngModel)]="selectedItem.stock"></ion-input>
+            </ion-item>
+          </ng-container>
+  
+          <!-- Solo para materiales (si se necesitan más campos específicos, se agregan aquí) -->
+          <ng-container *ngIf="selectedItem.type === 'material'">
+            <ion-item>
+              <ion-label position="stacked">Etiqueta</ion-label>
+              <ion-input [(ngModel)]="selectedItem.description"></ion-input>
+            </ion-item>
+          </ng-container>
+  
           <ion-button expand="full" (click)="saveChanges()">Guardar Cambios</ion-button>
         </div>
       </ion-content>

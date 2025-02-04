@@ -30,16 +30,6 @@ export class HitzorduakService {
     return this.http.get<any[]>(`${this.apiUrl}/produktuak`);
   }
 
-  // Crear un nuevo material
-  createMaterialak(material: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/materialak`, material);
-  }
-
-  // Crear un nuevo producto
-  createProduktuak(producto: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/produktuak`, producto);
-  }
-
   // Eliminar un material
   deleteMaterialak(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/materialak/${id}`);
@@ -58,6 +48,10 @@ export class HitzorduakService {
   // Actualizar un producto
   updateProduktuak(id: number, producto: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/produktuak/${id}`, producto);
+  }
+  
+  getAllBezeroFitxak(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/bezero-fitxak`);
   }
 
 }

@@ -40,6 +40,7 @@ export class InbentarioPage implements OnInit {
           name: materiala.izena,
           description: materiala.etiketa || 'No hay descripción',
           image: materiala.image || 'assets/default-image.png',
+          type: 'material' // Identificador de tipo
         }));
         if (this.currentSection === 'materiales') this.filterItems();
       },
@@ -48,7 +49,7 @@ export class InbentarioPage implements OnInit {
       }
     );
   }
-
+  
   loadProduktuak(): void {
     this.hitzorduakService.getProduktuak().subscribe(
       (data) => {
@@ -58,7 +59,9 @@ export class InbentarioPage implements OnInit {
           description: produktu.deskribapena || 'Sin descripción',
           marka: produktu.marka || 'La marca no está añadida',
           stock: produktu.stock || 'No hay stock añadido',
+          stockAlerta: produktu.stockAlerta || 'No hay stock añadido',
           image: produktu.image || 'assets/default-image.png',
+          type: 'producto' // Identificador de tipo
         }));
         if (this.currentSection === 'productos') this.filterItems();
       },
