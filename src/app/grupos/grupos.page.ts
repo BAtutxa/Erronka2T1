@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { HitzorduakService } from '../services/hitzorduak.service';
 
 @Component({
   selector: 'app-grupos',
@@ -8,21 +8,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./grupos.page.scss'],
 })
 export class GruposPage {
-  groups = [
-    { name: 'Grupo A', description: 'Descripción del Grupo A.' },
-    { name: 'Grupo B', description: 'Descripción del Grupo B.' },
-    { name: 'Grupo C', description: 'Descripción del Grupo C.' },
-    { name: 'Grupo D', description: 'Descripción del Grupo D.' },
-    { name: 'Grupo E', description: 'Descripción del Grupo E.' },
-  ];
-
+  groups: any[] = [];
   selectedGroup: any = null;
 
   constructor(
     private menuCtrl: MenuController,
-    private router: Router,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private hitzorduakService: HitzorduakService
   ) {}
+
+  ngOnInit() {
+    this.loadGroups();
+  }
 
   ionViewWillEnter() {
     this.menuCtrl.enable(true);
@@ -32,17 +29,76 @@ export class GruposPage {
     this.menuCtrl.enable(false);
   }
 
+  loadGroups() {
+    this.hitzorduakService.getGroups().subscribe((data) => {
+      this.groups = data;
+    });
+  }
+
   showGroupDetails(group: any) {
     this.selectedGroup = group;
+    this.loadPersons(group.id); // Corregido a loadPersons
   }
 
   closeGroupDetails() {
     this.selectedGroup = null;
   }
 
-  addGroup() {
-    console.log('Agregar grupo: función no implementada');
-    // Implementar lógica para agregar grupos en el futuro
+  loadPersons(groupId: number) { // Corregido el nombre de la función
+    this.hitzorduakService.getPersonsByGroup(groupId).subscribe((data) => {
+      if (this.selectedGroup && this.selectedGroup.id === groupId) {
+        this.selectedGroup.persons = data; // Corregido a persons
+      }
+    });
   }
 
+  async addGroup() {
+    const alert = await this.alertController.create({
+      header: 'Nuevo Grupo',
+      inputs: [
+        { name: 'name', type: 'text', placeholder: 'Nombre del grupo' },
+        { name: 'description', type: 'text', placeholder: 'Descripción' },
+      ],
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Guardar',
+          handler: (data) => {
+            this.hitzorduakService.addGroup(data).subscribe(() => this.loadGroups());
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  deleteGroup(groupId: number) {
+    this.hitzorduakService.deleteGroup(groupId).subscribe(() => this.loadGroups());
+  }
+
+  async addPerson(groupId: number) { // Corregido el nombre de la función
+    const alert = await this.alertController.create({
+      header: 'Nueva Persona',
+      inputs: [
+        { name: 'name', type: 'text', placeholder: 'Nombre' },
+        { name: 'surname', type: 'text', placeholder: 'Apellidos' },
+      ],
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Guardar',
+          handler: (data) => {
+            this.hitzorduakService.addPersonToGroup(groupId, data).subscribe(() => this.loadPersons(groupId));
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  deletePerson(groupId: number, personId: number) { // Corregido a personId
+    this.hitzorduakService.deletePersonFromGroup(groupId, personId).subscribe(() => {
+      this.loadPersons(groupId);
+    });
+  }
 }

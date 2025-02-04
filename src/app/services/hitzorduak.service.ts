@@ -54,4 +54,32 @@ export class HitzorduakService {
     return this.http.get<any[]>(`${this.apiUrl}/bezero-fitxak`);
   }
 
+  getGroups(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/taldeak`);
+  }
+
+  // Añadir un nuevo grupo
+  addGroup(group: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/taldeak`, group);
+  }
+
+  // Eliminar un grupo
+  deleteGroup(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/taldeak/${id}`);
+  }
+
+  // Obtener personas de un grupo específico
+  getPersonsByGroup(groupId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/taldeak/${groupId}/langileak`);
+  }
+
+  // Añadir una persona a un grupo
+  addPersonToGroup(groupId: number, person: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/grupos/${groupId}/langileak`, person);
+  }
+
+  // Eliminar una persona de un grupo
+  deletePersonFromGroup(groupId: number, personId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/grupos/${groupId}/langileak/${personId}`);
+  }
 }
