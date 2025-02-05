@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { Router, NavigationEnd } from '@angular/router';
+import { AlertController, MenuController } from '@ionic/angular'; // Importar MenuController
 import { Subscription } from 'rxjs';
-
 
 @Component({
   selector: 'app-menu',
@@ -20,18 +19,20 @@ export class MenuComponent implements OnInit, OnDestroy {
     { label: 'Garbiketa', route: '/limpieza', icon: 'assets/Fotos/garbi.png', titulo: 'Garbiketa' },
     { label: 'Ticket', route: '/ticket', icon: 'assets/Fotos/recibo.png', titulo: 'Ticket' },
   ];
-  
+
   private routerSubscription!: Subscription;
-  
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private alertController: AlertController) {}
-
-  
+  constructor(
+    private router: Router,
+    private alertController: AlertController,
+    private menuController: MenuController
+  ) {}
 
   ngOnInit(): void {
     this.routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.updateTitle();
+        this.menuController.close(); 
       }
     });
   }
@@ -39,11 +40,12 @@ export class MenuComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.routerSubscription) {
       this.routerSubscription.unsubscribe();
+      this.menuController.close(); 
     }
   }
 
   updateTitle(): void {
-    const currentRoute = this.router.url.split('/')[1]; // Get the first part of the route
+    const currentRoute = this.router.url.split('/')[1];
     const currentItem = this.menuItems.find(item => item.route === `/${currentRoute}`);
     if (currentItem) {
       this.titulo = currentItem.titulo;

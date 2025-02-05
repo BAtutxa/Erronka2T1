@@ -8,7 +8,7 @@
           <ion-card-title>{{ group.name }}</ion-card-title>
         </ion-card-header>
         <ion-card-content>{{ group.description }}</ion-card-content>
-        <ion-button color="danger" (click)="$event.stopPropagation(); deleteGroup(group.id)">Eliminar Grupo</ion-button>
+        <ion-button color="danger" (click)="$event.stopPropagation(); deleteGroup(group.id)"><ion-icon name="trash"></ion-icon></ion-button>
       </ion-card>
     </ng-container>
     <ion-button class="add-group-btn" shape="round" (click)="addGroup()">
@@ -21,7 +21,7 @@
     <div class="no-groups">No hay grupos disponibles.</div>
   </ng-template>
 
-  <ion-modal [isOpen]="!!selectedGroup">
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeGroupDetails()" >
     <ng-container *ngIf="selectedGroup">
       <ion-header>
         <ion-toolbar>

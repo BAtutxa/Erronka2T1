@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuController, AlertController } from '@ionic/angular';
 import { HitzorduakService } from '../services/hitzorduak.service';
 
@@ -7,9 +7,11 @@ import { HitzorduakService } from '../services/hitzorduak.service';
   templateUrl: './grupos.page.html',
   styleUrls: ['./grupos.page.scss'],
 })
-export class GruposPage {
+export class GruposPage implements OnInit {
   groups: any[] = [];
+  langile: any[] = [];
   selectedGroup: any = null;
+  isModalOpen: boolean = false;
 
   constructor(
     private menuCtrl: MenuController,
@@ -29,28 +31,47 @@ export class GruposPage {
     this.menuCtrl.enable(false);
   }
 
-  loadGroups() {
-    this.hitzorduakService.getGroups().subscribe((data) => {
-      this.groups = data;
-    });
+  loadGroups(): void {
+    this.hitzorduakService.getGroups().subscribe(
+      (data) => {
+        this.groups = data.map((groups) => ({
+          id: groups.id,
+          name: groups.izena,
+        }));
+      },
+      (error) => {
+        console.error('Error al cargar productos:', error);
+      }
+    );
   }
-
   showGroupDetails(group: any) {
     this.selectedGroup = group;
-    this.loadPersons(group.id); // Corregido a loadPersons
+    this.loadPersons(group.id);
+    this.isModalOpen = true; 
   }
 
   closeGroupDetails() {
     this.selectedGroup = null;
+    this.isModalOpen = false;
   }
 
-  loadPersons(groupId: number) { // Corregido el nombre de la función
-    this.hitzorduakService.getPersonsByGroup(groupId).subscribe((data) => {
-      if (this.selectedGroup && this.selectedGroup.id === groupId) {
-        this.selectedGroup.persons = data; // Corregido a persons
+  loadPersons(groupId: number): void {
+    this.hitzorduakService.getPersonsByGroup(groupId).subscribe(
+      (data) => {
+        if (this.selectedGroup.id && this.selectedGroup.id === groupId) {
+          this.selectedGroup.persons = data.map((person) => ({
+            id: person.kodea,
+            name: person.izena,
+            surname: person.abizenak
+          }));
+        }
+      },
+      (error) => {
+        console.error('Error al cargar personas:', error);
       }
-    });
+    );
   }
+  
 
   async addGroup() {
     const alert = await this.alertController.create({

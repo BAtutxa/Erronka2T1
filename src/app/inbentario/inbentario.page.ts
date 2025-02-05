@@ -14,7 +14,7 @@ export class InbentarioPage implements OnInit {
   filteredItems: any[] = [];
   currentSection: 'productos' | 'materiales' = 'productos';
   selectedItem: any = null;
-
+  isModalOpen: boolean = false;
   constructor(
     private alertController: AlertController,
     private hitzorduakService: HitzorduakService
@@ -92,6 +92,7 @@ export class InbentarioPage implements OnInit {
    */
   showItemDetails(item: any): void {
     this.selectedItem = item;
+    this.isModalOpen = true;
   }
 
   /**
@@ -99,6 +100,7 @@ export class InbentarioPage implements OnInit {
    */
   closeItemDetails(): void {
     this.selectedItem = null;
+    this.isModalOpen = false;
   }
 
   /**
@@ -153,9 +155,6 @@ export class InbentarioPage implements OnInit {
     }
   }
 
-  /**
-   * Método para abrir el modal para agregar nuevos productos/materiales
-   */
   openAddItemModal(): void {
     // Aquí puedes crear y abrir el modal para agregar un nuevo ítem
     // Puedes incluir un formulario para agregar los datos

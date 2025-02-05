@@ -13,24 +13,31 @@
     </ion-item>
   </ion-list>
 
-  <ion-modal *ngIf="selectedClient">
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeModal()">
     <ion-header>
       <ion-toolbar>
-        <ion-title>Detalles de {{ selectedClient.name }}</ion-title>
+        <ion-title>{{ selectClient.name }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="closeModal()">Cerrar</ion-button>
+          <ion-button (click)="closeModal()">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content *ngIf="selectedClient">
+      <h2>{{ selectedClient.name }} {{ selectedClient.surname }}</h2>
       <p>📞 Teléfono: {{ selectedClient.phone }}</p>
       <p>🧴 Piel sensible: {{ selectedClient.sensitiveSkin ? 'Sí' : 'No' }}</p>
-      <h3>Historial de Visitas</h3>
+      <p *ngIf="selectedClient.firstVisit">Primera visita: {{ selectedClient.firstVisit }}</p>
+      <p *ngIf="selectedClient.lastVisit">Última visita: {{ selectedClient.lastVisit }}</p>
+      <h3>servicios:</h3>
       <ion-list>
-        <ion-item *ngFor="let visit of selectedClient.visits">
+        <ion-item *ngFor="let kolorea of koloreak">
           <ion-label>
-            <p>📅 {{ visit.visitDate }}</p>
-            <p>💇 Servicio: {{ visit.service }}</p>
+            <p><strong>Producto:</strong> {{ kolorea.idProduktu }} ({{ kolorea.bolumena }})</p>
+            <p><strong>Fecha:</strong> {{ kolorea.data }}</p>
+            <p><strong>Cantidad:</strong> {{ kolorea.kantitatea }}</p>
+            <p><strong>Observaciones:</strong> {{ kolorea.oharra }}</p>
           </ion-label>
         </ion-item>
       </ion-list>

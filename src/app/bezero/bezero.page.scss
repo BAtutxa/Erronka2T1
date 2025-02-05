@@ -1,20 +1,109 @@
 .content-grid {
-    padding: 16px;
-  
-    ion-searchbar {
-      margin-bottom: 16px;
-    }
-  
-    ion-list {
-      margin-top: 8px;
-      ion-item {
-        border-bottom: 1px solid #dcdcdc;
-      }
-    }
-  }
-  
-  ion-card {
-    margin: 16px;
-  }
+  padding: 16px;
+}
 
-  
+ion-searchbar {
+  margin-bottom: 16px;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --border-radius: 12px;
+}
+
+ion-list {
+  margin-top: 8px;
+  padding: 0;
+}
+
+/* Estilo para los elementos de la lista */
+ion-item {
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  margin: 8px 0;
+  padding: 12px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+ion-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+ion-label h2 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+ion-label p {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 2px 0;
+}
+
+/* Estilo para el modal */
+ion-modal {
+  --border-radius: 16px;
+  --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+ion-header {
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ddd;
+}
+
+ion-toolbar {
+  padding: 0 16px;
+}
+
+ion-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #222;
+}
+
+ion-button {
+  --background: transparent;
+  --color: #333;
+}
+
+ion-content h2, ion-content h3 {
+  font-size: 1.2rem;
+  color: #444;
+  margin: 8px 0;
+  padding-left: 16px; /* Separación desde el borde izquierdo */
+}
+
+ion-content p {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 4px 0;
+  padding-left: 16px; /* Separación desde el borde izquierdo */
+}
+
+/* Mejorando la visualización de los servicios */
+ion-content h3 {
+  margin-top: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-bottom: 2px solid #dcdcdc;
+  padding-bottom: 4px;
+  padding-left: 16px; /* Separación desde el borde izquierdo */
+}
+
+/* Tarjetas para destacar servicios */
+.service-card {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px;
+  margin: 8px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s;
+  padding-left: 16px; /* Separación desde el borde izquierdo */
+}
+
+.service-card:hover {
+  background: #f0f0f0;
+}

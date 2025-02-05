@@ -15,6 +15,10 @@ export class HitzorduakService {
     return this.http.get<any[]>(`${this.apiUrl}/zerbitzuak`);
   }
 
+  getKoloreakByGroup(BezeroId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/taldeak/${BezeroId}/kolore-historialak`);
+  }
+
   // Obtener todas las citas
   getHitzorduak(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/hitzorduak`);

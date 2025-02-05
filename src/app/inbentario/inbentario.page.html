@@ -50,7 +50,7 @@
     </ng-template>
   </div>
 
-  <ion-modal [isOpen]="!!selectedItem">
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeItemDetails()">
     <ng-container *ngIf="selectedItem">
       <ion-header>
         <ion-toolbar>

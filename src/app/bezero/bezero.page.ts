@@ -13,9 +13,17 @@ interface Client {
   surname: string;
   phone: string;
   sensitiveSkin: boolean;
-  visits: Visit[];
   firstVisit: string;
   lastVisit: string;
+}
+
+interface Kolorea {
+  idBezero: number;
+  idProduktu: number;
+  data: string;
+  kantitatea: number;
+  bolumena: string;
+  oharra: string;
 }
 
 @Component({
@@ -26,8 +34,10 @@ interface Client {
 export class BezeroPage implements OnInit {
   searchQuery: string = '';
   clients: Client[] = [];
+  koloreak: Kolorea[] = [];
   filteredClients: Client[] = [];
   selectedClient: Client | null = null;
+  isModalOpen: boolean = false;
 
   constructor(
     private alertController: AlertController,
@@ -47,8 +57,7 @@ export class BezeroPage implements OnInit {
             name: client.izena,
             surname: client.abizena,
             phone: client.telefonoa,
-            sensitiveSkin: client.azal_sentikorra === 'Y',
-            visits: client.visits || [],
+            sensitiveSkin: client.azalSentikorra === 'Y',
             firstVisit: client.sortzeData,
             lastVisit: client.eguneratzeData,
           }));
@@ -64,7 +73,25 @@ export class BezeroPage implements OnInit {
       this.showAlert('Error', 'Ocurrió un error inesperado');
     }
   }
-  
+
+  loadKoloreak(BezeroId: number): void {
+    this.hitzorduakService.getKoloreakByGroup(BezeroId).subscribe(
+      (data) => {
+        this.koloreak = data.map(kolorea => ({
+          idBezero: kolorea.idBezeroa,
+          idProduktu: kolorea.idProduktu,
+          data: kolorea.data,
+          kantitatea: kolorea.kantitatea,
+          bolumena: kolorea.bolumena,
+          oharra: kolorea.oharra
+        }));
+      },
+      (error) => {
+        console.error('Error al cargar servicios:', error);
+        this.showAlert('Error', 'No se pudieron cargar los servicios');
+      }
+    );
+  }
 
   searchClients(): void {
     const query = this.searchQuery.toLowerCase().trim();
@@ -77,9 +104,12 @@ export class BezeroPage implements OnInit {
 
   selectClient(client: Client): void {
     this.selectedClient = client;
+    this.loadKoloreak(client.id); // Cargar los Koloreak cuando se seleccione un cliente
+    this.isModalOpen = true;
   }
 
   closeModal(): void {
+    this.isModalOpen = false;
     this.selectedClient = null;
   }
 
