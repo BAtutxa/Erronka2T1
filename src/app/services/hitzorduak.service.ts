@@ -16,7 +16,7 @@ export class HitzorduakService {
   }
 
   getKoloreakByBezeroa(idBezeroa: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/koloreak/bezero/${idBezeroa}`);
+    return this.http.get<any[]>(`${this.apiUrl}/kolore-historialak/bezero/${idBezeroa}`);
   }
 
   // Obtener todas las citas
