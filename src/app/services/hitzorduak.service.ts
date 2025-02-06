@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class HitzorduakService {
-  private apiUrl = 'http://localhost:8090/api';
+  private apiUrl = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
@@ -15,8 +15,8 @@ export class HitzorduakService {
     return this.http.get<any[]>(`${this.apiUrl}/zerbitzuak`);
   }
 
-  getKoloreakByGroup(BezeroId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/taldeak/${BezeroId}/kolore-historialak`);
+  getKoloreakByBezeroa(idBezeroa: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/koloreak/bezero/${idBezeroa}`);
   }
 
   // Obtener todas las citas

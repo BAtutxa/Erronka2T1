@@ -18,9 +18,7 @@ interface Client {
 }
 
 interface Kolorea {
-  idBezero: number;
-  idProduktu: number;
-  data: string;
+  data: Date;
   kantitatea: number;
   bolumena: string;
   oharra: string;
@@ -74,24 +72,31 @@ export class BezeroPage implements OnInit {
     }
   }
 
-  loadKoloreak(BezeroId: number): void {
-    this.hitzorduakService.getKoloreakByGroup(BezeroId).subscribe(
-      (data) => {
-        this.koloreak = data.map(kolorea => ({
-          idBezero: kolorea.idBezeroa,
-          idProduktu: kolorea.idProduktu,
-          data: kolorea.data,
-          kantitatea: kolorea.kantitatea,
-          bolumena: kolorea.bolumena,
-          oharra: kolorea.oharra
-        }));
-      },
-      (error) => {
-        console.error('Error al cargar servicios:', error);
-        this.showAlert('Error', 'No se pudieron cargar los servicios');
-      }
-    );
+  async loadKoloreak(idBezero: number): Promise<void> {
+    try {
+      this.hitzorduakService.getKoloreakByBezeroa(idBezero).subscribe(
+        (data) => {
+          console.log('Koloreak data:', data);
+            this.koloreak = data.map(kolorea => ({
+              data: kolorea.data,
+              kantitatea: kolorea.kantitatea,
+              bolumena: kolorea.bolumena,
+              oharra: kolorea.oharra
+            }));
+            this.koloreak = [...this.koloreak];
+        },
+        (error) => {
+          console.error('Error al cargar koloreak:', error);
+          this.showAlert('Error', 'No se pudieron cargar los koloreak');
+        }
+      );
+    } catch (error) {
+      console.error('Error:', error);
+      this.showAlert('Error', 'Ocurrió un error inesperado');
+    }
   }
+  
+  
 
   searchClients(): void {
     const query = this.searchQuery.toLowerCase().trim();
@@ -104,7 +109,7 @@ export class BezeroPage implements OnInit {
 
   selectClient(client: Client): void {
     this.selectedClient = client;
-    this.loadKoloreak(client.id); // Cargar los Koloreak cuando se seleccione un cliente
+    this.loadKoloreak(client.id);
     this.isModalOpen = true;
   }
 
