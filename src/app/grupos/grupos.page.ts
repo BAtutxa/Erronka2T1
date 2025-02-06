@@ -8,9 +8,11 @@ import { HitzorduakService } from '../services/hitzorduak.service';
   styleUrls: ['./grupos.page.scss'],
 })
 export class GruposPage implements OnInit {
-  groups: any[] = [];
-  langile: any[] = [];
-  selectedGroup: any = null;
+  grupos: any[] = [];
+  langileak: any[] = [];
+  filteredItems: any[] = [];
+  currentSection: 'grupos' | 'langileak' = 'grupos';
+  selectedItem: any = null;
   isModalOpen: boolean = false;
 
   constructor(
@@ -19,107 +21,115 @@ export class GruposPage implements OnInit {
     private hitzorduakService: HitzorduakService
   ) {}
 
-  ngOnInit() {
-    this.loadGroups();
+  ngOnInit(): void {
+    this.loadData(); // Carga inicial de datos
   }
 
-  ionViewWillEnter() {
-    this.menuCtrl.enable(true);
+  loadData(): void {
+    this.loadGrupos();
+    this.loadLangileak();
   }
 
-  ionViewWillLeave() {
-    this.menuCtrl.enable(false);
-  }
-
-  loadGroups(): void {
+  loadGrupos(): void {
     this.hitzorduakService.getGroups().subscribe(
       (data) => {
-        this.groups = data.map((groups) => ({
-          id: groups.id,
-          name: groups.izena,
+        this.grupos = data.map((grupo) => ({
+          id: grupo.kodea,
+          name: grupo.izena,
+          description: grupo.description || 'Sin descripción',
+          type: 'grupos'
         }));
+        if (this.currentSection === 'grupos') this.filterItems();
       },
       (error) => {
-        console.error('Error al cargar productos:', error);
+        console.error('Error al cargar grupos:', error);
       }
     );
   }
-  showGroupDetails(group: any) {
-    this.selectedGroup = group;
-    this.loadPersons(group.id);
-    this.isModalOpen = true; 
+
+  loadLangileak(): void {
+    this.hitzorduakService.getLangileak().subscribe({
+      next: (data: any[]) => {
+        this.langileak = data.map((langile) => ({
+          id: langile.id,
+          name: langile.izena,
+          surname: langile.abizenak,
+          type: 'langileak'
+        }));
+        if (this.currentSection === 'langileak') this.filterItems();
+      },
+      error: (error: any) => {
+        console.error('Error al cargar langileak:', error);
+      }
+    });
+  }
+  segmentChanged(): void {
+    this.filterItems();
   }
 
-  closeGroupDetails() {
-    this.selectedGroup = null;
+  filterItems(event?: any): void {
+    const query = event?.target?.value?.toLowerCase() || '';
+    const items = this.currentSection === 'grupos' ? this.grupos : this.langileak;
+    this.filteredItems = items.filter((item) => item.name.toLowerCase().includes(query));
+  }
+
+  showItemDetails(item: any): void {
+    this.selectedItem = item;
+    this.isModalOpen = true;
+  }
+
+  closeItemDetails(): void {
+    this.selectedItem = null;
     this.isModalOpen = false;
   }
 
-  loadPersons(groupId: number): void {
-    this.hitzorduakService.getPersonsByGroup(groupId).subscribe(
-      (data) => {
-        if (this.selectedGroup.id && this.selectedGroup.id === groupId) {
-          this.selectedGroup.persons = data.map((person) => ({
-            id: person.kodea,
-            name: person.izena,
-            surname: person.abizenak
-          }));
-        }
-      },
-      (error) => {
-        console.error('Error al cargar personas:', error);
-      }
-    );
-  }
-  
-
-  async addGroup() {
-    const alert = await this.alertController.create({
-      header: 'Nuevo Grupo',
-      inputs: [
-        { name: 'name', type: 'text', placeholder: 'Nombre del grupo' },
-        { name: 'description', type: 'text', placeholder: 'Descripción' },
-      ],
+  deleteItem(itemId: number, event: Event): void {
+    event.stopPropagation();
+    const confirm = this.alertController.create({
+      header: 'Confirmar',
+      message: '¿Seguro que quieres eliminar este ítem?',
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         {
-          text: 'Guardar',
-          handler: (data) => {
-            this.hitzorduakService.addGroup(data).subscribe(() => this.loadGroups());
+          text: 'Eliminar',
+          handler: () => {
+            if (this.currentSection === 'grupos') {
+              this.hitzorduakService.deleteGroup(itemId).subscribe(() => {
+                this.loadGrupos();
+              });
+            } else {
+              this.hitzorduakService.deleteLangile(itemId).subscribe(() => {
+                this.loadLangileak();
+              });
+            }
           },
         },
       ],
     });
-    await alert.present();
+    confirm.then((alert) => alert.present());
   }
 
-  deleteGroup(groupId: number) {
-    this.hitzorduakService.deleteGroup(groupId).subscribe(() => this.loadGroups());
-  }
-
-  async addPerson(groupId: number) { // Corregido el nombre de la función
-    const alert = await this.alertController.create({
-      header: 'Nueva Persona',
-      inputs: [
-        { name: 'name', type: 'text', placeholder: 'Nombre' },
-        { name: 'surname', type: 'text', placeholder: 'Apellidos' },
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            this.hitzorduakService.addPersonToGroup(groupId, data).subscribe(() => this.loadPersons(groupId));
-          },
+  saveChanges(): void {
+    if (this.currentSection === 'grupos') {
+      this.hitzorduakService.updateGroup(this.selectedItem.id, this.selectedItem).subscribe(
+        () => {
+          this.loadGrupos();
+          this.closeItemDetails();
         },
-      ],
-    });
-    await alert.present();
+        (error) => console.error('Error al actualizar el grupo:', error)
+      );
+    } else {
+      this.hitzorduakService.updateLangile(this.selectedItem.id, this.selectedItem).subscribe(
+        () => {
+          this.loadLangileak();
+          this.closeItemDetails();
+        },
+        (error) => console.error('Error al actualizar el langile:', error)
+      );
+    }
   }
 
-  deletePerson(groupId: number, personId: number) { // Corregido a personId
-    this.hitzorduakService.deletePersonFromGroup(groupId, personId).subscribe(() => {
-      this.loadPersons(groupId);
-    });
+  openAddItemModal(): void {
+    // Implementar lógica para abrir modal de añadir ítem
   }
 }

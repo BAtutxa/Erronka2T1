@@ -6,6 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class HitzorduakService {
+  
+  
+  
   private apiUrl = 'http://localhost:8090/api';
 
   constructor(private http: HttpClient) {}
@@ -86,4 +89,19 @@ export class HitzorduakService {
   deletePersonFromGroup(groupId: number, personId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/grupos/${groupId}/langileak/${personId}`);
   }
+
+  getLangileak(): Observable<any[]>  {
+    return this.http.get<any[]>(`${this.apiUrl}/langileak`);
+  }
+
+  deleteLangile(personId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/langileak/${personId}`);
+  }
+
+  updateGroup(id: number, selectedItem: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/taldeak/${id}`, selectedItem);
+  }
+
+  updateLangile(id: any, selectedItem: any) {
+    return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, selectedItem);  }
 }

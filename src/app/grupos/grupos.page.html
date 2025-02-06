@@ -1,50 +1,94 @@
 <app-menu></app-menu>
 
 <ion-content [fullscreen]="true">
-  <div class="group-grid">
-    <ng-container *ngIf="groups.length; else noGroupsTemplate">
-      <ion-card *ngFor="let group of groups" (click)="showGroupDetails(group)">
-        <ion-card-header>
-          <ion-card-title>{{ group.name }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>{{ group.description }}</ion-card-content>
-        <ion-button color="danger" (click)="$event.stopPropagation(); deleteGroup(group.id)"><ion-icon name="trash"></ion-icon></ion-button>
-      </ion-card>
-    </ng-container>
-    <ion-button class="add-group-btn" shape="round" (click)="addGroup()">
+  <div class="search-container">
+    <ion-searchbar
+      placeholder="Buscar en {{ currentSection === 'grupos' ? 'grupos' : 'langileak' }}"
+      (ionInput)="filterItems($event)"
+    ></ion-searchbar>
+    <ion-button
+      class="add-group-btn"
+      shape="round"
+      (click)="openAddItemModal()"
+    >
       <ion-icon name="add-circle-outline"></ion-icon>
-      <span> + </span>
     </ion-button>
   </div>
 
-  <ng-template #noGroupsTemplate>
-    <div class="no-groups">No hay grupos disponibles.</div>
-  </ng-template>
+  <div class="toggle-container">
+    <ion-segment [(ngModel)]="currentSection" (ionChange)="segmentChanged()">
+      <ion-segment-button value="grupos">
+        Grupos
+      </ion-segment-button>
+      <ion-segment-button value="langileak">
+        Langileak
+      </ion-segment-button>
+    </ion-segment>
+  </div>
 
-  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeGroupDetails()" >
-    <ng-container *ngIf="selectedGroup">
+  <div class="item-grid">
+    <ng-container *ngIf="filteredItems.length; else noItems">
+      <ion-card
+        class="item-card"
+        *ngFor="let item of filteredItems"
+        (click)="showItemDetails(item)"
+      >
+        <ion-card-header>
+          <ion-card-title>{{ item.name }}</ion-card-title>
+        </ion-card-header>
+        <ion-button
+          fill="clear"
+          (click)="deleteItem(item.id, $event)"
+        >
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </ion-card>
+    </ng-container>
+    <ng-template #noItems>
+      <p class="no-items">No hay {{ currentSection }} disponibles.</p>
+    </ng-template>
+  </div>
+
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeItemDetails()">
+    <ng-container *ngIf="selectedItem">
       <ion-header>
         <ion-toolbar>
-          <ion-title>{{ selectedGroup.name }}</ion-title>
+          <ion-title>{{ selectedItem.name }}</ion-title>
           <ion-buttons slot="end">
-            <ion-button (click)="closeGroupDetails()">
+            <ion-button (click)="closeItemDetails()">
               <ion-icon name="close"></ion-icon>
             </ion-button>
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
+  
       <ion-content>
-        <div class="group-details">
-          <p>{{ selectedGroup.description }}</p>
-          <ion-list>
-            <ion-item *ngFor="let person of selectedGroup.persons">
-              {{ person.name }} {{ person.surname }}
-              <ion-button fill="clear" color="danger" slot="end" (click)="deletePerson(selectedGroup.id, person.id)">
-                <ion-icon name="trash"></ion-icon>
-              </ion-button>
+        <div class="item-details">
+          <ion-item>
+            <ion-label position="stacked">Nombre</ion-label>
+            <ion-input [(ngModel)]="selectedItem.name"></ion-input>
+          </ion-item>
+  
+          <ion-item>
+            <ion-label position="stacked">Descripción</ion-label>
+            <ion-textarea [(ngModel)]="selectedItem.description"></ion-textarea>
+          </ion-item>
+  
+          <ng-container *ngIf="selectedItem.type === 'grupos'">
+            <ion-item>
+              <ion-label position="stacked">Código</ion-label>
+              <ion-input [(ngModel)]="selectedItem.kodea"></ion-input>
             </ion-item>
-          </ion-list>
-          <ion-button (click)="addPerson(selectedGroup.id)">Añadir Persona</ion-button>
+          </ng-container>
+  
+          <ng-container *ngIf="selectedItem.type === 'langileak'">
+            <ion-item>
+              <ion-label position="stacked">Apellidos</ion-label>
+              <ion-input [(ngModel)]="selectedItem.surname"></ion-input>
+            </ion-item>
+          </ng-container>
+  
+          <ion-button expand="full" (click)="saveChanges()">Guardar Cambios</ion-button>
         </div>
       </ion-content>
     </ng-container>
