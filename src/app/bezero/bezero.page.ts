@@ -2,11 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { HitzorduakService } from '../services/hitzorduak.service';
 
-interface Visit {
-  visitDate: string;
-  service: string;
-}
-
 interface Client {
   id: number;
   name: string;
@@ -22,6 +17,7 @@ interface Kolorea {
   kantitatea: number;
   bolumena: string;
   oharra: string;
+  productoNombre: String;
 }
 
 @Component({
@@ -35,8 +31,7 @@ export class BezeroPage implements OnInit {
   koloreak: Kolorea[] = [];
   filteredClients: Client[] = [];
   selectedClient: Client | null = null;
-  isModalOpen: boolean = false;
-
+  isModalOpen = false;
   constructor(
     private alertController: AlertController,
     private hitzorduakService: HitzorduakService
@@ -76,14 +71,13 @@ export class BezeroPage implements OnInit {
     try {
       this.hitzorduakService.getKoloreakByBezeroa(idBezero).subscribe(
         (data) => {
-          console.log('Koloreak data:', data);
-            this.koloreak = data.map(kolorea => ({
-              data: kolorea.data,
-              kantitatea: kolorea.kantitatea,
-              bolumena: kolorea.bolumena,
-              oharra: kolorea.oharra
-            }));
-            this.koloreak = [...this.koloreak];
+          this.koloreak = data.map(kolorea => ({
+            data: kolorea.data,
+            kantitatea: kolorea.kantitatea,
+            bolumena: kolorea.bolumena,
+            oharra: kolorea.oharrak,
+            productoNombre: kolorea.productoNombre
+          }));
         },
         (error) => {
           console.error('Error al cargar koloreak:', error);
@@ -95,8 +89,6 @@ export class BezeroPage implements OnInit {
       this.showAlert('Error', 'Ocurrió un error inesperado');
     }
   }
-  
-  
 
   searchClients(): void {
     const query = this.searchQuery.toLowerCase().trim();

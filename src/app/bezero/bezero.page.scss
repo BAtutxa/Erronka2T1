@@ -1,19 +1,18 @@
+/* Estilo principal */
 .content-grid {
   padding: 16px;
 }
 
-ion-searchbar {
+.searchbar {
   margin-bottom: 16px;
   --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   --border-radius: 12px;
 }
 
 ion-list {
-  margin-top: 8px;
   padding: 0;
 }
 
-/* Estilo para los elementos de la lista */
 ion-item {
   border: 1px solid #dcdcdc;
   border-radius: 12px;
@@ -42,7 +41,6 @@ ion-label p {
   margin: 2px 0;
 }
 
-/* Estilo para el modal */
 ion-modal {
   --border-radius: 16px;
   --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
@@ -51,6 +49,8 @@ ion-modal {
 ion-header {
   background-color: #f8f8f8;
   border-bottom: 1px solid #ddd;
+  margin: 8px 0;
+  padding: 12px;
 }
 
 ion-toolbar {
@@ -72,27 +72,17 @@ ion-content h2, ion-content h3 {
   font-size: 1.2rem;
   color: #444;
   margin: 8px 0;
-  padding-left: 16px; /* Separación desde el borde izquierdo */
 }
 
-ion-content p {
-  font-size: 0.95rem;
-  color: #555;
-  margin: 4px 0;
-  padding-left: 16px; /* Separación desde el borde izquierdo */
-}
 
-/* Mejorando la visualización de los servicios */
 ion-content h3 {
   margin-top: 16px;
   font-weight: bold;
   text-transform: uppercase;
   border-bottom: 2px solid #dcdcdc;
   padding-bottom: 4px;
-  padding-left: 16px; /* Separación desde el borde izquierdo */
 }
 
-/* Tarjetas para destacar servicios */
 .service-card {
   background: #f9f9f9;
   border: 1px solid #e0e0e0;
@@ -101,9 +91,19 @@ ion-content h3 {
   margin: 8px 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: background 0.3s;
-  padding-left: 16px; /* Separación desde el borde izquierdo */
 }
 
 .service-card:hover {
   background: #f0f0f0;
 }
+
+ion-content p {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 4px 0;
+}
+
+.pe{
+  padding-left: 16px;
+}
+
