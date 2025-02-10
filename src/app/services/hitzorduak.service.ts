@@ -10,7 +10,6 @@ export class HitzorduakService {
 
   constructor(private http: HttpClient) {}
 
-  // Obtener todos los servicios
   getZerbitzuak(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/zerbitzuak`);
   }
@@ -19,41 +18,34 @@ export class HitzorduakService {
     return this.http.get<any[]>(`${this.apiUrl}/kolore-historialak/bezero/${idBezeroa}`);
   }
 
-  // Obtener todas las citas
   getHitzorduak(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/hitzorduak`);
   }
 
-  // Obtener todos los materiales
   getMaterialak(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/materialak`);
   }
 
-  // Obtener todos los productos
   getProduktuak(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/produktuak`);
   }
 
-  // Eliminar un material
   deleteMaterialak(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/materialak/${id}`);
   }
 
-  // Eliminar un producto
   deleteProduktuak(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/produktuak/${id}`);
   }
 
-  // Actualizar un material
-  updateMaterialak(id: number, material: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/materialak/${id}`, material);
+  updateProduktuak(id: number, produktu: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/produktuak/${id}`, produktu);
   }
 
-  // Actualizar un producto
-  updateProduktuak(id: number, producto: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/produktuak/${id}`, producto);
+  updateMaterialak(id: number, materiala: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/materialak/${id}`, materiala);
   }
-  
+
   getAllBezeroFitxak(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/bezero-fitxak`);
   }
@@ -62,27 +54,22 @@ export class HitzorduakService {
     return this.http.get<any[]>(`${this.apiUrl}/taldeak`);
   }
 
-  // Añadir un nuevo grupo
   addGroup(group: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/taldeak`, group);
   }
 
-  // Eliminar un grupo
   deleteGroup(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/taldeak/${id}`);
   }
 
-  // Obtener personas de un grupo específico
   getPersonsByGroup(groupId: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/taldeak/${groupId}/langileak`);
   }
 
-  // Añadir una persona a un grupo
   addPersonToGroup(groupId: number, person: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/grupos/${groupId}/langileak`, person);
   }
 
-  // Eliminar una persona de un grupo
   deletePersonFromGroup(groupId: number, personId: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/grupos/${groupId}/langileak/${personId}`);
   }
@@ -100,5 +87,26 @@ export class HitzorduakService {
   }
 
   updateLangile(id: any, selectedItem: any) {
-    return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, selectedItem);  }
+    return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, selectedItem);  
+  }
+
+  createMaterial(item:any){
+    return this.http.post<any>(`${this.apiUrl}/materialak`, item);
+  }
+
+  createproduktu(item:any){
+    return this.http.post<any>(`${this.apiUrl}/produktuak`, item);
+  }
+
+  getKategoriak(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/kategoriak`);
+  }
+
+  saveMaterialMailegua(item:any){
+    return this.http.post<any>(`${this.apiUrl}/material_maileguak`, item);
+  }
+
+  saveProduktuMugimendua(item:any){
+    return this.http.post<any>(`${this.apiUrl}/produktu_mugimenduak`, item);
+  }
 }
