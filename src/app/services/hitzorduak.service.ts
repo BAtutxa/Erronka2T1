@@ -100,5 +100,34 @@ export class HitzorduakService {
   }
 
   updateLangile(id: any, selectedItem: any) {
-    return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, selectedItem);  }
+    return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, selectedItem);  
+  }
+  getAllTxandak(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/txandak`);
+  }
+
+
+  // Obtener un txandak por ID (equivalente al GET de /api/txandak/{id})
+  getTxandakById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/txandak/${id}`);
+  }
+
+
+  // Crear un nuevo txandak (equivalente al POST de /api/txandak)
+  createTxandak(txandak: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/txandak`, txandak);
+  }
+
+
+  // Actualizar un txandak (equivalente al PUT de /api/txandak/{id})
+  updateTxandak(id: number, txandak: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/txandak/${id}`, txandak);
+  }
+
+
+  // Eliminar un txandak (equivalente al DELETE de /api/txandak/{id})
+  deleteTxandak(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/txandak/${id}`);
+  }
+
 }
