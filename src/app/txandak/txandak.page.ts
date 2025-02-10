@@ -20,104 +20,91 @@ export class TxandakPage implements OnInit {
   fechaFin: string = '';
 
 
-
-
   newTxandak = {
     mota: '',
     data: '',
     sortzeData: '',
     eguneratzeData: '',
     ezabatzeData: null,
-    langileId: null // Nuevo: Asociar langile al txanda
+    id_langilea: null // Nuevo: Asociar langile al txanda
   };
 
-
-
-
   constructor(private hitzorduakService: HitzorduakService, private alertController: AlertController) {}
-
-
-
 
   ngOnInit() {
     this.loadTxandak();
   }
 
-
-
-
   segmentChanged() {
     console.log('Sección actual:', this.currentSection);
   }
 
-
-
-
   loadTxandak(): void {
-    this.hitzorduakService.getAllTxandak().subscribe(
-      (txandakData) => {
-        this.hitzorduakService.getLangileak().subscribe(
-          (langileakData) => {
-            this.txandak = txandakData.map((txandak) => {
-              const langile = langileakData.find(l => l.id === txandak.langileId) || { izena: 'Desconocido', abizena: '' };
+  this.hitzorduakService.getAllTxandak().subscribe(
+    (txandakData) => {
+      this.hitzorduakService.getLangileak().subscribe(
+        (langileakData) => {
+          this.txandak = txandakData.map((txandak) => {
+            // Buscar el langile correspondiente por id
+            let langile = langileakData.find(l => l.id === txandak.id_langilea);
 
+            // Si no se encuentra el langile, asignamos un valor predeterminado
+            if (!langile) {
+              console.warn(`No se encontró el trabajador con ID: ${txandak.langileId}`);
+              langile = { izena: 'No disponible', abizenak: 'No disponible' }; // Asignación correcta
+            }
 
+            return {
+              id: txandak.id,
+              type: txandak.mota,
+              date: txandak.data,
+              langileIzena: langile.izena,
+              langileAbizena: langile.abizenak
+            };
+          });
 
-
-              return {
-                id: txandak.id,
-                type: txandak.mota,
-                date: txandak.data,
-                langileIzena: langile.izena,
-                langileAbizena: langile.abizena
-              };
-            });
-
-
-
-
-            this.harrera = this.txandak.filter(item => item.type === 'H');
-            this.garbiketa = this.txandak.filter(item => item.type === 'G');
-            this.filterbyDate();
-          },
-          (error) => console.error('Error al cargar los langileak:', error)
-        );
-      },
-      (error) => console.error('Error al cargar los txandak:', error)
-    );
-  }
-
-
-
-
-  deleteItem(itemId: number, event: Event): void {
-    event.stopPropagation();
-    this.alertController.create({
-      header: 'Confirmar',
-      message: '¿Seguro que quieres eliminar este ítem?',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Eliminar',
-          handler: () => {
-            this.txandak = this.txandak.filter(item => item.id !== itemId);
-            this.harrera = this.txandak.filter(item => item.type === 'H');
-            this.garbiketa = this.txandak.filter(item => item.type === 'G');
-            this.filterbyDate();
-          },
+          this.harrera = this.txandak.filter(item => item.type === 'H');
+          this.garbiketa = this.txandak.filter(item => item.type === 'G');
+          this.filterbyDate();
         },
-      ],
-    }).then(alert => alert.present());
-  }
+        (error) => console.error('Error al cargar los langileak:', error)
+      );
+    },
+    (error) => console.error('Error al cargar los txandak:', error)
+  );
+}
 
+deleteItem(itemId: number, event: Event): void {
+  event.stopPropagation();
 
-
+  this.alertController.create({
+    header: 'Confirmar',
+    message: '¿Seguro que quieres eliminar este ítem?',
+    buttons: [
+      { text: 'Cancelar', role: 'cancel' },
+      {
+        text: 'Eliminar',
+        handler: () => {
+          this.hitzorduakService.deleteTxanda(itemId).subscribe(
+            () => {
+              this.txandak = this.txandak.filter(item => item.id !== itemId);
+              this.harrera = this.txandak.filter(item => item.type === 'H');
+              this.garbiketa = this.txandak.filter(item => item.type === 'G');
+              this.filterbyDate();
+            },
+            (error) => {            
+              console.error('Error al eliminar el ítem:', error);
+            }
+          );
+        },
+      },
+    ],
+  }).then(alert => alert.present());
+}
 
   filterbyDate(): void {
+    
     let filtered = this.txandak;
-
-
-
 
     if (this.fechaInicio) {
       filtered = filtered.filter(item => item.date >= this.fechaInicio);
@@ -126,15 +113,9 @@ export class TxandakPage implements OnInit {
       filtered = filtered.filter(item => item.date <= this.fechaFin);
     }
 
-
-
-
     this.harrera = filtered.filter(item => item.type === 'H');
     this.garbiketa = filtered.filter(item => item.type === 'G');
   }
-
-
-
 
   filterToday(): void {
     const today = new Date().toISOString().split('T')[0];
@@ -142,9 +123,6 @@ export class TxandakPage implements OnInit {
     this.fechaFin = today;
     this.filterbyDate();
   }
-
-
-
 
   resetFilter(): void {
     this.fechaInicio = '';

@@ -1,3 +1,4 @@
+<app-menu></app-menu>
 <ion-content>
   <div class="header-container">
     <ion-card>
@@ -50,8 +51,7 @@
   <ion-list *ngIf="currentSection === 'harrera' && harrera.length > 0">
     <ion-item *ngFor="let item of harrera">
       <ion-label>
-        <h2>ID: {{ item.id }}</h2>
-        <p>Tipo: {{ item.type }}</p>
+        <h2>Recepción</h2>
         <p>Fecha: {{ item.date }}</p>
         <p>Trabajador: {{ item.langileIzena }} {{ item.langileAbizena }}</p>
       </ion-label>
@@ -67,8 +67,7 @@
   <ion-list *ngIf="currentSection === 'garbiketa' && garbiketa.length > 0">
     <ion-item *ngFor="let item of garbiketa">
       <ion-label>
-        <h2>ID: {{ item.id }}</h2>
-        <p>Tipo: {{ item.type }}</p>
+        <h2>Limpieza</h2>
         <p>Fecha: {{ item.date }}</p>
         <p>Trabajador: {{ item.langileIzena }} {{ item.langileAbizena }}</p>
       </ion-label>
