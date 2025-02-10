@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 
 
+
+
 @Component({
   selector: 'app-txandak',
   templateUrl: './txandak.page.html',
@@ -18,6 +20,8 @@ export class TxandakPage implements OnInit {
   fechaFin: string = '';
 
 
+
+
   newTxandak = {
     mota: '',
     data: '',
@@ -28,7 +32,11 @@ export class TxandakPage implements OnInit {
   };
 
 
+
+
   constructor(private hitzorduakService: HitzorduakService, private alertController: AlertController) {}
+
+
 
 
   ngOnInit() {
@@ -36,9 +44,13 @@ export class TxandakPage implements OnInit {
   }
 
 
+
+
   segmentChanged() {
     console.log('Sección actual:', this.currentSection);
   }
+
+
 
 
   loadTxandak(): void {
@@ -48,6 +60,8 @@ export class TxandakPage implements OnInit {
           (langileakData) => {
             this.txandak = txandakData.map((txandak) => {
               const langile = langileakData.find(l => l.id === txandak.langileId) || { izena: 'Desconocido', abizena: '' };
+
+
 
 
               return {
@@ -60,8 +74,10 @@ export class TxandakPage implements OnInit {
             });
 
 
-            this.harrera = this.txandak.filter(item => item.type === 'harrera');
-            this.garbiketa = this.txandak.filter(item => item.type === 'garbiketa');
+
+
+            this.harrera = this.txandak.filter(item => item.type === 'H');
+            this.garbiketa = this.txandak.filter(item => item.type === 'G');
             this.filterbyDate();
           },
           (error) => console.error('Error al cargar los langileak:', error)
@@ -70,6 +86,8 @@ export class TxandakPage implements OnInit {
       (error) => console.error('Error al cargar los txandak:', error)
     );
   }
+
+
 
 
   deleteItem(itemId: number, event: Event): void {
@@ -83,8 +101,8 @@ export class TxandakPage implements OnInit {
           text: 'Eliminar',
           handler: () => {
             this.txandak = this.txandak.filter(item => item.id !== itemId);
-            this.harrera = this.txandak.filter(item => item.type === 'harrera');
-            this.garbiketa = this.txandak.filter(item => item.type === 'garbiketa');
+            this.harrera = this.txandak.filter(item => item.type === 'H');
+            this.garbiketa = this.txandak.filter(item => item.type === 'G');
             this.filterbyDate();
           },
         },
@@ -93,8 +111,12 @@ export class TxandakPage implements OnInit {
   }
 
 
+
+
   filterbyDate(): void {
     let filtered = this.txandak;
+
+
 
 
     if (this.fechaInicio) {
@@ -105,9 +127,13 @@ export class TxandakPage implements OnInit {
     }
 
 
-    this.harrera = filtered.filter(item => item.type === 'harrera');
-    this.garbiketa = filtered.filter(item => item.type === 'garbiketa');
+
+
+    this.harrera = filtered.filter(item => item.type === 'H');
+    this.garbiketa = filtered.filter(item => item.type === 'G');
   }
+
+
 
 
   filterToday(): void {
@@ -118,11 +144,13 @@ export class TxandakPage implements OnInit {
   }
 
 
+
+
   resetFilter(): void {
     this.fechaInicio = '';
     this.fechaFin = '';
-    this.harrera = this.txandak.filter(item => item.type === 'harrera');
-    this.garbiketa = this.txandak.filter(item => item.type === 'garbiketa');
+    this.harrera = this.txandak.filter(item => item.type === 'H');
+    this.garbiketa = this.txandak.filter(item => item.type === 'G');
   }
  
   async openAddItemModal() {

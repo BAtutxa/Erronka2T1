@@ -14,6 +14,8 @@ export class GruposPage implements OnInit {
   currentSection: 'grupos' | 'langileak' = 'grupos';
   selectedItem: any = null;
   isModalOpen: boolean = false;
+  isAddItemModalOpen: boolean = false;
+  newItem: any = { name: '', surname: '', kodea: '' };
 
   constructor(
     private menuCtrl: MenuController,
@@ -36,8 +38,8 @@ export class GruposPage implements OnInit {
         this.grupos = data.map((grupo) => ({
           id: grupo.kodea,
           name: grupo.izena,
-          description: grupo.description || 'Sin descripción',
-          type: 'grupos'
+          kodea: grupo.kodea,
+          langileak: []
         }));
         if (this.currentSection === 'grupos') this.filterItems();
       },
@@ -54,7 +56,8 @@ export class GruposPage implements OnInit {
           id: langile.id,
           name: langile.izena,
           surname: langile.abizenak,
-          type: 'langileak'
+          kodea: langile.kodea,
+          grupo: null
         }));
         if (this.currentSection === 'langileak') this.filterItems();
       },
@@ -63,6 +66,7 @@ export class GruposPage implements OnInit {
       }
     });
   }
+
   segmentChanged(): void {
     this.filterItems();
   }
@@ -74,62 +78,23 @@ export class GruposPage implements OnInit {
   }
 
   showItemDetails(item: any): void {
-    this.selectedItem = item;
-    this.isModalOpen = true;
-  }
+    if (this.currentSection === 'grupos') {
+      this.selectedItem = { ...item, langileak: [] };
+      this.hitzorduakService.getPersonsByGroup(item.kodea).subscribe((data: any) => {
+        this.selectedItem.langileak = data;
+        this.isModalOpen = true;
+      });
+    } else {
+      this.selectedItem = item;
 
+      this.hitzorduakService.getGroupByKodea(item.kodea).subscribe((data: any) => {
+        this.selectedItem.grupo = data;
+        this.isModalOpen = true;
+      });
+    }
+  }
   closeItemDetails(): void {
     this.selectedItem = null;
     this.isModalOpen = false;
-  }
-
-  deleteItem(itemId: number, event: Event): void {
-    event.stopPropagation();
-    const confirm = this.alertController.create({
-      header: 'Confirmar',
-      message: '¿Seguro que quieres eliminar este ítem?',
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Eliminar',
-          handler: () => {
-            if (this.currentSection === 'grupos') {
-              this.hitzorduakService.deleteGroup(itemId).subscribe(() => {
-                this.loadGrupos();
-              });
-            } else {
-              this.hitzorduakService.deleteLangile(itemId).subscribe(() => {
-                this.loadLangileak();
-              });
-            }
-          },
-        },
-      ],
-    });
-    confirm.then((alert) => alert.present());
-  }
-
-  saveChanges(): void {
-    if (this.currentSection === 'grupos') {
-      this.hitzorduakService.updateGroup(this.selectedItem.id, this.selectedItem).subscribe(
-        () => {
-          this.loadGrupos();
-          this.closeItemDetails();
-        },
-        (error) => console.error('Error al actualizar el grupo:', error)
-      );
-    } else {
-      this.hitzorduakService.updateLangile(this.selectedItem.id, this.selectedItem).subscribe(
-        () => {
-          this.loadLangileak();
-          this.closeItemDetails();
-        },
-        (error) => console.error('Error al actualizar el langile:', error)
-      );
-    }
-  }
-
-  openAddItemModal(): void {
-    // Implementar lógica para abrir modal de añadir ítem
   }
 }

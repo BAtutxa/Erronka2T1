@@ -87,5 +87,25 @@ export class HitzorduakService {
   }
 
   updateLangile(id: any, selectedItem: any) {
-    return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, selectedItem);  }
+    return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, selectedItem);  
+  }
+
+  getAllTxandak(): Observable<any[]>  {
+    return this.http.get<any[]>(`${this.apiUrl}/txandak`);
+  }
+
+  getKategoriak(): Observable<any[]>  {
+    return this.http.get<any[]>(`${this.apiUrl}/Kategoriak`);
+  }
+
+  createproduktu(item: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/produktuak`, item);
+  }
+  
+  createMaterial(item: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/materialak`, item);
+  }
+  getGroupByKodea(kodea: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/taldeak/${kodea}`);
+  }
 }

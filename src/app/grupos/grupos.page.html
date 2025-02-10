@@ -6,13 +6,6 @@
       placeholder="Buscar en {{ currentSection === 'grupos' ? 'grupos' : 'langileak' }}"
       (ionInput)="filterItems($event)"
     ></ion-searchbar>
-    <ion-button
-      class="add-group-btn"
-      shape="round"
-      (click)="openAddItemModal()"
-    >
-      <ion-icon name="add-circle-outline"></ion-icon>
-    </ion-button>
   </div>
 
   <div class="toggle-container">
@@ -36,12 +29,6 @@
         <ion-card-header>
           <ion-card-title>{{ item.name }}</ion-card-title>
         </ion-card-header>
-        <ion-button
-          fill="clear"
-          (click)="deleteItem(item.id, $event)"
-        >
-          <ion-icon name="trash"></ion-icon>
-        </ion-button>
       </ion-card>
     </ng-container>
     <ng-template #noItems>
@@ -63,32 +50,18 @@
       </ion-header>
   
       <ion-content>
-        <div class="item-details">
-          <ion-item>
-            <ion-label position="stacked">Nombre</ion-label>
-            <ion-input [(ngModel)]="selectedItem.name"></ion-input>
-          </ion-item>
-  
-          <ion-item>
-            <ion-label position="stacked">Descripción</ion-label>
-            <ion-textarea [(ngModel)]="selectedItem.description"></ion-textarea>
-          </ion-item>
-  
-          <ng-container *ngIf="selectedItem.type === 'grupos'">
-            <ion-item>
-              <ion-label position="stacked">Código</ion-label>
-              <ion-input [(ngModel)]="selectedItem.kodea"></ion-input>
-            </ion-item>
-          </ng-container>
-  
-          <ng-container *ngIf="selectedItem.type === 'langileak'">
-            <ion-item>
-              <ion-label position="stacked">Apellidos</ion-label>
-              <ion-input [(ngModel)]="selectedItem.surname"></ion-input>
-            </ion-item>
-          </ng-container>
-  
-          <ion-button expand="full" (click)="saveChanges()">Guardar Cambios</ion-button>
+        <div class="item-details" *ngIf="currentSection === 'grupos'">
+          <p><strong>Código:</strong> {{ selectedItem.kodea }}</p>
+          <h3>Langileak en este grupo:</h3>
+          <ul>
+            <li *ngFor="let langile of selectedItem.langileak">{{ langile.name }} {{ langile.surname }}</li>
+          </ul>
+        </div>
+
+        <div class="item-details" *ngIf="currentSection === 'langileak'">
+          <p><strong>Nombre:</strong> {{ selectedItem.name }}</p>
+          <p><strong>Apellidos:</strong> {{ selectedItem.surname }}</p>
+          <p><strong>Grupo:</strong> {{ selectedItem.grupo?.name || 'No asignado' }}</p>
         </div>
       </ion-content>
     </ng-container>
