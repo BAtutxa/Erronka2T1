@@ -6,7 +6,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class HitzorduakService {
+<<<<<<< HEAD
   private apiUrl = 'http://localhost:8080/api';
+=======
+  
+  getLangileakByGroup(kodea: any) {
+    throw new Error('Method not implemented.');
+  }
+  
+  
+  
+  private apiUrl = 'http://localhost:8090/api';
+>>>>>>> Aritz-Eder
 
   constructor(private http: HttpClient) {}
 
@@ -101,4 +112,9 @@ export class HitzorduakService {
 
   updateLangile(id: any, selectedItem: any) {
     return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, selectedItem);  }
+
+  getGroupByKodea(kodea: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/taldeak/${kodea}`);
+  }
+    
 }
