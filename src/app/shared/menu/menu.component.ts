@@ -18,6 +18,7 @@ export class MenuComponent implements OnInit, OnDestroy {
     { label: 'Zerbitzuak', route: '/zerbitzua', icon: 'assets/Fotos/zerb.png', titulo: 'Asistentzia' },
     { label: 'Garbiketa', route: '/limpieza', icon: 'assets/Fotos/garbi.png', titulo: 'Garbiketa' },
     { label: 'Ticket', route: '/ticket', icon: 'assets/Fotos/recibo.png', titulo: 'Ticket' },
+    { label: 'Txandak', route: '/txandak', icon: 'assets/Fotos/txandak.png', titulo: 'Txandak' },
   ];
 
   private routerSubscription!: Subscription;

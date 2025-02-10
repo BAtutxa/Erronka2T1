@@ -14,7 +14,8 @@ const routes: Routes = [
   {
     path: 'citas',
     loadChildren: () => import('./citas/citas.module').then(m => m.CitasPageModule)
-  },  {
+  },
+  {
     path: 'inbentario',
     loadChildren: () => import('./inbentario/inbentario.module').then( m => m.InbentarioPageModule)
   },
@@ -30,13 +31,14 @@ const routes: Routes = [
     path: 'bezero',
     loadChildren: () => import('./bezero/bezero.module').then( m => m.BezeroPageModule)
   },
-  {
-    path: 'limpieza',
-    loadChildren: () => import('./limpieza/limpieza.module').then( m => m.LimpiezaPageModule)
-  },
+  
   {
     path: 'zerbitzua',
     loadChildren: () => import('./zerbitzua/zerbitzua.module').then( m => m.ZerbitzuaPageModule)
+  },
+  {
+    path: 'txandak',
+    loadChildren: () => import('./txandak/txandak.module').then( m => m.TxandakPageModule)
   }
 
 ];

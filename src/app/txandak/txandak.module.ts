@@ -1,22 +1,24 @@
+import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { LimpiezaPageRoutingModule } from './limpieza-routing.module';
+import { TxandakPageRoutingModule } from './txandak-routing.module';
 
-import { LimpiezaPage } from './limpieza.page';
-import { SharedModule } from '../shared/shared.module';
+import { TxandakPage } from './txandak.page';
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    LimpiezaPageRoutingModule,
+    TxandakPageRoutingModule,
     SharedModule
-  ],
-  declarations: [LimpiezaPage]
+
+],
+  declarations: [TxandakPage]
 })
-export class LimpiezaPageModule {}
+export class TxandakPageModule {}

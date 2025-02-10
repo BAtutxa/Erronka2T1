@@ -87,26 +87,5 @@ export class HitzorduakService {
   }
 
   updateLangile(id: any, selectedItem: any) {
-    return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, selectedItem);  
-  }
-
-  createMaterial(item:any){
-    return this.http.post<any>(`${this.apiUrl}/materialak`, item);
-  }
-
-  createproduktu(item:any){
-    return this.http.post<any>(`${this.apiUrl}/produktuak`, item);
-  }
-
-  getKategoriak(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/kategoriak`);
-  }
-
-  saveMaterialMailegua(item:any){
-    return this.http.post<any>(`${this.apiUrl}/material_maileguak`, item);
-  }
-
-  saveProduktuMugimendua(item:any){
-    return this.http.post<any>(`${this.apiUrl}/produktu_mugimenduak`, item);
-  }
+    return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, selectedItem);  }
 }

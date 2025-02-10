@@ -1,0 +1,23 @@
+.header-container {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+/* Contenedor para los botones de segmentación y el botón de añadir */
+.segment-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+
+/* Asegurar que los botones de segmentación ocupen espacio */
+ion-segment {
+  flex-grow: 1;
+}

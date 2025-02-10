@@ -1,0 +1,81 @@
+<app-menu></app-menu>
+<ion-content>
+  <div class="header-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Selecciona Fecha</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-grid>
+          <ion-row class="ion-align-items-center">
+            <ion-col size="5">
+              <ion-item>
+                <ion-label position="stacked">Fecha inicio</ion-label>
+                <ion-input type="date" [(ngModel)]="fechaInicio" (ionChange)="filterbyDate()"></ion-input>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="5">
+              <ion-item>
+                <ion-label position="stacked">Fecha Fin</ion-label>
+                <ion-input type="date" [(ngModel)]="fechaFin" (ionChange)="filterbyDate()"></ion-input>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="2" class="ion-text-center">
+              <ion-button color="primary" fill="solid" (click)="filterToday()">Hoy</ion-button>
+              <ion-button color="primary" fill="solid" (click)="resetFilter()">Reiniciar</ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <div class="segment-container">
+      <ion-segment [(ngModel)]="currentSection" (ionChange)="segmentChanged()">
+        <ion-segment-button value="harrera">Harrera</ion-segment-button>
+        <ion-segment-button value="garbiketa">Garbiketa</ion-segment-button>
+      </ion-segment>
+
+      <ion-button class="add-group-btn" shape="round" (click)="openAddItemModal()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+
+  <ion-list *ngIf="currentSection === 'harrera' && harrera.length > 0">
+    <ion-item *ngFor="let item of harrera">
+      <ion-label>
+        <h2>ID: {{ item.id }}</h2>
+        <p>Tipo: {{ item.type }}</p>
+        <p>Fecha: {{ item.date }}</p>
+        <p>Trabajador: {{ item.langileIzena }} {{ item.langileAbizena }}</p>
+      </ion-label>
+
+      <ion-button color="danger" fill="clear" (click)="deleteItem(item.id, $event)">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="currentSection === 'garbiketa' && garbiketa.length > 0">
+    <ion-item *ngFor="let item of garbiketa">
+      <ion-label>
+        <h2>ID: {{ item.id }}</h2>
+        <p>Tipo: {{ item.type }}</p>
+        <p>Fecha: {{ item.date }}</p>
+        <p>Trabajador: {{ item.langileIzena }} {{ item.langileAbizena }}</p>
+      </ion-label>
+
+      <ion-button color="danger" fill="clear" (click)="deleteItem(item.id, $event)">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!-- Mensaje cuando no hay datos -->
+  <p *ngIf="(currentSection === 'harrera' && harrera.length === 0) || (currentSection === 'garbiketa' && garbiketa.length === 0)" class="empty-message">
+    No hay datos en {{ currentSection }}.
+  </p>
+</ion-content>
+       
