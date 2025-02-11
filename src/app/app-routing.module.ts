@@ -33,10 +33,6 @@ const routes: Routes = [
   },
   
   {
-    path: 'zerbitzua',
-    loadChildren: () => import('./zerbitzua/zerbitzua.module').then( m => m.ZerbitzuaPageModule)
-  },
-  {
     path: 'txandak',
     loadChildren: () => import('./txandak/txandak.module').then( m => m.TxandakPageModule)
   }

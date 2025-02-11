@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class HitzorduakService {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 
@@ -42,12 +42,16 @@ export class HitzorduakService {
     return this.http.put<any>(`${this.apiUrl}/produktuak/${id}`, produktu);
   }
 
+  updateLangileak(id: number, produktu: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/langileak/${id}`, produktu);
+  }
+
   updateMaterialak(id: number, materiala: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/materialak/${id}`, materiala);
   }
 
   getAllBezeroFitxak(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/bezero-fitxak`);
+    return this.http.get<any[]>(`${this.apiUrl}/bezeroak`);
   }
 
   getGroups(): Observable<any[]> {
@@ -60,10 +64,6 @@ export class HitzorduakService {
 
   deleteGroup(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/taldeak/${id}`);
-  }
-
-  getPersonsByGroup(groupId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/taldeak/${groupId}/langileak`);
   }
 
   addPersonToGroup(groupId: number, person: any): Observable<any> {
@@ -105,7 +105,8 @@ export class HitzorduakService {
   createMaterial(item: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/materialak`, item);
   }
-  getGroupByKodea(kodea: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/taldeak/${kodea}`);
+
+  removePersonFromGroup(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/produktuak/${id}`);
   }
 }

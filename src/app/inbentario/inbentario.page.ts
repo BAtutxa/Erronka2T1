@@ -42,7 +42,7 @@ export class InbentarioPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadData(); // Carga inicial de datos
+    this.loadData();
     this.loadKategoriak();
   }
 
@@ -323,7 +323,7 @@ openDocumentModal(item: any, event: Event): void {
   event.stopPropagation(); // Evita eventos no deseados
   this.documentData = {
     fecha: new Date().toISOString(), // Fecha actual
-    langilea: this.langileak.length > 0 ? this.langileak[0].id : null, // Primer langile por defecto
+    langilea: this.langileak.length > 0 ? this.langileak[0].id : null, 
     cantidad: 1,
     item: item
   };

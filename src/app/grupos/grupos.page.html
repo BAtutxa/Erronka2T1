@@ -8,16 +8,14 @@
     ></ion-searchbar>
   </div>
 
-  <div class="toggle-container">
-    <ion-segment [(ngModel)]="currentSection" (ionChange)="segmentChanged()">
-      <ion-segment-button value="grupos">
-        Grupos
-      </ion-segment-button>
-      <ion-segment-button value="langileak">
-        Langileak
-      </ion-segment-button>
-    </ion-segment>
-  </div>
+  <ion-segment [(ngModel)]="currentSection" (ionChange)="segmentChanged()">
+    <ion-segment-button value="grupos">
+      Grupos
+    </ion-segment-button>
+    <ion-segment-button value="langileak">
+      Langileak
+    </ion-segment-button>
+  </ion-segment>
 
   <div class="item-grid">
     <ng-container *ngIf="filteredItems.length; else noItems">
@@ -40,7 +38,7 @@
     <ng-container *ngIf="selectedItem">
       <ion-header>
         <ion-toolbar>
-          <ion-title>{{ selectedItem.name }}</ion-title>
+          <ion-card-title>{{ selectedItem?.name }}</ion-card-title>
           <ion-buttons slot="end">
             <ion-button (click)="closeItemDetails()">
               <ion-icon name="close"></ion-icon>
@@ -48,22 +46,49 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-  
+      
       <ion-content>
         <div class="item-details" *ngIf="currentSection === 'grupos'">
-          <p><strong>Código:</strong> {{ selectedItem.kodea }}</p>
           <h3>Langileak en este grupo:</h3>
           <ul>
-            <li *ngFor="let langile of selectedItem.langileak">{{ langile.name }} {{ langile.surname }}</li>
+            <li *ngFor="let langile of langileak">
+              <ng-container *ngIf="langile.taldeak.kodea === selectedItem.id">
+                {{ langile.name }} {{ langile.abizena }}
+              </ng-container>
+            </li>
           </ul>
+  
+          <!-- Desplegable para seleccionar un langile -->
+          <ion-item>
+            <ion-label>Seleccionar Langile</ion-label>
+            <ion-select [(ngModel)]="selectedLangileToAdd">
+              <ion-select-option *ngFor="let langile of langileak" [value]="langile">
+                {{ langile.name }} {{ langile.abizena }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>          
+  
+          <!-- Botón para actualizar el grupo del langile -->
+          <ion-button expand="full" (click)="saveChanges()">
+            Actualizar Grupo
+          </ion-button>
         </div>
-
+  
         <div class="item-details" *ngIf="currentSection === 'langileak'">
-          <p><strong>Nombre:</strong> {{ selectedItem.name }}</p>
-          <p><strong>Apellidos:</strong> {{ selectedItem.surname }}</p>
-          <p><strong>Grupo:</strong> {{ selectedItem.grupo?.name || 'No asignado' }}</p>
+          <ion-item>
+            <ion-label position="stacked">Nombre</ion-label>
+            <ion-input [(ngModel)]="selectedItem.name"></ion-input>
+          </ion-item> 
+          <ion-item>
+            <ion-label position="stacked">Apellido</ion-label>
+            <ion-input [(ngModel)]="selectedItem.abizena"></ion-input>
+          </ion-item> 
+          <ion-button expand="full" (click)="saveChanges()">
+            Actualizar Grupo
+          </ion-button>
         </div>
       </ion-content>
     </ng-container>
   </ion-modal>
+  
 </ion-content>

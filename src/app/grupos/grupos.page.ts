@@ -14,8 +14,10 @@ export class GruposPage implements OnInit {
   currentSection: 'grupos' | 'langileak' = 'grupos';
   selectedItem: any = null;
   isModalOpen: boolean = false;
-  isAddItemModalOpen: boolean = false;
-  newItem: any = { name: '', surname: '', kodea: '' };
+  availableLangileak: any[] = [];
+  selectedLangileToAdd: any = null;
+  selectedLangileId: string | null = null;
+
 
   constructor(
     private menuCtrl: MenuController,
@@ -24,7 +26,7 @@ export class GruposPage implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadData(); // Carga inicial de datos
+    this.loadData();
   }
 
   loadData(): void {
@@ -35,11 +37,9 @@ export class GruposPage implements OnInit {
   loadGrupos(): void {
     this.hitzorduakService.getGroups().subscribe(
       (data) => {
-        this.grupos = data.map((grupo) => ({
-          id: grupo.kodea,
-          name: grupo.izena,
-          kodea: grupo.kodea,
-          langileak: []
+        this.grupos = data.map((grupos) => ({
+          id: grupos.kodea,
+          name: grupos.izena
         }));
         if (this.currentSection === 'grupos') this.filterItems();
       },
@@ -48,24 +48,27 @@ export class GruposPage implements OnInit {
       }
     );
   }
-
+  
+  
   loadLangileak(): void {
-    this.hitzorduakService.getLangileak().subscribe({
-      next: (data: any[]) => {
-        this.langileak = data.map((langile) => ({
-          id: langile.id,
-          name: langile.izena,
-          surname: langile.abizenak,
-          kodea: langile.kodea,
-          grupo: null
+    this.hitzorduakService.getLangileak().subscribe(
+      (data) => {
+        this.langileak = data.map((langileak) => ({
+          id: langileak.id,
+          name: langileak.izena,
+          abizena: langileak.abizenak,
+          taldeak: langileak.taldeak ? {
+            kodea: langileak.taldeak.kodea,
+          } : null
         }));
-        if (this.currentSection === 'langileak') this.filterItems();
+        if (this.currentSection === 'grupos') this.filterItems();
       },
-      error: (error: any) => {
-        console.error('Error al cargar langileak:', error);
+      (error) => {
+        console.error('Error al cargar grupos:', error);
       }
-    });
+    );
   }
+  
 
   segmentChanged(): void {
     this.filterItems();
@@ -78,23 +81,83 @@ export class GruposPage implements OnInit {
   }
 
   showItemDetails(item: any): void {
-    if (this.currentSection === 'grupos') {
-      this.selectedItem = { ...item, langileak: [] };
-      this.hitzorduakService.getPersonsByGroup(item.kodea).subscribe((data: any) => {
-        this.selectedItem.langileak = data;
-        this.isModalOpen = true;
-      });
-    } else {
+    if (item) {
       this.selectedItem = item;
-
-      this.hitzorduakService.getGroupByKodea(item.kodea).subscribe((data: any) => {
-        this.selectedItem.grupo = data;
-        this.isModalOpen = true;
-      });
+      this.isModalOpen = true;
     }
   }
+  
+
   closeItemDetails(): void {
     this.selectedItem = null;
     this.isModalOpen = false;
   }
+
+  loadAvailableLangileak(): void {
+    this.availableLangileak = this.langileak.filter(
+      (langile) => !this.selectedItem.langileak.some((l: any) => l.id === langile.id)
+    );
+  }
+
+  addLangileToGroup(): void {
+    if (!this.selectedLangileToAdd) return;
+
+    this.hitzorduakService.addPersonToGroup(this.selectedItem.kodea, this.selectedLangileToAdd.id).subscribe(
+      () => {
+        this.selectedItem.langileak.push(this.selectedLangileToAdd);
+        this.loadAvailableLangileak();
+        this.selectedLangileToAdd = null;
+      },
+      (error) => {
+        console.error('Error al agregar langile:', error);
+      }
+    );
+  }
+
+  removeLangileFromGroup(langile: any): void {
+    this.hitzorduakService.removePersonFromGroup(langile.id).subscribe(
+      () => {
+        this.selectedItem.langileak = this.selectedItem.langileak.filter((l: any) => l.id !== langile.id);
+        this.loadAvailableLangileak();
+      },
+      (error) => {
+        console.error('Error al eliminar langile:', error);
+      }
+    );
+  }
+
+  saveChanges(): void {
+    if (this.currentSection === 'grupos') {
+      const updatedLangile = {
+        izena: this.selectedLangileToAdd.name,  // Ahora usa el nombre del seleccionado
+        abizenak: this.selectedLangileToAdd.abizena,  // Usa el apellido del seleccionado
+        taldeak: this.selectedItem ? { kodea: this.selectedItem.id } : null
+      };
+  
+      this.hitzorduakService.updateLangileak(this.selectedLangileToAdd.id, updatedLangile).subscribe(
+        () => {
+          this.loadGrupos();
+          this.loadLangileak();
+          this.closeItemDetails();
+        },
+        (error) => console.error('Error al actualizar el producto:', error)
+      );
+    } else {
+      const updateLangileak = {
+        izena: this.selectedItem.name,
+        abizenak: this.selectedItem.abizena,
+        taldeak: this.selectedItem.taldeak ? { kodea: this.selectedItem.taldeak.kodea } : null
+      };
+  
+      this.hitzorduakService.updateLangileak(this.selectedItem.id, updateLangileak).subscribe(
+        () => {
+          this.loadGrupos();
+          this.loadLangileak();
+          this.closeItemDetails();
+        },
+        (error) => console.error('Error al actualizar el material:', error)
+      );
+    }
+  }
+  
 }
