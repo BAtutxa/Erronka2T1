@@ -14,16 +14,12 @@
                 <ion-input type="date" [(ngModel)]="fechaInicio" (ionChange)="filterbyDate()"></ion-input>
               </ion-item>
             </ion-col>
-
-
             <ion-col size="5">
               <ion-item>
                 <ion-label position="stacked">Fecha Fin</ion-label>
                 <ion-input type="date" [(ngModel)]="fechaFin" (ionChange)="filterbyDate()"></ion-input>
               </ion-item>
             </ion-col>
-
-
             <ion-col size="2" class="ion-text-center">
               <ion-button color="primary" fill="solid" (click)="filterToday()">Hoy</ion-button>
               <ion-button color="primary" fill="solid" (click)="resetFilter()">Reiniciar</ion-button>
@@ -51,33 +47,70 @@
   <ion-list *ngIf="currentSection === 'harrera' && harrera.length > 0">
     <ion-item *ngFor="let item of harrera">
       <ion-label>
-        <h2>Recepción</h2>
-        <p>Fecha: {{ item.date }}</p>
-        <p>Trabajador: {{ item.langileIzena }} {{ item.langileAbizena }}</p>
+        <h2>Harrera</h2>
+        <p>Fecha: {{ item.data }}</p>
+        <p>Trabajador: {{ item.langilea?.izena }} {{ item.langilea?.abizena }}</p>
       </ion-label>
-
-
+  
       <ion-button color="danger" fill="clear" (click)="deleteItem(item.id, $event)">
         <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>
-
-
+  
   <ion-list *ngIf="currentSection === 'garbiketa' && garbiketa.length > 0">
     <ion-item *ngFor="let item of garbiketa">
       <ion-label>
-        <h2>Limpieza</h2>
-        <p>Fecha: {{ item.date }}</p>
-        <p>Trabajador: {{ item.langileIzena }} {{ item.langileAbizena }}</p>
+        <h2>Garbiketa</h2>
+        <p>Fecha: {{ item.data }}</p>
+        <p>Trabajador: {{ item.langilea?.izena }} {{ item.langilea?.abizena }}</p>
       </ion-label>
-
-
+  
       <ion-button color="danger" fill="clear" (click)="deleteItem(item.id, $event)">
         <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>
+  <ion-modal [isOpen]="isModalOpen">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Añadir Txanda</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content *ngIf="langileak.length > 0; else loading">
+      <ion-item>
+        <ion-label position="stacked">Tipo de Txanda</ion-label>
+        <ion-select [(ngModel)]="newTxandak.mota" placeholder="Seleccionar Tipo">
+          <ion-select-option value="M">Harrera</ion-select-option>
+          <ion-select-option value="G">Garbiketa</ion-select-option>
+        </ion-select>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label position="stacked">Fecha</ion-label>
+        <ion-input type="date" [(ngModel)]="newTxandak.data"></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label position="stacked">Trabajador</ion-label>
+        <ion-select [(ngModel)]="newTxandak.id_langilea" placeholder="Seleccionar Trabajador">
+          <ion-select-option *ngFor="let langilea of langileak" [value]="langilea.id">
+            {{ langilea.name }} {{ langilea.abizena }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+  
+      <ion-footer>
+        <ion-button expand="full" (click)="saveTxanda()">Guardar</ion-button>
+      </ion-footer>
+    </ion-content>
+    <ng-template #loading>
+      <p>Cargando datos de trabajadores...</p>
+    </ng-template>
+  </ion-modal>
 
 
   <!-- Mensaje cuando no hay datos -->

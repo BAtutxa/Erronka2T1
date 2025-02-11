@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class HitzorduakService {
+   
   private apiUrl = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
@@ -113,5 +114,9 @@ export class HitzorduakService {
 
   removePersonFromGroup(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/produktuak/${id}`);
+  }
+
+  createTxandak(item: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/txandak`, item);
   }
 }
