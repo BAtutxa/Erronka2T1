@@ -1,28 +1,73 @@
-/* Ajuste general */
-ion-grid {
-  padding: 20px;
+/* Card principal */
+.calendar-card {
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: auto; /* Ajuste automático para el contenido */
+  margin: 20px 0;
 }
 
-/* Chip personalizado */
-.grupo-chip {
-  --background: #3880ff;
-  --color: #fff;
+/* Estilo del texto con la fecha seleccionada */
+.date-display {
+  font-size: 1.2rem;  /* Tamaño adecuado para el texto */
   font-weight: bold;
+  margin: 0 10px;
+  cursor: pointer;
+  color: #333;  /* Color gris oscuro */
+  text-align: center;
+  padding: 10px 0;
 }
 
-/* Datetime */
-ion-datetime {
-  margin-top: 10px;
+/* Estilo de los iconos */
+ion-icon {
+  color: #333;  /* Color de iconos */
 }
 
-/* Mensaje de error */
-.error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 10px;
+/* Estilo de los botones */
+ion-button {
+  width: auto;
+  margin: 5px; /* Espaciado entre los botones */
+  font-size: 1rem; /* Tamaño adecuado para los botones */
 }
 
-/* Botón deshabilitado */
-ion-button[disabled] {
-  opacity: 0.5;
+/* Fila de los botones "Hoy" y "Añadir" */
+.ion-row {
+  margin-bottom: 15px;
+}
+
+/* Botones con la flecha para cambiar la fecha */
+ion-button[fill="clear"] {
+  margin: 0 10px; /* Espaciado entre los iconos */
+}
+
+ion-text.date-display {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Estilos del modal de fecha */
+ion-modal {
+  --width: 90%;
+  --height: 80%;
+  --border-radius: 15px;
+}
+
+/* Ajuste y alineación de los elementos dentro de los botones */
+.ion-row {
+  display: flex;
+  justify-content: center; /* Centra los botones */
+  align-items: center; /* Centra verticalmente */
+}
+
+/* Diseño responsivo para hacer que los elementos sean más pequeños en pantallas más pequeñas */
+@media (max-width: 767px) {
+  .calendar-card {
+    padding: 10px;
+  }
+
+  .date-display {
+    font-size: 1rem;  /* Reducir el tamaño del texto en pantallas pequeñas */
+  }
 }
