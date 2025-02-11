@@ -1,6 +1,6 @@
 import { HitzorduakService } from './../services/hitzorduak.service';
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController,ModalController } from '@ionic/angular';
 
 
 
@@ -14,22 +14,22 @@ export class TxandakPage implements OnInit {
   harrera: any[] = [];
   garbiketa: any[] = [];
   txandak: any[] = [];
-  langileak: any[] = [];
   currentSection: 'harrera' | 'garbiketa' = 'harrera';
   fechaInicio: string = '';
   fechaFin: string = '';
-
+  langileak: any[] = [];
 
   newTxandak = {
     mota: '',
     data: '',
-    sortzeData: '',
-    eguneratzeData: '',
-    ezabatzeData: null,
-    id_langilea: null // Nuevo: Asociar langile al txanda
+    id_langilea: null
   };
 
-  constructor(private hitzorduakService: HitzorduakService, private alertController: AlertController) {}
+  isModalOpen = false; // Controla la apertura del modal
+
+  constructor(private hitzorduakService: HitzorduakService, 
+              private alertController: AlertController, 
+              private modalController: ModalController) {}
 
   ngOnInit() {
     this.loadTxandak();
@@ -40,82 +40,93 @@ export class TxandakPage implements OnInit {
   }
 
   loadTxandak(): void {
-  this.hitzorduakService.getAllTxandak().subscribe(
-    (txandakData) => {
-      this.hitzorduakService.getLangileak().subscribe(
-        (langileakData) => {
-          this.txandak = txandakData.map((txandak) => {
-            // Buscar el langile correspondiente por id
-            let langile = langileakData.find(l => l.id === txandak.id_langilea);
+    this.hitzorduakService.getAllTxandak().subscribe(
+      (data) => {
+        this.txandak = data.map((txandak) => ({
+          id: txandak.id,
+          mota: txandak.mota,
+          data: txandak.data,
+          langilea: txandak.langilea ? {
+            id: txandak.langilea.id,
+            izena: txandak.langilea.izena,
+            abizena: txandak.langilea.abizena
+          } : null
+        }));
 
-            // Si no se encuentra el langile, asignamos un valor predeterminado
-            if (!langile) {
-              console.warn(`No se encontró el trabajador con ID: ${txandak.langileId}`);
-              langile = { izena: 'No disponible', abizenak: 'No disponible' }; // Asignación correcta
-            }
-
-            return {
-              id: txandak.id,
-              type: txandak.mota,
-              date: txandak.data,
-              langileIzena: langile.izena,
-              langileAbizena: langile.abizenak
-            };
-          });
-
-          this.harrera = this.txandak.filter(item => item.type === 'H');
-          this.garbiketa = this.txandak.filter(item => item.type === 'G');
-          this.filterbyDate();
-        },
-        (error) => console.error('Error al cargar los langileak:', error)
-      );
-    },
-    (error) => console.error('Error al cargar los txandak:', error)
-  );
-}
-
-deleteItem(itemId: number, event: Event): void {
-  event.stopPropagation();
-
-  this.alertController.create({
-    header: 'Confirmar',
-    message: '¿Seguro que quieres eliminar este ítem?',
-    buttons: [
-      { text: 'Cancelar', role: 'cancel' },
-      {
-        text: 'Eliminar',
-        handler: () => {
-          this.hitzorduakService.deleteTxanda(itemId).subscribe(
-            () => {
-              this.txandak = this.txandak.filter(item => item.id !== itemId);
-              this.harrera = this.txandak.filter(item => item.type === 'H');
-              this.garbiketa = this.txandak.filter(item => item.type === 'G');
-              this.filterbyDate();
-            },
-            (error) => {            
-              console.error('Error al eliminar el ítem:', error);
-            }
-          );
-        },
+        this.harrera = this.txandak.filter(item => item.mota === 'M');
+        this.garbiketa = this.txandak.filter(item => item.mota === 'G');
       },
-    ],
-  }).then(alert => alert.present());
-}
+      (error) => {
+        console.error('Error al cargar txandak:', error);
+      }
+    );
+  }
 
+  loadLangileak(): void {
+    this.hitzorduakService.getLangileak().subscribe(
+      (data) => {
+        this.langileak = data.map((langileak) => ({
+          id: langileak.id,
+          name: langileak.izena,
+          abizena: langileak.abizenak,
+          taldeak: langileak.taldeak ? {
+            kodea: langileak.taldeak.kodea,
+          } : null
+        }));
+      },
+      (error) => {
+        console.error('Error al cargar grupos:', error);
+      }
+    );
+  }
+
+  openAddItemModal(): void {
+    this.isModalOpen = true;
+    this.loadLangileak();
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+  }
+
+  saveTxanda(): void {
+    if (!this.newTxandak.mota || !this.newTxandak.data || !this.newTxandak.id_langilea) {
+      console.log('Datos incompletos');
+      return; // Evita el cierre si los datos están incompletos
+    }
+
+    const nuevoTxanda = {
+      mota: this.newTxandak.mota,
+      data: this.newTxandak.data,
+      langilea: this.newTxandak.id_langilea ? { id: this.newTxandak.id_langilea } : null,
+    };
+
+    this.hitzorduakService.createTxandak(nuevoTxanda).subscribe(
+      () => {
+        this.loadTxandak();
+        this.closeModal(); // Cierra el modal después de guardar
+      },
+      (error) => console.error('Error al crear txanda:', error)
+    );
+  }
+
+
+  
   filterbyDate(): void {
-    
     let filtered = this.txandak;
-
+  
     if (this.fechaInicio) {
-      filtered = filtered.filter(item => item.date >= this.fechaInicio);
+      filtered = filtered.filter(item => item.data >= this.fechaInicio);
     }
     if (this.fechaFin) {
-      filtered = filtered.filter(item => item.date <= this.fechaFin);
+      filtered = filtered.filter(item => item.data <= this.fechaFin);
     }
-
-    this.harrera = filtered.filter(item => item.type === 'H');
-    this.garbiketa = filtered.filter(item => item.type === 'G');
+  
+    // Aplicar el filtrado correcto por 'mota'
+    this.harrera = filtered.filter(item => item.mota === 'M');
+    this.garbiketa = filtered.filter(item => item.mota === 'G');
   }
+  
 
   filterToday(): void {
     const today = new Date().toISOString().split('T')[0];
@@ -127,85 +138,43 @@ deleteItem(itemId: number, event: Event): void {
   resetFilter(): void {
     this.fechaInicio = '';
     this.fechaFin = '';
-    this.harrera = this.txandak.filter(item => item.type === 'H');
+    this.harrera = this.txandak.filter(item => item.type === 'M');
     this.garbiketa = this.txandak.filter(item => item.type === 'G');
   }
+  
+  
  
-  async openAddItemModal() {
-    const alert = await this.alertController.create({
-      header: 'Añadir Nuevo Txanda',
-      inputs: [
-        {
-          name: 'mota',
-          type: 'text',
-          placeholder: 'Tipo de Txanda (harrera/garbiketa)',
-        },
-        {
-          name: 'data',
-          type: 'date',
-          placeholder: 'Fecha',
-        },
-        {
-          name: 'langileIzena',
-          type: 'text',
-          placeholder: 'Nombre del Trabajador',
-        },
-        {
-          name: 'langileAbizena',
-          type: 'text',
-          placeholder: 'Apellido del Trabajador',
-        },
-      ],
+  deleteItem(itemId: number, event: Event): void {
+    event.stopPropagation();
+  
+    this.alertController.create({
+      header: 'Confirmar',
+      message: '¿Seguro que quieres eliminar este ítem?',
       buttons: [
+        { text: 'Cancelar', role: 'cancel' },
         {
-          text: 'Cancelar',
-          role: 'cancel',
+          text: 'Eliminar',
           handler: () => {
-            console.log('Acción cancelada');
-            return true;
-          },
-        },
-        {
-          text: 'Guardar',
-          handler: (data) => {
-            if (!data.mota || !data.data || !data.langileIzena || !data.langileAbizena) {
-              console.log('Datos incompletos');
-              return false; // Evita cerrar si los datos están incompletos
-            }
- 
-            // Buscar el langileId basado en nombre y apellido
-            const langile = this.langileak.find(
-              (l) => l.izena === data.langileIzena && l.abizena === data.langileAbizena
+            this.hitzorduakService.deleteTxanda(itemId).subscribe(
+              () => {
+
+                this.txandak = this.txandak.filter(item => item.id !== itemId);
+                
+                // Filtramos de nuevo después de la eliminación
+                this.harrera = this.txandak.filter(item => item.mota === 'M');
+                this.garbiketa = this.txandak.filter(item => item.mota === 'G');
+                
+                this.filterbyDate(); // Aplicar el filtro por fecha si está activo
+                
+              },
+              (error) => {            
+                console.error('Error al eliminar el ítem:', error);
+              }
             );
- 
-            if (!langile) {
-              console.log('Trabajador no encontrado');
-              return false;
-            }
- 
-            // Crear un nuevo Txanda con el langileId correspondiente
-            const nuevoTxanda = {
-              id: this.txandak.length + 1, // Simulación de ID único
-              type: data.mota,
-              date: data.data,
-              langileId: langile.id, // Asocia el langileId al Txanda
-              langileIzena: langile.izena,
-              langileAbizena: langile.abizena,
-            };
- 
-            this.txandak.push(nuevoTxanda);
-            this.harrera = this.txandak.filter((item) => item.type === 'harrera');
-            this.garbiketa = this.txandak.filter((item) => item.type === 'garbiketa');
- 
-            console.log('Nuevo Txanda agregado:', nuevoTxanda);
-            return true;
+            
           },
         },
       ],
-    });
- 
-    await alert.present();
+    }).then(alert => alert.present());
   }
- 
- 
 }
