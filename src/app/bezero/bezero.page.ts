@@ -18,6 +18,7 @@ interface Kolorea {
   bolumena: string;
   oharra: string;
   productoNombre: String;
+  bezeroId: number;
 }
 
 @Component({
@@ -67,16 +68,17 @@ export class BezeroPage implements OnInit {
     }
   }
 
-  async loadKoloreak(idBezero: number): Promise<void> {
+  async loadKoloreak(): Promise<void> {
     try {
-      this.hitzorduakService.getKoloreakByBezeroa(idBezero).subscribe(
+      this.hitzorduakService.getKoloreak().subscribe(
         (data) => {
           this.koloreak = data.map(kolorea => ({
             data: kolorea.data,
             kantitatea: kolorea.kantitatea,
             bolumena: kolorea.bolumena,
             oharra: kolorea.oharrak,
-            productoNombre: kolorea.productoNombre
+            productoNombre: kolorea.produktua ? kolorea.produktua.izena : 'Desconocido',
+            bezeroId: kolorea.bezeroak ? kolorea.bezeroak.id : null // Aseguramos que bezeroak existe
           }));
         },
         (error) => {
@@ -89,6 +91,8 @@ export class BezeroPage implements OnInit {
       this.showAlert('Error', 'Ocurrió un error inesperado');
     }
   }
+  
+  
 
   searchClients(): void {
     const query = this.searchQuery.toLowerCase().trim();
@@ -101,7 +105,7 @@ export class BezeroPage implements OnInit {
 
   selectClient(client: Client): void {
     this.selectedClient = client;
-    this.loadKoloreak(client.id);
+    this.loadKoloreak();
     this.isModalOpen = true;
   }
 

@@ -6,7 +6,6 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class HitzorduakService {
-   
   private apiUrl = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
@@ -15,8 +14,8 @@ export class HitzorduakService {
     return this.http.get<any[]>(`${this.apiUrl}/zerbitzuak`);
   }
 
-  getKoloreakByBezeroa(idBezeroa: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/kolore-historialak/bezero/${idBezeroa}`);
+  getKoloreak(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/kolore-historialak`);
   }
 
   getHitzorduak(): Observable<any[]> {
@@ -118,5 +117,9 @@ export class HitzorduakService {
 
   createTxandak(item: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/txandak`, item);
+  }
+  
+  getKErabiltzaileak(): Observable<any[]>  {
+    return this.http.get<any[]>(`${this.apiUrl}/Kategoriak`);
   }
 }

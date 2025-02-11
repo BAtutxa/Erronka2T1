@@ -17,7 +17,7 @@ export class GruposPage implements OnInit {
   availableLangileak: any[] = [];
   selectedLangileToAdd: any = null;
   selectedLangileId: string | null = null;
-
+  
 
   constructor(
     private menuCtrl: MenuController,

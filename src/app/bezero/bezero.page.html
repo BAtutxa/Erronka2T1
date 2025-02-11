@@ -35,17 +35,18 @@
         <p class="pe" *ngIf="selectedClient.lastVisit">Última visita: {{ selectedClient.lastVisit }}</p>
         
         <h3>Servicios:</h3>
-        <ion-list>
-          <ion-item *ngFor="let kolorea of koloreak" class="service-card">
-            <ion-label>
+        <ul>
+          <li *ngFor="let kolorea of koloreak">
+            <ng-container *ngIf="kolorea.bezeroId === selectedClient.id">
               <p><strong>Producto:</strong> {{ kolorea.productoNombre }}</p>
               <p><strong>Bolumena:</strong> {{ kolorea.bolumena }}</p>
               <p><strong>Fecha:</strong> {{ kolorea.data | date }}</p>
               <p><strong>Cantidad:</strong> {{ kolorea.kantitatea }}</p>
               <p><strong>Observaciones:</strong> {{ kolorea.oharra }}</p>
-            </ion-label>
-          </ion-item>
-        </ion-list>
+            </ng-container>
+          </li>
+        </ul>
+        
       </ion-content>
     </ng-container>
     
