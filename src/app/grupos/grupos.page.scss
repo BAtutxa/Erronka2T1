@@ -50,4 +50,14 @@
     --background: var(--ion-color-success-shade);
   }
 
+  ul {
+    list-style-type: none; /* Quita los puntos de la lista */
+    padding-left: 20px
+  }
+
+  ul li {
+    line-height: 1.6; /* Ajusta el interlineado para más separación */
+    margin-bottom: 5px; /* Espacio entre los elementos de la lista */
+  }
+  
   
