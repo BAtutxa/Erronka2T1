@@ -115,4 +115,8 @@ export class HitzorduakService {
   removePersonFromGroup(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/produktuak/${id}`);
   }
+
+  createTxandak(item: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/txandak`, item);
+  }
 }
