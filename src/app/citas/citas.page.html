@@ -1,71 +1,58 @@
 <app-menu></app-menu>
 
+<ion-content class="ion-padding">
+  <ion-card class="calendar-card">
+    <ion-grid>
+      <!-- Fila con los botones "Hoy" y "Añadir", alineados a la derecha -->
+      <ion-row class="ion-justify-content-between">
+        <ion-col size="auto">
+          <ion-button expand="block" shape="round" (click)="setToday()">Hoy</ion-button>
+        </ion-col>
 
-<ion-content>
-  <ion-grid>
-    <ion-row>
-      <!-- Sección de grupo y calendario -->
-      <ion-col size="12" size-md="6">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Grupo Asignado</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-chip color="secondary" class="grupo-chip">
-              <ion-label>Grupo A</ion-label>
-            </ion-chip>
-          </ion-card-content>
-        </ion-card>
+        <ion-col size="auto">
+          <ion-button expand="block" shape="round">
+            Añadir
+          </ion-button>
+        </ion-col>
+      </ion-row>
 
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Selecciona Fecha y Hora</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-datetime
-              [(ngModel)]="selectedDate"
-              [min]="today"
-              display-format="DD MMM YYYY HH:mm"
-              month-values="1,2,3,4,5,9,10,11,12"
-              hour-values="9,10,11,12,13,14,15,16"
-              minute-values="0,15,30,45"
-              (ionChange)="onDateChange($event)"
-            ></ion-datetime>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <!-- Sección de servicios -->
-      <ion-col size="12" size-md="6">
-        <ion-card>
-          <ion-card-header>
-            <ion-card-title>Servicios Disponibles</ion-card-title>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-list>
-              <ion-item *ngFor="let service of services">
-                <ion-label>{{ service.name }}</ion-label>
-                <ion-checkbox
-                  slot="end"
-                  [(ngModel)]="service.selected"
-                ></ion-checkbox>
-              </ion-item>
-            </ion-list>
-            <div *ngIf="showErrorMessage" class="error-message">
-              Por favor, selecciona al menos un servicio y una fecha.
-            </div>
-          </ion-card-content>
-        </ion-card>
-
-        <ion-button expand="full" [disabled]="isButtonDisabled()" (click)="onSubmit()">
-          Confirmar Cita
+      <!-- Fila con los botones de navegación y la fecha -->
+      <ion-row class="ion-justify-content-center ion-align-items-center">
+        <ion-button fill="clear" (click)="prevDay()">
+          <ion-icon name="chevron-back-outline" size="large"></ion-icon>
         </ion-button>
 
-        <ion-button expand="full"  (click)="loadServices()">
-          getServices
+        <!-- Texto de la Fecha -->
+        <ion-text class="date-display" (click)="openDatePicker()">
+          {{ selectedDate | date: 'EEEE d MMMM, y' }}
+        </ion-text>
+
+        <ion-button fill="clear" (click)="nextDay()">
+          <ion-icon name="chevron-forward-outline" size="large"></ion-icon>
         </ion-button>
-        <label>{{services}}</label>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      </ion-row>
+    </ion-grid>
+  </ion-card>
+
+  <!-- Modal para seleccionar la fecha -->
+  <ion-modal [isOpen]="isDatePickerOpen" (didDismiss)="closeDatePicker()">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Selecciona una Fecha</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeDatePicker()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    
+    <ion-content class="ion-padding">
+      <!-- Calendario de selección de fecha -->
+      <ion-datetime
+        display-format="DD/MM/YYYY"
+        [(ngModel)]="selectedDate"
+        (ionCancel)="closeDatePicker()"
+        (ionChange)="confirmDate()"
+      ></ion-datetime>
+    </ion-content>
+  </ion-modal>
 </ion-content>

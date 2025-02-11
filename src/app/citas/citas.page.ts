@@ -1,73 +1,39 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
-import { HitzorduakService } from '../services/hitzorduak.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-citas',
   templateUrl: './citas.page.html',
   styleUrls: ['./citas.page.scss'],
 })
-export class CitasPage implements OnInit {
-  today: string; // Fecha mínima para el calendario
-  selectedDate: string | null = null; // Fecha seleccionada
-  services: any[] = []; // Servicios disponibles
-  showErrorMessage = false; // Mostrar mensaje de error
+export class CitasPage {
+  selectedDate: string = new Date().toISOString();
+  isDatePickerOpen: boolean = false;
 
-  constructor(
-    private alertController: AlertController,
-    @Inject(HitzorduakService)
-    private hs: HitzorduakService
-  ) {
-    this.today = new Date().toISOString();
+  setToday() {
+    this.selectedDate = new Date().toISOString();
   }
 
-  ngOnInit() {
-    this.loadServices();
+  prevDay() {
+    let date = new Date(this.selectedDate);
+    date.setDate(date.getDate() - 1);
+    this.selectedDate = date.toISOString();
   }
 
-  // Cargar servicios desde la API
-  loadServices(): void {
-    this.hs.getZerbitzuak().subscribe(
-      (data) => {
-        this.services = data.map((service) => ({
-          name: service.izena,
-          selected: false,
-        }));
-      },
-      (error) => {
-        console.error('Error al cargar servicios:', error);
-      }
-    );
+  nextDay() {
+    let date = new Date(this.selectedDate);
+    date.setDate(date.getDate() + 1);
+    this.selectedDate = date.toISOString();
   }
 
-  isButtonDisabled(): boolean {
-    return !this.selectedDate || !this.services.some((s) => s.selected);
+  openDatePicker() {
+    this.isDatePickerOpen = true;
   }
 
-  async onSubmit(): Promise<void> {
-    if (this.isButtonDisabled()) {
-      this.showErrorMessage = true;
-    } else {
-      this.showErrorMessage = false;
-
-      const selectedServices = this.services
-        .filter((service) => service.selected)
-        .map((service) => service.name);
-
-      const alert = await this.alertController.create({
-        header: 'Cita Confirmada',
-        message: `
-          Fecha: ${this.selectedDate}
-          Servicios: ${selectedServices.join(', ')}
-        `,
-        buttons: ['OK'],
-      });
-
-      await alert.present();
-    }
+  closeDatePicker() {
+    this.isDatePickerOpen = false;
   }
 
-  onDateChange(event: any): void {
-    this.selectedDate = event.detail.value;
+  confirmDate() {
+    this.isDatePickerOpen = false;
   }
 }
