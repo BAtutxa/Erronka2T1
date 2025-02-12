@@ -1,50 +1,68 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HitzorduakService } from '../services/hitzorduak.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   email: string = '';
   password: string = '';
   emailError: string = '';
   passwordError: string = '';
-  passError: string = ''; // Mensaje de error para las credenciales incorrectas
+  passError: string = ''; // Mensaje de error para credenciales incorrectas
+  erabiltzaileak: any[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private hitzorduakService: HitzorduakService) {}
 
-  // Método para verificar el login
+  ngOnInit(): void {
+    this.loadErabiltzaileak();
+  }
+
   login() {
-    // Resetear los mensajes de error
     this.emailError = '';
     this.passwordError = '';
     this.passError = '';
-
+  
     let isValid = true;
-
-    // Verificar si el email o la contraseña están vacíos
+  
     if (!this.email) {
       this.emailError = 'Email-a bete behar duzu.';
       isValid = false;
     }
-
+  
     if (!this.password) {
       this.passwordError = 'Pasahitza bete behar duzu.';
       isValid = false;
     }
-
-    // Si los campos están completos, verificar las credenciales
-    if (isValid) {
-      if (this.email === 'ibai@gmail.com' && this.password === '123') {
-        // Si las credenciales son correctas, navega a la página de citas
-        this.router.navigate(['/citas']);
-      } else {
-        // Si las credenciales son incorrectas, muestra el mensaje de error debajo del botón
-        this.passError = 'Email edo pasahitza ez dira zuzendu.';
-      }
+  
+    if (!isValid) return;
+  
+    const user = this.erabiltzaileak.find(
+      (erabiltzaile) => erabiltzaile.username === this.email && erabiltzaile.pasahitza === this.password
+    );
+  
+    if (user) {
+      this.router.navigate(['/citas']);
+    } else {
+      this.passError = 'Email edo pasahitza ez dira zuzendu.';
     }
   }
-  
+
+  loadErabiltzaileak(): void {
+    this.hitzorduakService.getErabiltzaileak().subscribe(
+      (data) => {
+        this.erabiltzaileak = data.map((erabiltzaile) => ({
+          username: erabiltzaile.username,
+          pasahitza: erabiltzaile.pasahitza,
+          rola: erabiltzaile.rola
+        }));
+      },
+      (error) => {
+        console.error('Error al cargar erabiltzaileak:', error);
+      }
+    );
+  }
 }

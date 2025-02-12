@@ -119,7 +119,7 @@ export class HitzorduakService {
     return this.http.post<any>(`${this.apiUrl}/txandak`, item);
   }
   
-  getKErabiltzaileak(): Observable<any[]>  {
-    return this.http.get<any[]>(`${this.apiUrl}/Kategoriak`);
+  getErabiltzaileak(): Observable<any[]>  {
+    return this.http.get<any[]>(`${this.apiUrl}/erabiltzaileak`);
   }
 }

@@ -21,7 +21,7 @@ export class TxandakPage implements OnInit {
 
   newTxandak = {
     mota: '',
-    data: '',
+    data: new Date().toISOString().split('T')[0],
     id_langilea: null
   };
 
