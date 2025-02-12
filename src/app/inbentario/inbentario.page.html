@@ -176,12 +176,9 @@
             
             <ion-item>
               <ion-label position="stacked">Categoría</ion-label>
-              <ion-select [(ngModel)]="selectedItem.kategoria.id" placeholder="Selecciona una categoría">
-                <ion-select-option *ngFor="let kategoria of kategoriak" [value]="kategoria.id">
-                  {{ kategoria.izena }}
-                </ion-select-option>
-              </ion-select>
+              <ion-input [value]="selectedItem.kategoria?.izena || 'Sin categoría'"></ion-input>
             </ion-item>
+                       
 
             <ion-item>
               <ion-label position="stacked">Marca</ion-label>
@@ -210,4 +207,5 @@
       </ion-content>
     </ng-container>
   </ion-modal>
-</ion-content>
+</ion-content>    
+

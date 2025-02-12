@@ -100,15 +100,13 @@ export class InbentarioPage implements OnInit {
           stockAlerta: produktu.stockAlerta || 'No hay stock añadido',
           image: produktu.image || 'assets/default-image.png',
           type: 'producto',
-          kategoria: produktu.kategoriak ? { id: produktu.kategoriak.id, izena: produktu.kategoriak.izena } : null
+          kategoria: produktu.kategoriak && produktu.kategoriak.id
+            ? { id: produktu.kategoriak.id, izena: produktu.kategoriak.izena }
+            : null // Dejamos null si no tiene categoría
         }));
-        
+
         if (this.currentSection === 'productos') {
           this.filterItems();
-        }
-  
-        if (this.selectedItem && this.selectedItem.kategoria) {
-          this.selectedItem.kategoria.id = this.selectedItem.kategoria.id || null;
         }
       },
       (error) => {
@@ -116,7 +114,6 @@ export class InbentarioPage implements OnInit {
       }
     );
   }
-  
 
   loadKategoriak(): void {
     this.hitzorduakService.getKategoriak().subscribe(
@@ -125,12 +122,14 @@ export class InbentarioPage implements OnInit {
           id: kategoria.id,
           izena: kategoria.izena
         }));
+        console.log('Categorías cargadas:', this.kategoriak); // ← Verifica si hay datos aquí
       },
       (error) => {
         console.error('Error al cargar categorías:', error);
       }
     );
-  }
+}
+
 
   /**
    * Se ejecuta cuando se cambia la sección (productos/materiales)
@@ -152,16 +151,16 @@ export class InbentarioPage implements OnInit {
    * Muestra los detalles del ítem seleccionado
    */
   showItemDetails(item: any): void {
-    this.selectedItem = item;
-  
-    // Aquí aseguramos que la categoría está correctamente asignada
-    if (this.selectedItem && this.selectedItem.kategoria) {
-      this.selectedItem.kategoria.id = this.selectedItem.kategoria.id || null;
+    this.selectedItem = { ...item };
+
+    // Aseguramos que la categoría tiene un objeto válido
+    if (!this.selectedItem.kategoria) {
+      this.selectedItem.kategoria = { id: null, izena: 'Sin categoría' };
     }
-  
+
     this.isModalOpen = true;
-  }
-  
+}
+ 
 
   /**
    * Cierra los detalles del ítem
