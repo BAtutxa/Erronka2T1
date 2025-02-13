@@ -10,7 +10,7 @@
         </ion-col>
 
         <ion-col size="auto">
-          <ion-button expand="block" shape="round">
+          <ion-button expand="block" shape="round" (click)="abrirModalNuevaCita()">
             Añadir
           </ion-button>
         </ion-col>
@@ -34,6 +34,36 @@
     </ion-grid>
   </ion-card>
 
+  <!-- Vista de Agenda -->
+  <div class="agenda-container">
+    <!-- Columna de Horas -->
+    <div class="hour-column">
+      <div *ngFor="let hour of hours" class="hour-item">
+        {{ hour }}
+      </div>
+    </div>
+
+    <!-- Contenedor de Citas -->
+    <div class="agenda-column">
+      <div class="citas-container">
+        <div *ngFor="let cita of citas"
+          class="cita-box"
+          [ngStyle]="{
+            'top': calcularPosicion(cita.hasieraOrdua),
+            'height': calcularAltura(cita.duracion),
+            'left': calcularColumna(cita)
+          }"
+          (click)="abrirInfoCita(cita)">
+
+            <ion-card-content class="cita-text">
+              <strong style="font-size: 18px; font-weight: 500; color: white">{{ cita.izena }}</strong><br>
+              <span style="color: aqua; font-weight: 300;">{{ cita.deskribapena }}</span>
+            </ion-card-content>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal para seleccionar la fecha -->
   <ion-modal [isOpen]="isDatePickerOpen" (didDismiss)="closeDatePicker()">
     <ion-header>
@@ -46,13 +76,12 @@
     </ion-header>
     
     <ion-content class="ion-padding">
-      <!-- Calendario de selección de fecha -->
       <ion-datetime
         display-format="DD/MM/YYYY"
         [(ngModel)]="selectedDate"
         (ionCancel)="closeDatePicker()"
-        (ionChange)="confirmDate()"
-      ></ion-datetime>
+        (ionChange)="confirmDate()">
+      </ion-datetime>
     </ion-content>
   </ion-modal>
 </ion-content>
