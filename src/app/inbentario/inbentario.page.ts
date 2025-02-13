@@ -13,7 +13,6 @@ export class InbentarioPage implements OnInit {
   kategoriak: any[] = [];
   langileak: any[] = [];
 
-
   newProduct = {
     name: '',
     description: '',
@@ -27,15 +26,15 @@ export class InbentarioPage implements OnInit {
   
   newMaterial = {
     name: '',
-    etiketa:''
+    etiketa: ''
   };
-  
 
   filteredItems: any[] = [];
   currentSection: 'productos' | 'materiales' = 'productos';
   selectedItem: any = null;
   isModalOpen: boolean = false;
   isFormVisible = false;
+
   constructor(
     private alertController: AlertController,
     private hitzorduakService: HitzorduakService
@@ -46,9 +45,59 @@ export class InbentarioPage implements OnInit {
     this.loadKategoriak();
   }
 
-  /**
-   * Carga los datos tanto de materiales como de productos
-   */
+  addItem() {
+    if (this.currentSection === 'productos') {
+        const productToAdd = {
+            izena: this.newProduct.name,
+            deskribapena: this.newProduct.description,
+            marka: this.newProduct.marka,
+            stock: this.newProduct.stock,
+            stockAlerta: this.newProduct.stockAlerta,
+            kategoriak: this.newProduct.kategoriak.id ? { id: this.newProduct.kategoriak.id } : null
+        };
+
+        console.log("📤 Enviando producto a la API:", JSON.stringify(productToAdd));
+
+        this.hitzorduakService.createproduktu(productToAdd).subscribe(
+            (newProduct) => {
+                console.log('✅ Producto agregado:', newProduct);
+
+                // Recargar la lista de productos desde la API para asegurarnos de que se refleje en la vista
+                this.loadProduktuak();
+
+                this.toggleForm(); // Cierra el formulario después de añadir
+            },
+            (error) => {
+                console.error('❌ Error al agregar producto:', error);
+            }
+        );
+    } else {
+        const materialToAdd = {
+            izena: this.newMaterial.name,
+            etiketa: this.newMaterial.etiketa
+        };
+
+        console.log("📤 Enviando material a la API:", JSON.stringify(materialToAdd));
+
+        this.hitzorduakService.createMaterial(materialToAdd).subscribe(
+            (newMaterial) => {
+                console.log('✅ Material agregado:', newMaterial);
+
+                // Recargar la lista de materiales desde la API para asegurarnos de que se refleje en la vista
+                this.loadMateriala();
+
+                this.toggleForm(); // Cierra el formulario después de añadir
+            },
+            (error) => {
+                console.error('❌ Error al agregar material:', error);
+            }
+        );
+    }
+}
+
+ 
+  
+
   loadData(): void {
     this.loadMateriala();
     this.loadProduktuak();
@@ -62,7 +111,7 @@ export class InbentarioPage implements OnInit {
           name: materiala.izena,
           description: materiala.etiketa || 'No hay descripción',
           image: materiala.image || 'assets/default-image.png',
-          type: 'material' // Identificador de tipo
+          type: 'material'
         }));
         if (this.currentSection === 'materiales') this.filterItems();
       },
@@ -80,10 +129,9 @@ export class InbentarioPage implements OnInit {
           izena: langileak.izena,
           abizena: langileak.abizena
         }));
-        if (this.currentSection === 'materiales') this.filterItems();
       },
       (error) => {
-        console.error('Error al cargar materiales:', error);
+        console.error('Error al cargar trabajadores:', error);
       }
     );
   }
@@ -96,13 +144,13 @@ export class InbentarioPage implements OnInit {
           name: produktu.izena,
           description: produktu.deskribapena || 'Sin descripción',
           marka: produktu.marka || 'La marca no está añadida',
-          stock: produktu.stock || 'No hay stock añadido',
-          stockAlerta: produktu.stockAlerta || 'No hay stock añadido',
+          stock: produktu.stock || 0,
+          stockAlerta: produktu.stockAlerta || 0,
           image: produktu.image || 'assets/default-image.png',
           type: 'producto',
           kategoria: produktu.kategoriak && produktu.kategoriak.id
             ? { id: produktu.kategoriak.id, izena: produktu.kategoriak.izena }
-            : null // Dejamos null si no tiene categoría
+            : null
         }));
 
         if (this.currentSection === 'productos') {
@@ -122,60 +170,40 @@ export class InbentarioPage implements OnInit {
           id: kategoria.id,
           izena: kategoria.izena
         }));
-        console.log('Categorías cargadas:', this.kategoriak); // ← Verifica si hay datos aquí
       },
       (error) => {
         console.error('Error al cargar categorías:', error);
       }
     );
-}
+  }
 
-
-  /**
-   * Se ejecuta cuando se cambia la sección (productos/materiales)
-   */
   segmentChanged(): void {
     this.filterItems();
   }
 
-  /**
-   * Filtra los ítems según el término de búsqueda y la sección actual
-   */
   filterItems(event?: any): void {
     const query = event?.target?.value?.toLowerCase() || '';
     const items = this.currentSection === 'productos' ? this.produktuak : this.materiala;
     this.filteredItems = items.filter((item) => item.name.toLowerCase().includes(query));
   }
 
-  /**
-   * Muestra los detalles del ítem seleccionado
-   */
   showItemDetails(item: any): void {
     this.selectedItem = { ...item };
-
-    // Aseguramos que la categoría tiene un objeto válido
     if (!this.selectedItem.kategoria) {
       this.selectedItem.kategoria = { id: null, izena: 'Sin categoría' };
     }
-
     this.isModalOpen = true;
-}
- 
+  }
 
-  /**
-   * Cierra los detalles del ítem
-   */
   closeItemDetails(): void {
     this.selectedItem = null;
     this.isModalOpen = false;
   }
 
-  /**
-   * Elimina un ítem (producto/material)
-   */
   deleteItem(itemId: number, event: Event): void {
     event.stopPropagation();
-    const confirm = this.alertController.create({
+    
+    this.alertController.create({
       header: 'Confirmar',
       message: '¿Seguro que quieres eliminar este ítem?',
       buttons: [
@@ -186,34 +214,41 @@ export class InbentarioPage implements OnInit {
         {
           text: 'Eliminar',
           handler: () => {
+            console.log('Intentando eliminar item con ID:', itemId);
+  
             if (this.currentSection === 'productos') {
-              this.hitzorduakService.deleteProduktuak(itemId).subscribe(() => {
-                this.loadProduktuak(); // Recargar productos
-              });
+              // Eliminar del array local antes de la petición HTTP
+              this.produktuak = this.produktuak.filter(item => item.id !== itemId);
+              this.filterItems();
+  
+              this.hitzorduakService.deleteProduktuak(itemId).subscribe(
+                () => {
+                  console.log('Producto eliminado correctamente');
+                },
+                (error) => console.error('Error al eliminar producto:', error)
+              );
             } else {
-              this.hitzorduakService.deleteMaterialak(itemId).subscribe(() => {
-                this.loadMateriala(); // Recargar materiales
-              });
+              // Eliminar del array local antes de la petición HTTP
+              this.materiala = this.materiala.filter(item => item.id !== itemId);
+              this.filterItems();
+  
+              this.hitzorduakService.deleteMaterialak(itemId).subscribe(
+                () => {
+                  console.log('Material eliminado correctamente');
+                },
+                (error) => console.error('Error al eliminar material:', error)
+              );
             }
-          },
-        },
-      ],
-    });
-    confirm.then((alert) => alert.present());
+          }
+        }
+      ]
+    }).then((alert) => alert.present());
   }
+  
 
   saveChanges(): void {
     if (this.currentSection === 'productos') {
-      const updateProduct = {
-        name: this.selectedItem.name,
-        description: this.selectedItem.description,
-        marka: this.selectedItem.marka,
-        stock: this.selectedItem.stock,
-        kategoriak: {
-          id: this.selectedItem.kategoriak.id,
-        }
-      };
-      this.hitzorduakService.updateProduktuak(this.selectedItem.id, updateProduct).subscribe(
+      this.hitzorduakService.updateProduktuak(this.selectedItem.id, this.selectedItem).subscribe(
         () => {
           this.loadProduktuak();
           this.closeItemDetails();
@@ -221,11 +256,7 @@ export class InbentarioPage implements OnInit {
         (error) => console.error('Error al actualizar el producto:', error)
       );
     } else {
-      const updateMaterial = {
-        name: this.selectedItem.name,
-        etiketa: this.selectedItem.description
-      };
-      this.hitzorduakService.updateMaterialak(this.selectedItem.id, updateMaterial).subscribe(
+      this.hitzorduakService.updateMaterialak(this.selectedItem.id, this.selectedItem).subscribe(
         () => {
           this.loadMateriala();
           this.closeItemDetails();
@@ -234,111 +265,37 @@ export class InbentarioPage implements OnInit {
       );
     }
   }
-  
+
   toggleForm() {
     this.isFormVisible = !this.isFormVisible;
   }
-  
-  addItem() {
-    if (this.currentSection === 'productos') {
-      // Aseguramos que la categoría seleccionada tenga el ID correcto
-      const productToAdd = {
-        name: this.newProduct.name,
-        description: this.newProduct.description,
-        marka: this.newProduct.marka,
-        stock: this.newProduct.stock,
-        stockAlerta: this.newProduct.stockAlerta,
-        kategoriak: {
-          id: this.newProduct.kategoriak.id,  // Guardamos el ID de la categoría seleccionada
-        }
-      };
-  
-      // Llamamos al servicio para crear el nuevo producto
-      this.hitzorduakService.createproduktu(productToAdd).subscribe(
-        () => {
-          this.loadProduktuak(); // Recargamos la lista de productos después de agregar el nuevo
-          this.resetProductForm(); // Limpiar el formulario de producto después de agregarlo
-        },
-        (error) => {
-          console.error('Error al agregar producto:', error);
-        }
-      );
-    } else {
-      // Para materiales, no se requiere el ID de categoría
-      const materialToAdd = {
-        name: this.newMaterial.name,
-        etiketa: this.newMaterial.etiketa,
-      };
-  
-      // Llamamos al servicio para crear el nuevo material
-      this.hitzorduakService.createMaterial(materialToAdd).subscribe(
-        () => {
-          this.loadMateriala(); // Recargamos la lista de materiales después de agregar el nuevo
-          this.resetMaterialForm(); // Limpiar el formulario de material después de agregarlo
-        },
-        (error) => {
-          console.error('Error al agregar material:', error);
-        }
-      );
-    }
-  
-    // Ocultamos el formulario después de agregar el ítem
-    this.toggleForm();
-  }
-  
-  // Función para resetear el formulario del producto
-  resetProductForm() {
-    this.newProduct = {
-      name: '',
-      description: '',
-      marka: '',
-      stock: 0,
-      stockAlerta: 0,
-      kategoriak: {
-        id: null,  // Reiniciamos el ID de la categoría
-      }
-    };
-  }
-  
-  // Función para resetear el formulario del material
-  resetMaterialForm() {
-    this.newMaterial = {
-      name: '',
-      etiketa: ''
-    };
-  }
 
   isDocumentModalOpen = false;
-documentData = {
-  fecha: '',
-  langilea: null,
-  cantidad: 0,
-  item: null,
-};
-
-// Método para abrir el modal con los datos del item seleccionado
-openDocumentModal(item: any, event: Event): void {
-  this.loadLangileak();
-  event.stopPropagation(); // Evita eventos no deseados
-  this.documentData = {
-    fecha: new Date().toISOString(), // Fecha actual
-    langilea: this.langileak.length > 0 ? this.langileak[0].id : null, 
-    cantidad: 1,
-    item: item
+  documentData = {
+    fecha: '',
+    langilea: null,
+    cantidad: 0,
+    item: null,
   };
-  this.isDocumentModalOpen = true;
-}
 
+  openDocumentModal(item: any, event: Event): void {
+    this.loadLangileak();
+    event.stopPropagation();
+    this.documentData = {
+      fecha: new Date().toISOString(),
+      langilea: this.langileak.length > 0 ? this.langileak[0].id : null,
+      cantidad: 1,
+      item: item
+    };
+    this.isDocumentModalOpen = true;
+  }
 
-// Método para cerrar el modal
-closeDocumentModal(): void {
-  this.isDocumentModalOpen = false;
-}
+  closeDocumentModal(): void {
+    this.isDocumentModalOpen = false;
+  }
 
-// Método para guardar los datos
-saveDocumentData(): void {
-  console.log('Datos guardados:', this.documentData);
-  this.closeDocumentModal();
-}
-
+  saveDocumentData(): void {
+    console.log('Datos guardados:', this.documentData);
+    this.closeDocumentModal();
+  }
 }

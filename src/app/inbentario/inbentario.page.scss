@@ -53,3 +53,19 @@ ion-segment-button {
   font-size: 16px;
   padding: 20px;
 }
+
+.card-buttons {
+  display: flex;
+  justify-content: space-between;  // Espacia los botones a los lados
+  padding: 10px;  // Espaciado para que no se peguen al borde
+}
+
+.delete-button {
+  color: red;  // Color opcional para el botón de eliminar
+}
+
+.document-button {
+  color: blue;  // Color opcional para el botón de documento
+}
+
+

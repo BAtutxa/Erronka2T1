@@ -90,7 +90,6 @@
         *ngFor="let item of filteredItems"
         (click)="showItemDetails(item)"
       >
-        <img [src]="item.image" [alt]="item.name" />
         <ion-card-header>
           <ion-card-title>{{ item.name }}</ion-card-title>
         </ion-card-header>
