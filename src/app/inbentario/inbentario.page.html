@@ -7,10 +7,10 @@
       (ionInput)="filterItems($event)"
     ></ion-searchbar>
 
-    <ion-button class="add-group-btn" shape="round" (click)="toggleForm()">
+    <ion-button *ngIf="isAdmin" class="add-group-btn" shape="round" (click)="toggleForm()">
       <ion-icon name="add-circle-outline"></ion-icon>
     </ion-button>
-    <ion-button [routerLink]="'/graficos'">Gráficos</ion-button>
+    <ion-button *ngIf="isAdmin" [routerLink]="'/graficos'">Gráficos</ion-button>
 
 
   </div>
@@ -96,7 +96,7 @@
         <ion-card-header>
           <ion-card-title>{{ item.name }}</ion-card-title>
         </ion-card-header>
-        <ion-button
+        <ion-button *ngIf="isAdmin"
           fill="clear"
           (click)="deleteItem(item.id, $event)"
         >
@@ -204,7 +204,7 @@
             </ion-item>
           </ng-container>
   
-          <ion-button expand="full" (click)="saveChanges()">Guardar Cambios</ion-button>
+          <ion-button *ngIf="isAdmin" expand="full" (click)="saveChanges()">Guardar Cambios</ion-button>
         </div>
       </ion-content>
     </ng-container>

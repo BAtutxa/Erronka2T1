@@ -245,6 +245,9 @@ export class InbentarioPage implements OnInit {
     }).then((alert) => alert.present());
   }
   
+  isAdmin(): boolean{
+    return this.hitzorduakService.hasRole('IR');
+  }
 
   saveChanges(): void {
     if (this.currentSection === 'productos') {

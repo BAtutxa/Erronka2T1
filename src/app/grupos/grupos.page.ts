@@ -49,6 +49,9 @@ export class GruposPage implements OnInit {
     );
   }
   
+  isAdmin(): boolean{
+    return this.hitzorduakService.hasRole('IR');
+  }
   
   loadLangileak(): void {
     this.hitzorduakService.getLangileak().subscribe(

@@ -39,6 +39,10 @@ export class TxandakPage implements OnInit {
     console.log('Sección actual:', this.currentSection);
   }
 
+  isAdmin(): boolean{
+    return this.hitzorduakService.hasRole('IR');
+  }
+
   loadTxandak(): void {
     this.hitzorduakService.getAllTxandak().subscribe(
       (data) => {
