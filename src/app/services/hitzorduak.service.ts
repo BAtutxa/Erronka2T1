@@ -162,4 +162,17 @@ export class HitzorduakService {
   clearRole(): void {
     this.userRole = null;
   }
+
+  registrarUsoMaterial(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/material_maileguak`, data);
+  }
+  
+  registrarDevolucionMaterial(idMaterial: number): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/material_maileguak/devolver/${idMaterial}`, {});
+  }
+  
+  getHistorialMaterial(idMaterial: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/material_maileguak/material/${idMaterial}`);
+  }
+  
 }

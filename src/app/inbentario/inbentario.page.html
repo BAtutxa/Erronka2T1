@@ -205,6 +205,12 @@
               <ion-label position="stacked">Stock</ion-label>
               <ion-input type="number" [(ngModel)]="selectedItem.stock"></ion-input>
             </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Cantidad a Restar</ion-label>
+              <ion-input type="number" [(ngModel)]="cantidadRestar"></ion-input>
+            </ion-item>
+
+            <ion-button expand="full" color="danger" (click)="restarStock()">Restar del Stock</ion-button>
           </ng-container>
  
           <!-- Solo para materiales (si se necesitan más campos específicos, se agregan aquí) -->
@@ -217,6 +223,27 @@
               <ion-label position="stacked">Etiqueta</ion-label>
               <ion-input [(ngModel)]="selectedItem.description"></ion-input>
             </ion-item>
+            <ion-item *ngIf="selectedItem.type === 'material'">
+              <ion-label>Estado:</ion-label>
+              <ion-text color="{{ selectedItem.estaEnUso ? 'danger' : 'success' }}">
+                {{ selectedItem.estaEnUso ? 'En uso por ' + selectedItem.usadoPor : 'Disponible' }}
+              </ion-text>
+            </ion-item>
+            
+            <!-- NUEVO: Selección de trabajador y botones de acción -->
+            <ng-container *ngIf="selectedItem.type === 'material'">
+              <ion-item>
+                <ion-label position="stacked">Seleccionar Trabajador</ion-label>
+                <ion-select [(ngModel)]="selectedLangilea" placeholder="Selecciona un trabajador">
+                  <ion-select-option *ngFor="let langile of langileak" [value]="langile.id">
+                    {{ langile.name }} {{ langile.abizena }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+            
+              <ion-button expand="full" color="success" (click)="registrarRecogida(selectedItem)">Registrar Recogida</ion-button>
+              <ion-button expand="full" color="danger" (click)="registrarDevolucion(selectedItem)">Registrar Devolución</ion-button>
+            </ng-container>
           </ng-container>
  
           <ion-button *ngIf="isAdmin" expand="full" (click)="saveChanges()">Guardar Cambios</ion-button>

@@ -13,6 +13,12 @@ export class InbentarioPage implements OnInit {
   produktuak: any[] = [];
   kategoriak: any[] = [];
   langileak: any[] = [];
+  availableLangileak: any[] = [];
+
+  cantidadRestar: number = 0;
+  selectedLangilea: number | null = null;
+
+
 
 
   newProduct = {
@@ -48,6 +54,7 @@ export class InbentarioPage implements OnInit {
   ngOnInit(): void {
     this.loadData();
     this.loadKategoriak();
+    this.loadLangileak(); 
   }
 
 
@@ -122,21 +129,26 @@ export class InbentarioPage implements OnInit {
 
   loadMateriala(): void {
     this.hitzorduakService.getMaterialak().subscribe(
-      (data) => {
-        this.materiala = data.map((materiala) => ({
-          id: materiala.id,
-          name: materiala.izena,
-          description: materiala.etiketa || 'No hay descripción',
-          image: materiala.image || 'assets/default-image.png',
-          type: 'material'
-        }));
-        if (this.currentSection === 'materiales') this.filterItems();
-      },
-      (error) => {
-        console.error('Error al cargar materiales:', error);
-      }
+        (data) => {
+            this.materiala = data.map((materiala) => ({
+                id: materiala.id,
+                name: materiala.izena,
+                description: materiala.etiketa || 'No hay descripción',
+                image: materiala.image || 'assets/default-image.png',
+                type: 'material',
+                estaEnUso: false, // ❌ Inicialmente no está en uso
+                usadoPor: null   // ❌ No hay nadie usándolo
+            }));
+
+            if (this.currentSection === 'materiales') this.filterItems();
+        },
+        (error) => {
+            console.error("❌ Error al cargar materiales:", error);
+        }
     );
-  }
+}
+
+
 
 
   loadLangileak(): void {
@@ -144,15 +156,26 @@ export class InbentarioPage implements OnInit {
       (data) => {
         this.langileak = data.map((langileak) => ({
           id: langileak.id,
-          izena: langileak.izena,
-          abizena: langileak.abizena
+          name: langileak.izena,
+          abizena: langileak.abizenak,
+          taldeak: langileak.taldeak ? {
+            kodea: langileak.taldeak.kodea,
+          } : null
         }));
+        if (this.currentSection === 'materiales') this.filterItems();
       },
       (error) => {
-        console.error('Error al cargar trabajadores:', error);
+        console.error('Error al cargar grupos:', error);
       }
     );
   }
+  loadAvailableLangileak(): void {
+    this.availableLangileak = this.langileak.filter(
+      (langile) => !this.selectedItem.langileak.some((l: any) => l.id === langile.id)
+    );
+  }
+  
+  
 
 
   loadProduktuak(): void {
@@ -216,8 +239,27 @@ export class InbentarioPage implements OnInit {
     if (!this.selectedItem.kategoria) {
       this.selectedItem.kategoria = { id: null, izena: 'Sin categoría' };
     }
+  
+    // Cargar el estado actual del material (si está en uso y quién lo tiene)
+    this.hitzorduakService.getHistorialMaterial(item.id).subscribe(
+      (data) => {
+        if (data && data.length > 0) {
+          const ultimoRegistro = data[data.length - 1];
+          this.selectedItem.estaEnUso = !ultimoRegistro.amaiera_data; // Si no tiene fecha de devolución, está en uso
+          this.selectedItem.usadoPor = this.selectedItem.estaEnUso
+            ? `${ultimoRegistro.langile.izena} ${ultimoRegistro.langile.abizena}`
+            : null;
+        } else {
+          this.selectedItem.estaEnUso = false;
+          this.selectedItem.usadoPor = null;
+        }
+      },
+      (error) => console.error('Error al obtener historial del material:', error)
+    );
+  
     this.isModalOpen = true;
   }
+  
 
 
   closeItemDetails(): void {
@@ -333,4 +375,67 @@ export class InbentarioPage implements OnInit {
     console.log('Datos guardados:', this.documentData);
     this.closeDocumentModal();
   }
+  restarStock(): void {
+    if (!this.selectedItem || !this.selectedItem.stock || this.cantidadRestar <= 0) {
+      console.warn("⚠️ Ingresa una cantidad válida.");
+      return;
+    }
+
+    if (this.selectedItem.stock < this.cantidadRestar) {
+      console.warn("❌ No hay suficiente stock disponible.");
+      return;
+    }
+
+    this.selectedItem.stock -= this.cantidadRestar;
+
+    this.hitzorduakService.updateProduktuak(this.selectedItem.id, { stock: this.selectedItem.stock }).subscribe(
+      () => {
+        console.log(`✅ Stock actualizado: ${this.selectedItem.stock}`);
+        this.loadProduktuak();
+      },
+      (error) => console.error('Error al actualizar el stock:', error)
+    );
+
+    this.cantidadRestar = 0;
+  }
+
+  registrarRecogida(material: any): void {
+    if (!this.selectedLangilea) {
+        console.warn("⚠️ Debes seleccionar un trabajador.");
+        return;
+    }
+
+    // Buscar el trabajador seleccionado en la lista
+    const trabajador = this.langileak.find(l => l.id === this.selectedLangilea);
+
+    if (!trabajador) {
+        console.warn("❌ No se encontró el trabajador.");
+        return;
+    }
+
+    // Buscar el material en la lista general y actualizarlo
+    const materialIndex = this.materiala.findIndex(m => m.id === material.id);
+    if (materialIndex !== -1) {
+        this.materiala[materialIndex].estaEnUso = true;
+        this.materiala[materialIndex].usadoPor = `${trabajador.name} ${trabajador.abizena}`;
+    }
+
+    console.log(`✅ ${material.name} recogido por ${this.materiala[materialIndex].usadoPor}`);
+
+    this.showItemDetails(this.materiala[materialIndex]); // Refrescar detalles sin perder datos
+}
+
+registrarDevolucion(material: any): void {
+  // Buscar el material en la lista general y actualizarlo
+  const materialIndex = this.materiala.findIndex(m => m.id === material.id);
+  if (materialIndex !== -1) {
+      this.materiala[materialIndex].estaEnUso = false;
+      this.materiala[materialIndex].usadoPor = null;
+  }
+
+  console.log(`✅ ${material.name} ha sido devuelto`);
+
+  this.showItemDetails(this.materiala[materialIndex]); // Refrescar detalles sin perder datos
+}
+
 }
