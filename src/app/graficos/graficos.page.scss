@@ -1,0 +1,16 @@
+ion-header {
+    background-color: #ccc; 
+  }
+  
+  ion-toolbar {
+    --background: #ccc; 
+    position: relative; 
+  }
+  
+  ion-header ion-button {
+    position: absolute;
+    right: 16px; 
+    top: 50%;
+    transform: translateY(-50%); 
+  }
+  
