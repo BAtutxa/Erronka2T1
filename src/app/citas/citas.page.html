@@ -47,18 +47,18 @@
     <div class="agenda-column">
       <div class="citas-container">
         <div *ngFor="let cita of citas"
-  class="cita-box"
-  [ngStyle]="{
-    'top': calcularPosicion(cita.hasieraOrdua),
-    'height': calcularAltura(cita.hasieraOrdua, cita.amaieraOrdua),
-    'left': calcularColumna(cita)
-  }"
-  (click)="abrirInfoCita(cita)">
-  <ion-card-content class="cita-text">
-    <strong style="font-size: 18px; font-weight: 500; color: white">{{ cita.izena }}</strong><br>
-    <span style="color: aqua; font-weight: 300;">{{ cita.deskribapena }}</span>
-  </ion-card-content>
-</div>
+          class="cita-box"
+          [ngStyle]="{
+            'top': calcularPosicion(cita.hasieraOrdua),
+            'height': calcularAltura(cita.hasieraOrdua, cita.amaieraOrdua),
+            'left': calcularColumna(cita)
+          }"
+          (click)="abrirInfoCita(cita)">
+          <ion-card-content class="cita-text">
+            <strong>{{ cita.izena }}</strong><br>
+            <span>{{ cita.deskribapena }}</span>
+          </ion-card-content>
+        </div>
       </div>
     </div>
   </div>
@@ -83,4 +83,57 @@
       </ion-datetime>
     </ion-content>
   </ion-modal>
+
+  <!-- MODAL PARA NUEVA CITA -->
+  <ion-modal [isOpen]="isModalNuevaCitaOpen" (didDismiss)="cerrarModalNuevaCita()">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Nueva Cita</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="cerrarModalNuevaCita()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding">
+      <ion-item>
+        <ion-label position="stacked">Nombre del Cliente</ion-label>
+        <ion-input [(ngModel)]="nuevaCita.izena"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Teléfono</ion-label>
+        <ion-input type="tel" [(ngModel)]="nuevaCita.telefonoa"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Descripción</ion-label>
+        <ion-input [(ngModel)]="nuevaCita.deskribapena"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Hora de Inicio</ion-label>
+        <ion-datetime displayFormat="HH:mm" [(ngModel)]="nuevaCita.hasieraOrdua"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Hora de Fin</ion-label>
+        <ion-datetime displayFormat="HH:mm" [(ngModel)]="nuevaCita.amaieraOrdua"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Asiento</ion-label>
+        <ion-input [value]="nuevaCita.eserlekua || 'Buscando asiento...'" disabled></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>¿Es etxekoa?</ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="nuevaCita.etxekoa"></ion-checkbox>
+      </ion-item>
+
+      <ion-button expand="full" (click)="guardarCita()">Guardar Cita</ion-button>
+      <ion-button expand="full" fill="outline" color="danger" (click)="cerrarModalNuevaCita()">Cancelar</ion-button>
+    </ion-content>
+  </ion-modal>
+
 </ion-content>

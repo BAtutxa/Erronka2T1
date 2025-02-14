@@ -27,14 +27,15 @@ export class CitasPage implements OnInit {
    * Cargar las citas del día seleccionado desde la API.
    */
   loadCitas() {
-    const formattedDate = this.selectedDate.split('T')[0]; // Formatear a YYYY-MM-DD
+    const formattedDate = this.selectedDate.split('T')[0]; // Formato YYYY-MM-DD
     this.hitzorduakService.getHitzorduak().subscribe(
       (data: any[]) => {
+        console.log("📆 Citas cargadas desde API:", data);
         this.citas = data.filter(cita => cita.data === formattedDate); // Filtrar por fecha
-        console.log('📆 Citas cargadas:', this.citas);
+        console.log("📆 Citas filtradas por fecha:", this.citas);
       },
       (error) => {
-        console.error('❌ Error al cargar citas:', error);
+        console.error("❌ Error al cargar citas:", error);
       }
     );
   }
@@ -84,6 +85,8 @@ export class CitasPage implements OnInit {
    * Calcula la posición vertical de la cita en la agenda.
    */
   calcularPosicion(horaInicio: string): string {
+    if (!horaInicio) return '0px';
+  
     const minutosDesdeInicio = this.convertirHoraAMinutos(horaInicio) - this.convertirHoraAMinutos('08:00');
     return `${(minutosDesdeInicio / 10) * (this.alturaPorMediaHora / 3)}px`;
   }
@@ -108,16 +111,19 @@ export class CitasPage implements OnInit {
     const alert = await this.alertController.create({
       header: 'Detalles de la Cita',
       message: `
-        <strong>Nombre:</strong> ${cita.izena} <br>
-        <strong>Descripción:</strong> ${cita.deskribapena} <br>
-        <strong>Inicio:</strong> ${cita.hasieraOrdua} <br>
-        <strong>Fin:</strong> ${cita.amaieraOrdua}
+        izena: ${cita.izena} , 
+        deskribapena: ${cita.deskribapena} ,
+        hasiera ordua: ${cita.hasieraOrdua} , 
+        amaiera ordua: ${cita.amaieraOrdua} , 
+        etxekoa: ${cita.etxekoa ? 'Bai' : 'Ez'}
       `,
       buttons: ['Cerrar']
     });
 
     await alert.present();
-  }
+}
+
+
 
   /**
    * Cambiar a la fecha de hoy.
@@ -189,7 +195,6 @@ export class CitasPage implements OnInit {
         {
           name: 'hasieraOrdua',
           type: 'time',
-          label: 'Hora de inicio',
           value: this.formatHour(10, 0),
           min: '10:00',
           max: '14:50',
@@ -197,10 +202,15 @@ export class CitasPage implements OnInit {
         {
           name: 'amaieraOrdua',
           type: 'time',
-          label: 'Hora de fin',
           value: this.formatHour(10, 10),
           min: '10:10',
           max: '15:00',
+        },
+        {
+          name: 'etxekoa',
+          type: 'checkbox',
+          label: 'etxekoa',
+          value: true // Por defecto, desmarcado
         }
       ],
       buttons: [
@@ -211,40 +221,106 @@ export class CitasPage implements OnInit {
         {
           text: 'Añadir',
           handler: (data) => {
+            console.log("Datos de la nueva cita:", data);
             this.agregarCita(data);
           }
         }
       ]
     });
-
+  
     await alert.present();
   }
+  
+
 
   /**
    * 📌 Agrega una cita a la base de datos y la muestra en la agenda sin recargar.
    */
   agregarCita(data: any) {
-    const nuevaCita = {
-      izena: data.izena,
-      deskribapena: data.deskribapena,
-      data: this.selectedDate.split('T')[0], // Formato YYYY-MM-DD
-      hasieraOrdua: data.hasieraOrdua,
-      amaieraOrdua: data.amaieraOrdua,
-    };
-
-    this.hitzorduakService.createHitzordua(nuevaCita).subscribe(
+    const asientoLibre = this.buscarAsientoLibre(); // 🔥 Busca un asiento libre
+    if (asientoLibre === null) {
+      console.warn("⚠️ No hay asientos disponibles.");
+      return;
+    }
+  
+    console.log("📤 Enviando cita a la API:", this.nuevaCita);
+  
+    this.hitzorduakService.createHitzordua(this.nuevaCita).subscribe(
       (createdCita) => {
-        console.log('✅ Cita agregada:', createdCita);
-        
-        // Añadir la nueva cita directamente al array sin necesidad de recargar la página
+        console.log("✅ Cita agregada:", createdCita);
         this.citas.push(createdCita);
-        
-        // Refrescar la vista para que se muestre en la agenda
-        this.loadCitas();
+        this.loadCitas(); // Recargar la agenda
       },
       (error) => {
-        console.error('❌ Error al agregar la cita:', error);
+        console.error("❌ Error al agregar la cita:", error);
       }
     );
   }
+  
+
+  buscarAsientoLibre(): number | null {
+    const asientosDisponibles = [1, 2, 3, 4, 5]; // 🔥 5 asientos en la peluquería
+    const asientosOcupados = this.citas.map(cita => cita.eserlekua); // 🔥 Asientos ya usados
+  
+    // 🔥 Encuentra el primer asiento libre
+    for (const asiento of asientosDisponibles) {
+      if (!asientosOcupados.includes(asiento)) {
+        return asiento;
+      }
+    }
+  
+    return null; // ❌ No hay asientos libres
+  }
+
+  // Propiedad para manejar el estado del modal
+isModalNuevaCitaOpen: boolean = false;
+
+// Propiedad para almacenar los datos de la nueva cita
+nuevaCita: any = {
+  izena: '',
+  telefonoa: '',
+  deskribapena: '',
+  hasieraOrdua: '',
+  amaieraOrdua: '',
+  eserlekua: '',
+  etxekoa: false,
+};
+
+// Método para abrir el modal
+
+// Método para cerrar el modal
+cerrarModalNuevaCita() {
+  this.isModalNuevaCitaOpen = false;
+}
+
+// Método para guardar la cita
+guardarCita() {
+  console.log("📤 Enviando cita:", this.nuevaCita);
+
+  // Aquí puedes validar los datos antes de enviarlos
+  if (!this.nuevaCita.izena || !this.nuevaCita.hasieraOrdua || !this.nuevaCita.amaieraOrdua) {
+    console.warn("⚠️ Faltan datos obligatorios.");
+    return;
+  }
+
+  // Convertir el checkbox en 'E' o 'K'
+  this.nuevaCita.etxekoa = this.nuevaCita.etxekoa ? 'E' : 'K';
+
+  this.hitzorduakService.createHitzordua(this.nuevaCita).subscribe(
+    (createdCita) => {
+      console.log("✅ Cita agregada:", createdCita);
+
+      // Añadir la nueva cita sin recargar la página
+      this.citas.push(createdCita);
+
+      // Cerrar el modal
+      this.cerrarModalNuevaCita();
+    },
+    (error) => {
+      console.error("❌ Error al agregar la cita:", error);
+    }
+  );
+}
+
+  
 }

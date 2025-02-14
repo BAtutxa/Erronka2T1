@@ -174,5 +174,14 @@ export class HitzorduakService {
   getHistorialMaterial(idMaterial: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/material_maileguak/material/${idMaterial}`);
   }
+
+  createHitzorduaWithZerbitzuak(hitzordua: any, zerbitzuak: number[]): Observable<any> {
+    const payload = {
+      hitzordua: hitzordua,
+      zerbitzuak: zerbitzuak
+    };
+    return this.http.post<any>(`${this.apiUrl}/hitzorduak`, payload);
+  }
+  
   
 }
