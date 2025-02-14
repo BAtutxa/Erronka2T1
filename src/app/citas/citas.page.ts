@@ -39,20 +39,11 @@ export class CitasPage implements OnInit {
     );
   }
 
-  /**
-   * Genera la lista de horas disponibles en la agenda cada 10 minutos.
-   */
   generateHours() {
-    let startHour = 10;
-    let startMinute = 0;
-
+    let startHour = 8;
     while (startHour < 15) {
-      this.hours.push(this.formatHour(startHour, startMinute));
-      startMinute += 10; // Ahora incrementamos de 10 en 10 minutos
-      if (startMinute === 60) {
-        startMinute = 0;
-        startHour++;
-      }
+      this.hours.push(this.formatHour(startHour, 0)); // Siempre con minutos en 0
+      startHour++; // Incrementamos la hora en lugar de los minutos
     }
   }
 
@@ -66,8 +57,17 @@ export class CitasPage implements OnInit {
   /**
    * Calcula la altura de una cita basada en su duración.
    */
-  calcularAltura(duracion: number): string {
-    if (!duracion || duracion < 10) return `${this.alturaPorMediaHora / 3}px`; // Mínimo 10 min
+  calcularAltura(horaInicio: string, horaFin: string): string {
+    const minutosInicio = this.convertirHoraAMinutos(horaInicio);
+    const minutosFin = this.convertirHoraAMinutos(horaFin);
+    const duracion = minutosFin - minutosInicio;
+  
+    // Asegurarnos de que la duración no sea negativa o cero
+    if (duracion <= 0) {
+      return `${this.alturaPorMediaHora / 3}px`; // Mínimo 10 min
+    }
+  
+    // Calculamos la altura en función de la duración
     return `${(duracion / 30) * this.alturaPorMediaHora}px`;
   }
 
@@ -84,17 +84,21 @@ export class CitasPage implements OnInit {
    * Calcula la posición vertical de la cita en la agenda.
    */
   calcularPosicion(horaInicio: string): string {
-    let minutosDesdeInicio = this.convertirHoraAMinutos(horaInicio) - this.convertirHoraAMinutos('10:00');
-    return `${(minutosDesdeInicio / 10) * (this.alturaPorMediaHora / 3)}px`; // Adaptado a intervalos de 10 min
+    const minutosDesdeInicio = this.convertirHoraAMinutos(horaInicio) - this.convertirHoraAMinutos('08:00');
+    return `${(minutosDesdeInicio / 10) * (this.alturaPorMediaHora / 3)}px`;
   }
 
   /**
    * 📌 **Calcula en qué columna se colocará la cita (distribuye en 3 columnas)**
    */
   calcularColumna(cita: any): string {
-    let index = this.citas.indexOf(cita) % 3; // Máximo 3 columnas antes de resetear
-    let spacing = 220;
-    return `${index * spacing}px`;
+    const horaInicio = cita.hasieraOrdua;
+    // Crear un identificador único para cada hora
+    const indexByTime = this.citas.filter(c => c.hasieraOrdua === horaInicio).indexOf(cita);
+    let spacing = 220; // Espacio entre columnas
+  
+    // Desplazar cada cita según el índice dentro de su hora de inicio
+    return `${indexByTime * spacing}px`;
   }
 
   /**
