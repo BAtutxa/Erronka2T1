@@ -59,7 +59,7 @@
           </ul>
   
           <!-- Desplegable para seleccionar un langile -->
-          <ion-item>
+          <ion-item *ngIf="isAdmin">
             <ion-label>Seleccionar Langile</ion-label>
             <ion-select [(ngModel)]="selectedLangileToAdd">
               <ion-select-option *ngFor="let langile of langileak" [value]="langile">
@@ -69,7 +69,7 @@
           </ion-item>          
   
           <!-- Botón para actualizar el grupo del langile -->
-          <ion-button expand="full" (click)="saveChanges()">
+          <ion-button *ngIf="isAdmin" expand="full" (click)="saveChanges()">
             Actualizar Grupo
           </ion-button>
         </div>
@@ -83,7 +83,7 @@
             <ion-label position="stacked">Apellido</ion-label>
             <ion-input [(ngModel)]="selectedItem.abizena"></ion-input>
           </ion-item> 
-          <ion-button expand="full" (click)="saveChanges()">
+          <ion-button *ngIf="isAdmin" expand="full" (click)="saveChanges()">
             Actualizar Grupo
           </ion-button>
         </div>

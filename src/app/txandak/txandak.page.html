@@ -37,7 +37,7 @@
       </ion-segment>
 
 
-      <ion-button class="add-group-btn" shape="round" (click)="openAddItemModal()">
+      <ion-button *ngIf="isAdmin" class="add-group-btn" shape="round" (click)="openAddItemModal()">
         <ion-icon name="add-circle-outline"></ion-icon>
       </ion-button>
     </div>
@@ -52,7 +52,7 @@
         <p>Trabajador: {{ item.langilea?.izena }} {{ item.langilea?.abizena }}</p>
       </ion-label>
   
-      <ion-button color="danger" fill="clear" (click)="deleteItem(item.id, $event)">
+      <ion-button *ngIf="isAdmin" color="danger" fill="clear" (click)="deleteItem(item.id, $event)">
         <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
       </ion-button>
     </ion-item>
@@ -66,7 +66,7 @@
         <p>Trabajador: {{ item.langilea?.izena }} {{ item.langilea?.abizena }}</p>
       </ion-label>
   
-      <ion-button color="danger" fill="clear" (click)="deleteItem(item.id, $event)">
+      <ion-button *ngIf="isAdmin" color="danger" fill="clear" (click)="deleteItem(item.id, $event)">
         <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
       </ion-button>
     </ion-item>

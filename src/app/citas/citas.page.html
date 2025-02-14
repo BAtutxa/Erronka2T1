@@ -47,19 +47,18 @@
     <div class="agenda-column">
       <div class="citas-container">
         <div *ngFor="let cita of citas"
-          class="cita-box"
-          [ngStyle]="{
-            'top': calcularPosicion(cita.hasieraOrdua),
-            'height': calcularAltura(cita.duracion),
-            'left': calcularColumna(cita)
-          }"
-          (click)="abrirInfoCita(cita)">
-
-            <ion-card-content class="cita-text">
-              <strong style="font-size: 18px; font-weight: 500; color: white">{{ cita.izena }}</strong><br>
-              <span style="color: aqua; font-weight: 300;">{{ cita.deskribapena }}</span>
-            </ion-card-content>
-        </div>
+  class="cita-box"
+  [ngStyle]="{
+    'top': calcularPosicion(cita.hasieraOrdua),
+    'height': calcularAltura(cita.hasieraOrdua, cita.amaieraOrdua),
+    'left': calcularColumna(cita)
+  }"
+  (click)="abrirInfoCita(cita)">
+  <ion-card-content class="cita-text">
+    <strong style="font-size: 18px; font-weight: 500; color: white">{{ cita.izena }}</strong><br>
+    <span style="color: aqua; font-weight: 300;">{{ cita.deskribapena }}</span>
+  </ion-card-content>
+</div>
       </div>
     </div>
   </div>

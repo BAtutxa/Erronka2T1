@@ -35,7 +35,11 @@ const routes: Routes = [
   {
     path: 'txandak',
     loadChildren: () => import('./txandak/txandak.module').then( m => m.TxandakPageModule)
+  },  {
+    path: 'graficos',
+    loadChildren: () => import('./graficos/graficos.module').then( m => m.GraficosPageModule)
   }
+
 
 ];
 

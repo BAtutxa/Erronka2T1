@@ -11,6 +11,8 @@ export class HitzorduakService {
 
   constructor(private http: HttpClient) {}
 
+  private userRole: string | null = null;
+
   getZerbitzuak(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/zerbitzuak`);
   }
@@ -157,4 +159,23 @@ export class HitzorduakService {
   }
   
   
+  // Método para establecer el rol del usuario
+  setRole(role: string): void {
+    this.userRole = role;
+  }
+
+  // Método para obtener el rol del usuario
+  getRole(): string | null {
+    return this.userRole;
+  }
+
+  // Método para verificar si el usuario tiene un rol específico
+  hasRole(role: string): boolean {
+    return this.userRole === role;
+  }
+
+  // Método para borrar el rol del usuario
+  clearRole(): void {
+    this.userRole = null;
+  }
 }

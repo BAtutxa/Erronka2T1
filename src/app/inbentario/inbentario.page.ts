@@ -228,6 +228,42 @@ export class InbentarioPage implements OnInit {
       ]
     }).then((alert) => alert.present());
   }
+  
+  isAdmin(): boolean{
+    return this.hitzorduakService.hasRole('IR');
+  }
+
+  saveChanges(): void {
+    if (this.currentSection === 'productos') {
+      this.hitzorduakService.updateProduktuak(this.selectedItem.id, this.selectedItem).subscribe(
+        () => {
+          this.loadProduktuak();
+          this.closeItemDetails();
+        },
+        (error) => console.error('Error al actualizar el producto:', error)
+      );
+    } else {
+      this.hitzorduakService.updateMaterialak(this.selectedItem.id, this.selectedItem).subscribe(
+        () => {
+          this.loadMateriala();
+          this.closeItemDetails();
+        },
+        (error) => console.error('Error al actualizar el material:', error)
+      );
+    }
+  }
+
+  toggleForm() {
+    this.isFormVisible = !this.isFormVisible;
+  }
+
+  isDocumentModalOpen = false;
+  documentData = {
+    fecha: '',
+    langilea: null,
+    cantidad: 0,
+    item: null,
+  };
 
   openDocumentModal(item: any, event: Event): void {
     this.loadLangileak();

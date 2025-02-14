@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Gráficos</ion-title>
+    <ion-button [routerLink]="'/inbentario'">Inbentario</ion-button>
+  </ion-toolbar>
+  
+</ion-header>
+
+
+<ion-content>
+  <ion-content>
+    <div>
+      <h3>Stock de Productos</h3>
+      <canvas #productosChart></canvas>
+    </div>
+    <div>
+      <canvas #productosPieChart></canvas>
+    </div>
+    <div>
+      <canvas #productosLineChart></canvas>
+    </div>
+    <ion-button (click)="exportToPDF()">Exportar a PDF</ion-button>
+  </ion-content>
+</ion-content>

@@ -45,6 +45,7 @@ export class HomePage implements OnInit {
     );
   
     if (user) {
+      this.hitzorduakService.setRole(user.rola);
       this.router.navigate(['/citas']);
     } else {
       this.passError = 'Email edo pasahitza ez dira zuzendu.';
