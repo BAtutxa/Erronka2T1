@@ -1,5 +1,6 @@
 <app-menu></app-menu>
 
+
 <ion-content [fullscreen]="true">
   <div class="search-container">
     <ion-searchbar
@@ -7,20 +8,95 @@
       (ionInput)="filterItems($event)"
     ></ion-searchbar>
 
-    <ion-button class="add-group-btn" shape="round" (click)="toggleForm()">
+
+    <ion-button *ngIf="isAdmin" class="add-group-btn" shape="round" (click)="toggleForm()">
       <ion-icon name="add-circle-outline"></ion-icon>
     </ion-button>
     <ion-button *ngIf="isAdmin" [routerLink]="'/graficos'">Gráficos</ion-button>
 
 
+
+
   </div>
+
+
+  <div *ngIf="isFormVisible" class="form-container">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Añadir Nuevo</ion-card-title>
+      </ion-card-header>
+
+
+      <ion-card-content>
+        <div class="item-details">
+          <ng-container *ngIf="currentSection === 'productos'">
+            <ion-item>
+              <ion-label position="stacked">Nombre</ion-label>
+              <ion-input [(ngModel)]="newProduct.name"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Descripción</ion-label>
+              <ion-input [(ngModel)]="newProduct.description"></ion-input>
+            </ion-item>
+
+
+            <ion-item>
+              <ion-label position="stacked">Categoría</ion-label>
+              <ion-select [(ngModel)]="newProduct.kategoriak.id" placeholder="Selecciona una categoría">
+                <ion-select-option *ngFor="let kategoria of kategoriak" [value]="kategoria.id">
+                  {{ kategoria.izena }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>            
+
+
+            <ion-item>
+              <ion-label position="stacked">Marca</ion-label>
+              <ion-input [(ngModel)]="newProduct.marka"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Stock</ion-label>
+              <ion-input type="number" [(ngModel)]="newProduct.stock"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Stock Alerta</ion-label>
+              <ion-input type="number" [(ngModel)]="newProduct.stockAlerta"></ion-input>
+            </ion-item>
+          </ng-container>
+
+
+          <!-- Campos específicos para materiales -->
+          <ng-container *ngIf="currentSection === 'materiales'">
+            <ion-item>
+              <ion-label position="stacked">Nombre</ion-label>
+              <ion-input [(ngModel)]="newMaterial.name"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="stacked">Etiqueta</ion-label>
+              <ion-input [(ngModel)]="newMaterial.etiketa"></ion-input>
+            </ion-item>
+          </ng-container>
+
+
+          <ion-button expand="full" (click)="addItem()">Añadir</ion-button>
+          <ion-button expand="full" fill="outline" color="danger" (click)="toggleForm()">Cancelar</ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
 
   <div class="toggle-container">
     <ion-segment [(ngModel)]="currentSection" (ionChange)="segmentChanged()">
-      <ion-segment-button value="productos">Productos</ion-segment-button>
-      <ion-segment-button value="materiales">Materiales</ion-segment-button>
+      <ion-segment-button value="productos">
+        Productos
+      </ion-segment-button>
+      <ion-segment-button value="materiales">
+        Materiales
+      </ion-segment-button>
     </ion-segment>
   </div>
+
 
   <div class="item-grid">
     <ng-container *ngIf="filteredItems.length; else noItems">
@@ -32,16 +108,54 @@
         <ion-card-header>
           <ion-card-title>{{ item.name }}</ion-card-title>
         </ion-card-header>
-        <ion-button 
+        <ion-button *ngIf="isAdmin"
           fill="clear"
           (click)="deleteItem(item.id, $event)"
         >
           <ion-icon name="trash"></ion-icon>
-        </ion-button> 
+        </ion-button>
+
 
         <ion-button fill="clear" (click)="openDocumentModal(item, $event)">
           <ion-icon name="document"></ion-icon>
         </ion-button>
+        <ion-modal [isOpen]="isDocumentModalOpen" (didDismiss)="closeDocumentModal()">
+          <ion-header>
+            <ion-toolbar>
+              <ion-title>Registrar Uso</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="closeDocumentModal()">
+                  <ion-icon name="close"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+       
+          <ion-content>
+            <div class="form-container">
+              <ion-item>
+                <ion-label position="stacked">Fecha</ion-label>
+                <ion-datetime [(ngModel)]="documentData.fecha"></ion-datetime>
+              </ion-item>
+       
+              <ion-item *ngIf="langileak && langileak.length > 0">
+                <ion-label position="stacked">Langilea</ion-label>
+                <ion-select [(ngModel)]="documentData.langilea" placeholder="Selecciona un trabajador">
+                  <ion-select-option *ngFor="let langile of langileak" [value]="langile?.id">
+                    {{ langile?.izena }} {{ langile?.abizena }}
+                  </ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-label position="stacked">Cantidad</ion-label>
+                <ion-input type="number" [(ngModel)]="documentData.cantidad"></ion-input>
+              </ion-item>
+       
+              <ion-button expand="full" (click)="saveDocumentData()">Guardar</ion-button>
+              <ion-button expand="full" fill="outline" color="danger" (click)="closeDocumentModal()">Cancelar</ion-button>
+            </div>
+          </ion-content>
+        </ion-modal>
       </ion-card>
     </ng-container>
     <ng-template #noItems>
@@ -49,7 +163,7 @@
     </ng-template>
   </div>
 
-  <!-- MODAL PARA EDITAR DETALLES DEL PRODUCTO -->
+
   <ion-modal [isOpen]="isModalOpen" (didDismiss)="closeItemDetails()">
     <ng-container *ngIf="selectedItem">
       <ion-header>
@@ -62,9 +176,10 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-  
+ 
       <ion-content>
         <div class="item-details">
+          <!-- Solo para productos -->
           <ng-container *ngIf="selectedItem.type === 'producto'">
             <ion-item>
               <ion-label position="stacked">Nombre</ion-label>
@@ -74,28 +189,25 @@
               <ion-label position="stacked">Descripción</ion-label>
               <ion-textarea [(ngModel)]="selectedItem.description"></ion-textarea>
             </ion-item>
+           
             <ion-item>
               <ion-label position="stacked">Categoría</ion-label>
               <ion-input [value]="selectedItem.kategoria?.izena || 'Sin categoría'"></ion-input>
             </ion-item>
+                       
+
+
             <ion-item>
               <ion-label position="stacked">Marca</ion-label>
               <ion-input [(ngModel)]="selectedItem.marka"></ion-input>
             </ion-item>
             <ion-item>
               <ion-label position="stacked">Stock</ion-label>
-              <ion-input type="number" [(ngModel)]="selectedItem.stock" disabled></ion-input>
+              <ion-input type="number" [(ngModel)]="selectedItem.stock"></ion-input>
             </ion-item>
-
-            <!-- NUEVO: Campo para restar stock -->
-            <ion-item>
-              <ion-label position="stacked">Cantidad a Restar</ion-label>
-              <ion-input type="number" [(ngModel)]="cantidadRestar"></ion-input>
-            </ion-item>
-
-            <ion-button expand="full" color="danger" (click)="restarStock()">Restar del Stock</ion-button>
           </ng-container>
-
+ 
+          <!-- Solo para materiales (si se necesitan más campos específicos, se agregan aquí) -->
           <ng-container *ngIf="selectedItem.type === 'material'">
             <ion-item>
               <ion-label position="stacked">Nombre</ion-label>
@@ -106,10 +218,10 @@
               <ion-input [(ngModel)]="selectedItem.description"></ion-input>
             </ion-item>
           </ng-container>
-  
-          <ion-button expand="full" (click)="saveChanges()">Guardar Cambios</ion-button>
+ 
+          <ion-button *ngIf="isAdmin" expand="full" (click)="saveChanges()">Guardar Cambios</ion-button>
         </div>
       </ion-content>
     </ng-container>
   </ion-modal>
-</ion-content>
+</ion-content>    
