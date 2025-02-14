@@ -45,6 +45,10 @@ export class HitzorduakService {
     return this.http.delete<void>(`${this.apiUrl}/produktuak/${id}`);
   }
 
+  deleteKategoria(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/kategoriak/${id}`);
+  }
+
   updateProduktuak(id: number, produktu: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/produktuak/${id}`, produktu);
   }
@@ -136,26 +140,6 @@ export class HitzorduakService {
   
   createHitzordua(item: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/hitzorduak`, item);
-  }
-  /**
-   * Registrar la recogida de un material por un trabajador
-   */
-  registrarUsoMaterial(registro: { materialId: number; langileaId: number; fechaRecogida: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/material-maileguak`, registro);
-  }
-
-  /**
-   * Registrar la devolución de un material
-   */
-  registrarDevolucionMaterial(materialId: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/material-maileguak/devolucion/${materialId}`, {});
-  }
-
-  /**
-   * Obtener historial de uso de un material
-   */
-  getHistorialMaterial(materialId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/material-maileguak/historial/${materialId}`);
   }
   
   

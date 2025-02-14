@@ -144,35 +144,98 @@ export class InbentarioPage implements OnInit {
     this.filteredItems = items.filter((item) => item.name.toLowerCase().includes(query));
   }
 
-  toggleForm() {
-    this.isFormVisible = !this.isFormVisible;
-  }
-
   addItem() {
     if (this.currentSection === 'productos') {
+        if (!this.newProduct.name || !this.newProduct.kategoriak.id) {
+            console.warn("⚠️ Nombre y categoría son obligatorios.");
+            return;
+        }
+
         const productToAdd = {
-            izena: this.newProduct.name,
-            deskribapena: this.newProduct.description,
+            name: this.newProduct.name,
+            description: this.newProduct.description,
             marka: this.newProduct.marka,
             stock: this.newProduct.stock,
             stockAlerta: this.newProduct.stockAlerta,
             kategoriak: this.newProduct.kategoriak.id ? { id: this.newProduct.kategoriak.id } : null
         };
 
-        console.log("📤 Enviando producto a la API:", JSON.stringify(productToAdd));
-
         this.hitzorduakService.createproduktu(productToAdd).subscribe(
             (newProduct) => {
                 console.log('✅ Producto agregado:', newProduct);
-                this.loadProduktuak();
-                this.toggleForm();
+
+                this.produktuak.push({
+                    id: newProduct.id, 
+                    name: newProduct.name,
+                    description: newProduct.description,
+                    marka: newProduct.marka,
+                    stock: newProduct.stock,
+                    stockAlerta: newProduct.stockAlerta,
+                    type: 'producto',
+                    kategoria: newProduct.kategoriak ? { id: newProduct.kategoriak.id, izena: newProduct.kategoriak.izena } : null
+                });
+
+                this.filterItems(); 
+                this.resetProductForm(); // Resetear formulario
+                this.toggleForm(); // Cierra el formulario
             },
             (error) => {
                 console.error('❌ Error al agregar producto:', error);
             }
         );
+    } else {
+        if (!this.newMaterial.name) {
+            console.warn("⚠️ El nombre del material es obligatorio.");
+            return;
+        }
+
+        const materialToAdd = {
+            name: this.newMaterial.name,
+            etiketa: this.newMaterial.etiketa,
+        };
+
+        this.hitzorduakService.createMaterial(materialToAdd).subscribe(
+            (newMaterial) => {
+                console.log('✅ Material agregado:', newMaterial);
+
+                this.materiala.push({
+                    id: newMaterial.id,
+                    name: newMaterial.name,
+                    description: newMaterial.etiketa,
+                    type: 'material'
+                });
+
+                this.filterItems();
+                this.resetMaterialForm(); // Resetear formulario
+                this.toggleForm();
+            },
+            (error) => {
+                console.error('❌ Error al agregar material:', error);
+            }
+        );
     }
-  }
+}
+
+// **Nuevas funciones para resetear el formulario después de agregar**
+resetProductForm() {
+    this.newProduct = {
+        name: '',
+        description: '',
+        marka: '',
+        stock: 0,
+        stockAlerta: 0,
+        kategoriak: { id: null }
+    };
+}
+
+resetMaterialForm() {
+    this.newMaterial = {
+        name: '',
+        etiketa: ''
+    };
+}
+
+  
 
   showItemDetails(item: any): void {
     this.selectedItem = { ...item };
@@ -186,18 +249,6 @@ export class InbentarioPage implements OnInit {
   closeItemDetails(): void {
     this.selectedItem = null;
     this.isModalOpen = false;
-  }
-
-  saveChanges(): void {
-    if (this.selectedItem) {
-      this.hitzorduakService.updateProduktuak(this.selectedItem.id, this.selectedItem).subscribe(
-        () => {
-          this.loadProduktuak();
-          this.closeItemDetails();
-        },
-        (error) => console.error('Error al actualizar el producto:', error)
-      );
-    }
   }
 
   deleteItem(itemId: number, event: Event): void {
@@ -214,13 +265,29 @@ export class InbentarioPage implements OnInit {
         {
           text: 'Eliminar',
           handler: () => {
+            console.log('Intentando eliminar item con ID:', itemId);
+  
             if (this.currentSection === 'productos') {
+              // Eliminar del array local antes de la petición HTTP
               this.produktuak = this.produktuak.filter(item => item.id !== itemId);
               this.filterItems();
-
+  
               this.hitzorduakService.deleteProduktuak(itemId).subscribe(
-                () => console.log('Producto eliminado correctamente'),
+                () => {
+                  console.log('Producto eliminado correctamente');
+                },
                 (error) => console.error('Error al eliminar producto:', error)
+              );
+            } else {
+              // Eliminar del array local antes de la petición HTTP
+              this.materiala = this.materiala.filter(item => item.id !== itemId);
+              this.filterItems();
+  
+              this.hitzorduakService.deleteMaterialak(itemId).subscribe(
+                () => {
+                  console.log('Material eliminado correctamente');
+                },
+                (error) => console.error('Error al eliminar material:', error)
               );
             }
           }
@@ -256,14 +323,6 @@ export class InbentarioPage implements OnInit {
   toggleForm() {
     this.isFormVisible = !this.isFormVisible;
   }
-
-  isDocumentModalOpen = false;
-  documentData = {
-    fecha: '',
-    langilea: null,
-    cantidad: 0,
-    item: null,
-  };
 
   openDocumentModal(item: any, event: Event): void {
     this.loadLangileak();
