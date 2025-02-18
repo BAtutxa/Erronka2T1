@@ -10,6 +10,7 @@ import { HitzorduakService } from '../services/hitzorduak.service';
 export class CitasPage implements OnInit {
   selectedDate: string = new Date().toISOString();
   isDatePickerOpen: boolean = false;
+  services: any[] = [];
 
   citas: any[] = []; // Lista de citas obtenidas de la API
   hours: string[] = []; // Horas del calendario (cada 10 minutos)
@@ -21,6 +22,7 @@ export class CitasPage implements OnInit {
 
   ngOnInit() {
     this.loadCitas();
+    this.loadServices(); // Cargar servicios
   }
 
   /**
@@ -115,7 +117,9 @@ export class CitasPage implements OnInit {
         deskribapena: ${cita.deskribapena} ,
         hasiera ordua: ${cita.hasieraOrdua} , 
         amaiera ordua: ${cita.amaieraOrdua} , 
-        etxekoa: ${cita.etxekoa ? 'Bai' : 'Ez'}
+        etxekoa: ${cita.etxekoa ? 'Bai' : 'Ez'},
+        telefonoa: ${cita.telefonoa},
+        eserlekua: ${cita.eserlekua},
       `,
       buttons: ['Cerrar']
     });
@@ -175,108 +179,198 @@ export class CitasPage implements OnInit {
     this.loadCitas();
   }
 
-  /**
-   * 📌 Abre una alerta con un formulario para añadir una nueva cita.
-   */
   async abrirModalNuevaCita() {
+    this.nuevaCita = {
+      izena: '',
+      telefonoa: '',
+      deskribapena: '',
+      hasieraOrdua: '10:00',
+      amaieraOrdua: '10:10',
+      eserlekua: this.asignarEserlekua(),
+      etxekoa: false,
+      data: this.selectedDate.split('T')[0],
+      id_zerbitzua: null, // Servicio seleccionado
+      zerbitzuIzena: 'Selecciona un servicio' // ✅ Guardamos el nombre del servicio
+    };
+  
+    this.mostrarFormularioCita(); // ✅ Llamamos directamente al formulario de la cita
+  }
+  
+  /**
+   * 📌 Función para mostrar el formulario de nueva cita con los datos actualizados.
+   */
+  async mostrarFormularioCita() {
     const alert = await this.alertController.create({
       header: 'Nueva Cita',
       inputs: [
+        { name: 'izena', type: 'text', placeholder: 'Nombre del cliente', value: this.nuevaCita.izena },
+        { name: 'telefonoa', type: 'tel', placeholder: 'Teléfono', value: this.nuevaCita.telefonoa },
+        { name: 'deskribapena', type: 'text', placeholder: 'Descripción', value: this.nuevaCita.deskribapena },
+        { name: 'hasieraOrdua', type: 'time', value: this.nuevaCita.hasieraOrdua },
+        { name: 'amaieraOrdua', type: 'time', value: this.nuevaCita.amaieraOrdua },
         {
-          name: 'izena',
+          name: 'eserlekua',
           type: 'text',
-          placeholder: 'Nombre del cliente'
-        },
-        {
-          name: 'deskribapena',
-          type: 'text',
-          placeholder: 'Descripción'
-        },
-        {
-          name: 'hasieraOrdua',
-          type: 'time',
-          value: this.formatHour(10, 0),
-          min: '10:00',
-          max: '14:50',
-        },
-        {
-          name: 'amaieraOrdua',
-          type: 'time',
-          value: this.formatHour(10, 10),
-          min: '10:10',
-          max: '15:00',
+          value: `Asiento ${this.nuevaCita.eserlekua}`,
+          disabled: true,
         },
         {
           name: 'etxekoa',
           type: 'checkbox',
-          label: 'etxekoa',
-          value: true // Por defecto, desmarcado
+          label: 'Etxekoa (del centro)',
+          checked: this.nuevaCita.etxekoa,
+        },
+        // 📌 Botón de selección de servicio
+        {
+          name: 'zerbitzuIzena',
+          type: 'text',
+          value: this.nuevaCita.zerbitzuIzena,
+          attributes: {
+            readonly: true, // ✅ Solo se cambia a través del selector
+          },
+          handler: async () => {
+            await this.mostrarSelectorServicios();
+          }
         }
       ],
       buttons: [
+        { text: 'Cancelar', role: 'cancel' },
         {
-          text: 'Cancelar',
-          role: 'cancel'
+          text: 'Elegir servicio',
+          handler: async () => {
+            await this.mostrarSelectorServicios();
+          }
         },
         {
           text: 'Añadir',
           handler: (data) => {
-            console.log("Datos de la nueva cita:", data);
-            this.agregarCita(data);
-          }
-        }
-      ]
+            this.nuevaCita.izena = data.izena;
+            this.nuevaCita.telefonoa = data.telefonoa;
+            this.nuevaCita.deskribapena = data.deskribapena;
+            this.nuevaCita.hasieraOrdua = data.hasieraOrdua;
+            this.nuevaCita.amaieraOrdua = data.amaieraOrdua;
+            this.nuevaCita.etxekoa = data.etxekoa;
+  
+            console.log("✅ Servicio seleccionado:", this.nuevaCita.id_zerbitzua, " - ", this.nuevaCita.zerbitzuIzena);
+            this.agregarCita();
+          },
+        },
+      ],
     });
   
     await alert.present();
   }
   
-
-
   /**
-   * 📌 Agrega una cita a la base de datos y la muestra en la agenda sin recargar.
+   * 📌 Función que muestra un selector de servicios en un nuevo AlertController
    */
-  agregarCita(data: any) {
-    const asientoLibre = this.buscarAsientoLibre(); // 🔥 Busca un asiento libre
-    if (asientoLibre === null) {
-      console.warn("⚠️ No hay asientos disponibles.");
-      return;
-    }
+  async mostrarSelectorServicios() {
+    const alert = await this.alertController.create({
+      header: 'Selecciona un servicio',
+      inputs: this.services.map((servicio) => ({
+        name: 'id_zerbitzua',
+        type: 'radio',
+        label: servicio.izena,
+        value: servicio.id,
+        checked: this.nuevaCita.id_zerbitzua === servicio.id
+      })),
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'OK',
+          handler: (selectedServiceId) => {
+            // Guardamos el servicio seleccionado en `this.nuevaCita`
+            const selectedService = this.services.find(s => s.id == selectedServiceId);
+            if (selectedService) {
+              this.nuevaCita.id_zerbitzua = selectedServiceId;
+              this.nuevaCita.zerbitzuIzena = selectedService.izena; // ✅ Guardamos el nombre del servicio también
+            }
   
-    console.log("📤 Enviando cita a la API:", this.nuevaCita);
+            console.log("✅ Servicio seleccionado:", this.nuevaCita.id_zerbitzua, " - ", this.nuevaCita.zerbitzuIzena);
+            
+            // ✅ Reabrimos la alerta principal con los datos actualizados
+            this.mostrarFormularioCita();
+          },
+        },
+      ],
+    });
   
-    this.hitzorduakService.createHitzordua(this.nuevaCita).subscribe(
-      (createdCita) => {
-        console.log("✅ Cita agregada:", createdCita);
-        this.citas.push(createdCita);
-        this.loadCitas(); // Recargar la agenda
+    await alert.present();
+  }
+
+  loadServices() {
+    this.hitzorduakService.getZerbitzuak().subscribe(
+      (data) => {
+        this.services = data;
+        console.log("✅ Servicios cargados:", this.services); // ⬅️ Verifica que hay datos aquí
       },
       (error) => {
-        console.error("❌ Error al agregar la cita:", error);
+        console.error("❌ Error al cargar servicios:", error);
       }
     );
   }
   
-
-  buscarAsientoLibre(): number | null {
-    const asientosDisponibles = [1, 2, 3, 4, 5]; // 🔥 5 asientos en la peluquería
-    const asientosOcupados = this.citas.map(cita => cita.eserlekua); // 🔥 Asientos ya usados
-  
-    // 🔥 Encuentra el primer asiento libre
-    for (const asiento of asientosDisponibles) {
-      if (!asientosOcupados.includes(asiento)) {
-        return asiento;
-      }
+  /**
+   * 📌 Agrega una cita a la base de datos y la muestra en la agenda sin recargar.
+   */
+  agregarCita() {
+    if (!this.nuevaCita.izena || !this.nuevaCita.hasieraOrdua || !this.nuevaCita.amaieraOrdua || !this.nuevaCita.data) {
+      console.warn("⚠️ Falta información obligatoria para crear la cita.");
+      return;
     }
   
-    return null; // ❌ No hay asientos libres
+    const citaAEnviar = {
+      izena: this.nuevaCita.izena,
+      telefonoa: this.nuevaCita.telefonoa,
+      deskribapena: this.nuevaCita.deskribapena,
+      hasieraOrdua: this.nuevaCita.hasieraOrdua,
+      amaieraOrdua: this.nuevaCita.amaieraOrdua,
+      eserlekua: this.nuevaCita.eserlekua,
+      etxekoa: this.nuevaCita.etxekoa ? 'E' : 'K', // 🟢 La base de datos espera 'E' o 'K'
+      data: this.nuevaCita.data // 🟢 Asegurar que se envía la fecha
+    };
+  
+    console.log("📤 Enviando cita a la API:", citaAEnviar);
+  
+    this.hitzorduakService.createHitzordua(citaAEnviar).subscribe(
+      (createdCita) => {
+        console.log('✅ Cita agregada:', createdCita);
+        this.citas.push(createdCita);
+        this.loadCitas();
+      },
+      (error) => {
+        console.error('❌ Error al agregar la cita:', error);
+      }
+    );
   }
+  
+  
+  
+  
+
+  asignarEserlekua(): string {
+    const asientosDisponibles = ['1', '2', '3', '4', '5']; // Asientos en formato string
+    const asientosOcupados = this.citas.map((cita) => cita.eserlekua.toString());
+  
+    // Encuentra el primer asiento libre
+    const asientoLibre = asientosDisponibles.find((asiento) => !asientosOcupados.includes(asiento));
+  
+    if (asientoLibre) {
+      console.log(`✅ Asignando asiento ${asientoLibre}`);
+      return asientoLibre;
+    } else {
+      console.warn('❌ No hay asientos disponibles');
+      return 'No disponible'; // Mensaje de error si no hay asientos libres
+    }
+  }
+  
+  
 
   // Propiedad para manejar el estado del modal
 isModalNuevaCitaOpen: boolean = false;
 
 // Propiedad para almacenar los datos de la nueva cita
-nuevaCita: any = {
+nuevaCita = {
   izena: '',
   telefonoa: '',
   deskribapena: '',
@@ -284,7 +378,12 @@ nuevaCita: any = {
   amaieraOrdua: '',
   eserlekua: '',
   etxekoa: false,
+  data: '', // 🟢 Asegurar que data esté presente
+  id_zerbitzua: null, // ✅ Ahora está definido en nuevaCita
+  zerbitzuIzena: '' // ✅ Ahora está definido en nuevaCita
 };
+
+
 
 // Método para abrir el modal
 
@@ -295,25 +394,23 @@ cerrarModalNuevaCita() {
 
 // Método para guardar la cita
 guardarCita() {
-  console.log("📤 Enviando cita:", this.nuevaCita);
+  console.log("📤 Datos de la nueva cita antes de enviar:", this.nuevaCita);
 
-  // Aquí puedes validar los datos antes de enviarlos
+  // Validar que los campos obligatorios no estén vacíos
   if (!this.nuevaCita.izena || !this.nuevaCita.hasieraOrdua || !this.nuevaCita.amaieraOrdua) {
     console.warn("⚠️ Faltan datos obligatorios.");
     return;
   }
 
-  // Convertir el checkbox en 'E' o 'K'
-  this.nuevaCita.etxekoa = this.nuevaCita.etxekoa ? 'E' : 'K';
+  // Convertir `etxekoa` en 'E' o 'K'
+  this.nuevaCita.etxekoa = this.nuevaCita.etxekoa ? true : false;
 
   this.hitzorduakService.createHitzordua(this.nuevaCita).subscribe(
     (createdCita) => {
       console.log("✅ Cita agregada:", createdCita);
 
-      // Añadir la nueva cita sin recargar la página
+      // Añadir la cita a la lista sin recargar
       this.citas.push(createdCita);
-
-      // Cerrar el modal
       this.cerrarModalNuevaCita();
     },
     (error) => {
@@ -321,6 +418,5 @@ guardarCita() {
     }
   );
 }
-
   
 }

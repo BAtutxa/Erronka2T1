@@ -141,4 +141,10 @@ ion-modal {
   .cita-box {
     width: 100%;
   }
+
+  ion-alert.wide-alert {
+    --width: 400px;
+    --max-height: 650px;
+  }
+  
 }
